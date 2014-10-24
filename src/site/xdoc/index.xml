@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document
+  xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>io7m-jcamera</title>
+  </properties>
+
+  <body>
+    <subsection name="jcamera">
+      <p>The <var>jcamera</var> package implements a set of types and
+      functions for handling cameras in a rendering system independent
+      manner.</p>
+    </subsection>
+  </body>
+
+</document>

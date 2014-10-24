@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:changelog xmlns:c="http://schemas.io7m.com/changelog/2.0.0">
+  <c:project>io7m-jcamera</c:project>
+
+  <c:release c:ticket-system="com.io7m.fossil.jcamera">
+    <c:date>2014-10-24</c:date>
+    <c:version>0.1.0</c:version>
+    <c:item>
+      <c:date>2014-10-24</c:date>
+      <c:type-code-new/>
+      <c:summary>Initial release.</c:summary>
+    </c:item>
+  </c:release>
+
+  <c:ticket-system xml:id="com.io7m.fossil.jcamera">
+    <c:ticket-url>http://fossil.io7m.com/repo.cgi/io7m-jcamera/tktview?name=</c:ticket-url>
+  </c:ticket-system>
+</c:changelog>
+

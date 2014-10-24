@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright © 2014 <code@io7m.com> http://io7m.com
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+<s:section
+  xml:id="usage"
+  xmlns:s="http://schemas.io7m.com/structural/2.0.0"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+  <s:section-title>Usage</s:section-title>
+  <s:section-contents/>
+
+  <s:subsection xml:id="usage.overview">
+    <s:subsection-title>Overview</s:subsection-title>
+    <s:paragraph>
+      This section attempts to describe how to use the
+      <s:term s:type="package">${project.parent.name}</s:term> package. The
+      example code uses <s:link-external s:target="http://jogamp.org/www/jogl">JOGL</s:link-external>
+      but the package can obviously be used under any Java input/windowing system.
+      This section doesn't attempt to explain why anything works the way it does -
+      readers are encouraged to read the
+      <s:link s:target="dai">design and implementation</s:link> section, which
+      describes everything in extensive detail.
+    </s:paragraph>
+  </s:subsection>
+
+  <s:subsection xml:id="usage.fps">
+    <s:subsection-title>First-person camera</s:subsection-title>
+    <s:paragraph>
+      The complete program sources are given in
+      <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleMain.java">ExampleMain.java</s:link-external>
+      and
+      <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleScene.java">ExampleScene.java</s:link-external>.
+      The <s:term s:type="type">ExampleScene</s:term> type contains the actual OpenGL
+      scene rendering code and should mostly be ignored. The actual camera handling code
+      is given in <s:term s:type="type">ExampleMain</s:term> and is the subject of the
+      tutorial.
+    </s:paragraph>
+    <s:paragraph>
+      A simple <s:link s:target="dai.fpsstyle.behaviour">first-person style</s:link>
+      camera is created as follows:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Camera declaration</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-0.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      The camera will produce 
+      <s:link s:target="dai.fpsstyle.input.rotation_coefficients">rotation coefficients</s:link> 
+      and a <s:term s:type="term">view matrix</s:term> that will be used during rendering, so
+      these need to be declared too. Additionally, a
+      <s:link s:target="dai.fpsstyle.input.mouse_region">mouse region</s:link> is declared
+      to map window-space coordinates to rotation coefficients:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Result declarations</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-1.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      In order to provide a camera that actually moves and rotates according
+      to input, an <s:link s:target="dai.fpsstyle.integrators">integrator</s:link>
+      is required:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Integrator declaration</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-2.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      Then, a window is required in which to display the results of OpenGL
+      rendering:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Window declaration</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-3.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      The window must be supplied with callback functions that are executed
+      at roughly sixty times per second. The integrator is told to integrate
+      the position/orientation of the camera, and the cursor is then warped
+      back to the center of the screen. The camera is asked to produce a
+      <s:term s:type="term">view matrix</s:term> which is then used during
+      rendering. Additionally, the 
+      <s:link s:target="dai.fpsstyle.input.mouse_region">mouse region</s:link>
+      is notified of any window resizes.
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>OpenGL event listener</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-4.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      A mouse listener is registered in order to tell the declared
+      <s:link s:target="dai.fpsstyle.input">input</s:link> about any
+      mouse movement:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Mouse listener</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-5.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      Finally, a keyboard listener is registered in order to tell the declared
+      <s:link s:target="dai.fpsstyle.input">input</s:link> about any
+      key events:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Key listener</s:formal-item-title>
+      <s:verbatim><xi:include href="examples-jogl-6.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      The example code allows switching between a fixed camera and the first-person
+      camera with the <s:term s:type="constant">M</s:term> key. The code also allows
+      showing/hiding of the mouse cursor with the
+      <s:term s:type="constant">P</s:term> key.
+    </s:paragraph>
+  </s:subsection>
+
+</s:section>
