@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2ES2;
@@ -30,12 +31,15 @@ import javax.media.opengl.GL3;
 import javax.media.opengl.GLException;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.MatrixReadable4x4FType;
 import com.io7m.jtensors.VectorI3F;
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.newt.opengl.GLWindow;
 
-final class ExampleScene
+final class ExampleRenderer implements
+  ExampleRendererControllerType,
+  ExampleRendererType
 {
   private static final int VERTEX_COLOR_OFFSET_BYTES;
   private static final int VERTEX_COMPONENTS;
@@ -48,11 +52,11 @@ final class ExampleScene
     VERTEX_COUNT = 4;
     VERTEX_COMPONENTS = 2 * 3;
     VERTEX_COLOR_OFFSET_BYTES = 3 * 4;
-    VERTEX_SIZE_BYTES = ExampleScene.VERTEX_COMPONENTS * 4;
+    VERTEX_SIZE_BYTES = ExampleRenderer.VERTEX_COMPONENTS * 4;
     VERTICES_TOTAL_ELEMENTS =
-      ExampleScene.VERTEX_COUNT * ExampleScene.VERTEX_COMPONENTS;
+      ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_COMPONENTS;
     VERTICES_TOTAL_SIZE_BYTES =
-      ExampleScene.VERTEX_COUNT * ExampleScene.VERTEX_SIZE_BYTES;
+      ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_SIZE_BYTES;
   }
 
   private static float noise(
@@ -73,12 +77,14 @@ final class ExampleScene
       IOException
   {
     final InputStream f_stream =
-      ExampleScene.class.getResourceAsStream("basic.f");
+      ExampleRenderer.class.getResourceAsStream("basic.f");
     if (f_stream == null) {
       throw new FileNotFoundException("basic.f");
     }
 
     final List<String> fragment_source = ShaderUtilities.readLines(f_stream);
+    f_stream.close();
+
     final IntBuffer fragment_lengths =
       Buffers.newDirectIntBuffer(fragment_source.size());
     final String[] fragment_lines = new String[fragment_source.size()];
@@ -117,12 +123,14 @@ final class ExampleScene
       IOException
   {
     final InputStream v_stream =
-      ExampleScene.class.getResourceAsStream("basic.v");
+      ExampleRenderer.class.getResourceAsStream("basic.v");
     if (v_stream == null) {
       throw new FileNotFoundException("basic.v");
     }
 
     final List<String> vertex_source = ShaderUtilities.readLines(v_stream);
+    v_stream.close();
+
     final IntBuffer vertex_lengths =
       Buffers.newDirectIntBuffer(vertex_source.size());
     final String[] vertex_lines = new String[vertex_source.size()];
@@ -212,7 +220,7 @@ final class ExampleScene
     final GL3 g)
   {
     final FloatBuffer data =
-      Buffers.newDirectFloatBuffer(ExampleScene.VERTICES_TOTAL_ELEMENTS);
+      Buffers.newDirectFloatBuffer(ExampleRenderer.VERTICES_TOTAL_ELEMENTS);
 
     int base = 0;
     data.put(base + 0, -0.5f);
@@ -223,7 +231,7 @@ final class ExampleScene
     data.put(base + 4, 1.0f);
     data.put(base + 5, 0.0f);
 
-    base += ExampleScene.VERTEX_COMPONENTS;
+    base += ExampleRenderer.VERTEX_COMPONENTS;
     data.put(base + 0, -0.5f);
     data.put(base + 1, -0.5f);
     data.put(base + 2, 0.0f);
@@ -232,7 +240,7 @@ final class ExampleScene
     data.put(base + 4, 0.0f);
     data.put(base + 5, 0.0f);
 
-    base += ExampleScene.VERTEX_COMPONENTS;
+    base += ExampleRenderer.VERTEX_COMPONENTS;
     data.put(base + 0, 0.5f);
     data.put(base + 1, -0.5f);
     data.put(base + 2, 0.0f);
@@ -241,7 +249,7 @@ final class ExampleScene
     data.put(base + 4, 1.0f);
     data.put(base + 5, 0.0f);
 
-    base += ExampleScene.VERTEX_COMPONENTS;
+    base += ExampleRenderer.VERTEX_COMPONENTS;
     data.put(base + 0, 0.5f);
     data.put(base + 1, 0.5f);
     data.put(base + 2, 0.0f);
@@ -256,7 +264,7 @@ final class ExampleScene
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      ExampleScene.VERTICES_TOTAL_SIZE_BYTES,
+      ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -269,133 +277,158 @@ final class ExampleScene
   {
     final IntBuffer status = Buffers.newDirectIntBuffer(1);
     assert status != null;
-    final int vs = ExampleScene.compileVertexShader(g, status);
-    final int fs = ExampleScene.compileFragmentShader(g, status);
-    final int p = ExampleScene.createProgram(g, vs, fs, status);
+    final int vs = ExampleRenderer.compileVertexShader(g, status);
+    final int fs = ExampleRenderer.compileFragmentShader(g, status);
+    final int p = ExampleRenderer.createProgram(g, vs, fs, status);
     return p;
   }
 
-  private final GL3         gl;
-  private final int         indices;
-  private final int         mesh;
-  private final int         program;
-  private final MatrixM4x4F projection;
-  private final MatrixM4x4F model;
-  private final MatrixM4x4F modelview;
+  private @Nullable GL3           gl;
+  private int                     indices;
+  private int                     mesh;
+  private int                     program;
+  private final MatrixM4x4F       projection;
+  private final MatrixM4x4F       model;
+  private final MatrixM4x4F       modelview;
+  private final MatrixM4x4F       view;
+  private @Nullable GLWindow      window;
+  private AtomicBoolean           want_warp;
+  private volatile MatrixSnapshot view_new;
 
-  ExampleScene(
+  public ExampleRenderer()
+  {
+    this.gl = null;
+    this.indices = -1;
+    this.mesh = -1;
+    this.program = -1;
+    this.projection = new MatrixM4x4F();
+    this.model = new MatrixM4x4F();
+    this.view = new MatrixM4x4F();
+    this.modelview = new MatrixM4x4F();
+    this.want_warp = new AtomicBoolean(false);
+    this.view_new = MatrixSnapshot.pack(this.view);
+  }
+
+  @Override public void init(
+    final GLWindow in_window,
     final GL3 in_gl)
     throws IOException
   {
-    this.gl = NullCheck.notNull(in_gl, "GL");
-    this.program = ExampleScene.makeProgram(this.gl);
-    this.mesh = ExampleScene.makeMesh(this.gl);
-    this.indices = ExampleScene.makeIndices(this.gl);
-    this.projection = new MatrixM4x4F();
-    this.model = new MatrixM4x4F();
-    this.modelview = new MatrixM4x4F();
+    final GL3 g = NullCheck.notNull(in_gl, "GL");
+    this.gl = g;
+    this.window = NullCheck.notNull(in_window, "Drawable");
+    this.program = ExampleRenderer.makeProgram(g);
+    this.mesh = ExampleRenderer.makeMesh(g);
+    this.indices = ExampleRenderer.makeIndices(g);
+    this.want_warp = new AtomicBoolean(false);
   }
 
-  void draw(
-    final MatrixReadable4x4FType view_matrix)
+  @Override public void draw()
   {
-    NullCheck.notNull(view_matrix, "View matrix");
+    final GL3 g = this.gl;
 
-    this.gl.glClearDepth(1.0f);
-    this.gl.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
-    this.gl.glClear(GL.GL_COLOR_BUFFER_BIT
-      | GL.GL_DEPTH_BUFFER_BIT
-      | GL.GL_STENCIL_BUFFER_BIT);
-    this.gl.glEnable(GL.GL_DEPTH_TEST);
-    this.gl.glDepthFunc(GL.GL_LEQUAL);
-    this.gl.glDisable(GL.GL_CULL_FACE);
+    if (g != null) {
+      this.view_new.unpack(this.view);
 
-    this.gl.glUseProgram(this.program);
-    this.gl.glBindBuffer(GL.GL_ARRAY_BUFFER, this.mesh);
+      g.glClearDepth(1.0f);
+      g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+      g.glClear(GL.GL_COLOR_BUFFER_BIT
+        | GL.GL_DEPTH_BUFFER_BIT
+        | GL.GL_STENCIL_BUFFER_BIT);
+      g.glEnable(GL.GL_DEPTH_TEST);
+      g.glDepthFunc(GL.GL_LEQUAL);
+      g.glDisable(GL.GL_CULL_FACE);
 
-    final int position_attrib;
-    final int color_attrib;
+      g.glUseProgram(this.program);
+      g.glBindBuffer(GL.GL_ARRAY_BUFFER, this.mesh);
 
-    {
-      position_attrib =
-        this.gl.glGetAttribLocation(this.program, "v_position");
-      assert position_attrib != -1;
+      final int position_attrib;
+      final int color_attrib;
 
-      this.gl.glEnableVertexAttribArray(position_attrib);
-      this.gl.glVertexAttribPointer(
-        position_attrib,
-        3,
-        GL.GL_FLOAT,
-        false,
-        ExampleScene.VERTEX_SIZE_BYTES,
-        0);
-    }
+      {
+        position_attrib = g.glGetAttribLocation(this.program, "v_position");
+        assert position_attrib != -1;
 
-    {
-      color_attrib = this.gl.glGetAttribLocation(this.program, "v_color");
-      assert color_attrib != -1;
-
-      this.gl.glEnableVertexAttribArray(color_attrib);
-      this.gl.glVertexAttribPointer(
-        color_attrib,
-        3,
-        GL.GL_FLOAT,
-        false,
-        ExampleScene.VERTEX_SIZE_BYTES,
-        ExampleScene.VERTEX_COLOR_OFFSET_BYTES);
-    }
-
-    {
-      final int uid =
-        this.gl.glGetUniformLocation(this.program, "m_projection");
-      assert uid != -1;
-      this.gl.glUniformMatrix4fv(
-        uid,
-        1,
-        false,
-        this.projection.getFloatBuffer());
-    }
-
-    this.gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, this.indices);
-
-    {
-      final int uid =
-        this.gl.glGetUniformLocation(this.program, "m_modelview");
-      assert uid != -1;
-
-      for (int index = 0; index < 100; ++index) {
-        final float x = 10.0f - (ExampleScene.noise(index * 10) * 20.0f);
-        final float y = 0.0f;
-        final float z = 10.0f - (ExampleScene.noise(index * 100) * 20.0f);
-
-        MatrixM4x4F.setIdentity(this.model);
-        MatrixM4x4F.translateByVector3FInPlace(this.model, new VectorI3F(
-          x,
-          y,
-          -z));
-
-        MatrixM4x4F.setIdentity(this.modelview);
-        MatrixM4x4F.multiply(view_matrix, this.model, this.modelview);
-
-        this.gl.glUniformMatrix4fv(
-          uid,
-          1,
+        g.glEnableVertexAttribArray(position_attrib);
+        g.glVertexAttribPointer(
+          position_attrib,
+          3,
+          GL.GL_FLOAT,
           false,
-          this.modelview.getFloatBuffer());
+          ExampleRenderer.VERTEX_SIZE_BYTES,
+          0);
+      }
 
-        this.gl.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
+      {
+        color_attrib = g.glGetAttribLocation(this.program, "v_color");
+        assert color_attrib != -1;
+
+        g.glEnableVertexAttribArray(color_attrib);
+        g.glVertexAttribPointer(
+          color_attrib,
+          3,
+          GL.GL_FLOAT,
+          false,
+          ExampleRenderer.VERTEX_SIZE_BYTES,
+          ExampleRenderer.VERTEX_COLOR_OFFSET_BYTES);
+      }
+
+      {
+        final int uid = g.glGetUniformLocation(this.program, "m_projection");
+        assert uid != -1;
+        g.glUniformMatrix4fv(uid, 1, false, this.projection.getFloatBuffer());
+      }
+
+      g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, this.indices);
+
+      {
+        final int uid = g.glGetUniformLocation(this.program, "m_modelview");
+        assert uid != -1;
+
+        for (int index = 0; index < 100; ++index) {
+          final float x = 10.0f - (ExampleRenderer.noise(index * 10) * 20.0f);
+          final float y = 0.0f;
+          final float z =
+            10.0f - (ExampleRenderer.noise(index * 100) * 20.0f);
+
+          MatrixM4x4F.setIdentity(this.model);
+          MatrixM4x4F.translateByVector3FInPlace(this.model, new VectorI3F(
+            x,
+            y,
+            -z));
+
+          MatrixM4x4F.setIdentity(this.modelview);
+          MatrixM4x4F.multiply(this.view, this.model, this.modelview);
+
+          g
+            .glUniformMatrix4fv(
+              uid,
+              1,
+              false,
+              this.modelview.getFloatBuffer());
+
+          g.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
+        }
+      }
+
+      g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+      g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+
+      g.glDisableVertexAttribArray(position_attrib);
+      g.glDisableVertexAttribArray(color_attrib);
+      g.glUseProgram(0);
+    }
+
+    if (this.want_warp.get()) {
+      final GLWindow w = this.window;
+      if (w != null) {
+        w.warpPointer(w.getWidth() / 2, w.getHeight() / 2);
+        this.want_warp.set(false);
       }
     }
-
-    this.gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
-    this.gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-
-    this.gl.glDisableVertexAttribArray(position_attrib);
-    this.gl.glDisableVertexAttribArray(color_attrib);
-    this.gl.glUseProgram(0);
   }
 
-  void reshape(
+  @Override public void reshape(
     final int width,
     final int height)
   {
@@ -407,5 +440,16 @@ final class ExampleScene
       100.0f,
       fw / fh,
       Math.toRadians(90.0f));
+  }
+
+  @Override public void setWantWarpPointer()
+  {
+    this.want_warp.set(true);
+  }
+
+  @Override public void setViewMatrix(
+    final MatrixSnapshot m)
+  {
+    this.view_new = m;
   }
 }

@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -17,7 +17,6 @@
 package com.io7m.jcamera.examples.jogl;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.DebugGL3;
@@ -29,18 +28,11 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 
-import com.io7m.jcamera.JCameraFPSStyle;
-import com.io7m.jcamera.JCameraFPSStyleIntegrator;
-import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
-import com.io7m.jcamera.JCameraFPSStyleType;
 import com.io7m.jcamera.JCameraInput;
 import com.io7m.jcamera.JCameraMouseRegion;
 import com.io7m.jcamera.JCameraRotationCoefficients;
 import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.VectorI3F;
-import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.junreachable.UnreachableCodeException;
 import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
@@ -74,37 +66,32 @@ public final class ExampleMain
     final String[] args)
   {
     /**
-     * @example Construct an input and a camera.
+     * @example Construct a new renderer.
      */
 
-    final JCameraInput input = JCameraInput.newInput();
-    final JCameraFPSStyleType camera = JCameraFPSStyle.newCamera();
+    final ExampleRenderer renderer = new ExampleRenderer();
 
     /**
-     * @example Declare a vector to hold mouse rotation coefficients, a flag
-     *          that states whether or not the camera is enabled, a matrix to
-     *          hold the view matrix for the scene, and a mouse region
-     *          configured with an origin that matches that of JOGL's
-     *          windowing system.
+     * @example Construct a new simulation and get access to the camera's
+     *          input.
      */
 
-    final JCameraRotationCoefficients rotation_coefficients =
+    final ExampleSimulationType sim = new ExampleSimulation(renderer);
+    final JCameraInput input = sim.getInput();
+
+    /**
+     * @example Declare a structure to hold mouse rotation coefficients, and a
+     *          mouse region configured with an origin that matches that of
+     *          JOGL's windowing system.
+     */
+
+    final JCameraRotationCoefficients rotations =
       new JCameraRotationCoefficients();
-    final AtomicBoolean camera_enabled = new AtomicBoolean();
-    final MatrixM4x4F.Context matrix_context = new MatrixM4x4F.Context();
-    final MatrixM4x4F view_matrix = new MatrixM4x4F();
     final JCameraMouseRegion mouse_region =
       JCameraMouseRegion.newRegion(
         JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
         640,
         480);
-
-    /**
-     * @example Construct an integrator using the default implementations.
-     */
-
-    final JCameraFPSStyleIntegratorType integrator =
-      JCameraFPSStyleIntegrator.newIntegrator(camera, input);
 
     /**
      * @example Initialize JOGL and open a window.
@@ -132,10 +119,7 @@ public final class ExampleMain
      */
 
     window.addGLEventListener(new GLEventListener() {
-      private @Nullable ExampleScene scene;
-      private int                    frame;
-      private long                   time_now;
-      private long                   time_then;
+      private int frame;
 
       @Override public void init(
         final @Nullable GLAutoDrawable drawable)
@@ -154,7 +138,6 @@ public final class ExampleMain
       {
         assert drawable != null;
         ++this.frame;
-        this.time_now = System.nanoTime();
 
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
@@ -166,60 +149,18 @@ public final class ExampleMain
 
         if (this.frame == 2) {
           try {
-            this.scene = new ExampleScene(g);
-            this.scene.reshape(window.getWidth(), window.getHeight());
+            renderer.init(window, g);
+            renderer.reshape(window.getWidth(), window.getHeight());
           } catch (final IOException e) {
             throw new GLException(e);
           }
         }
 
         /**
-         * Integrate the camera if it is enabled.
-         */
-
-        if (camera_enabled.get()) {
-          final long interval = this.time_now - this.time_then;
-          final float delta = interval / 1000000000.0f;
-          integrator.integrate(delta);
-          camera.cameraMakeViewMatrix(matrix_context, view_matrix);
-        } else {
-
-          /**
-           * Otherwise, produce a view matrix that simulates a simple fixed
-           * camera.
-           */
-
-          MatrixM4x4F.setIdentity(view_matrix);
-          final VectorReadable3FType origin = new VectorI3F(0.0f, 2.0f, 3.0f);
-          final VectorReadable3FType target =
-            new VectorI3F(0.0f, 0.0f, -3.0f);
-          final VectorReadable3FType up = new VectorI3F(0.0f, 1.0f, 0.0f);
-          MatrixM4x4F.lookAtWithContext(
-            matrix_context,
-            origin,
-            target,
-            up,
-            view_matrix);
-        }
-
-        /**
          * Draw the scene!
          */
 
-        assert this.scene != null;
-        this.scene.draw(view_matrix);
-
-        /**
-         * Warp the cursor back to the center of the screen.
-         */
-
-        if (camera_enabled.get()) {
-          window.warpPointer(
-            (int) mouse_region.getCenterX(),
-            (int) mouse_region.getCenterY());
-        }
-
-        this.time_then = this.time_now;
+        renderer.draw();
       }
 
       @Override public void reshape(
@@ -229,16 +170,9 @@ public final class ExampleMain
         final int width,
         final int height)
       {
-        /**
-         * Update the mouse region if the size of the window has changed.
-         */
-
         mouse_region.setWidth(width);
         mouse_region.setHeight(height);
-
-        if (this.scene != null) {
-          this.scene.reshape(width, height);
-        }
+        renderer.reshape(width, height);
       }
     });
 
@@ -258,15 +192,10 @@ public final class ExampleMain
          * mouse movement.
          */
 
-        if (camera_enabled.get()) {
-          mouse_region.getCoefficients(
-            e.getX(),
-            e.getY(),
-            rotation_coefficients);
-
-          input.addRotationAroundHorizontal(rotation_coefficients
-            .getHorizontal());
-          input.addRotationAroundVertical(rotation_coefficients.getVertical());
+        if (sim.cameraIsEnabled()) {
+          mouse_region.getCoefficients(e.getX(), e.getY(), rotations);
+          input.addRotationAroundHorizontal(rotations.getHorizontal());
+          input.addRotationAroundVertical(rotations.getVertical());
         }
       }
     });
@@ -363,7 +292,7 @@ public final class ExampleMain
 
           case KeyEvent.VK_M:
           {
-            final boolean enabled = camera_enabled.get();
+            final boolean enabled = sim.cameraIsEnabled();
 
             if (enabled) {
               System.out.println("Disabling camera");
@@ -371,14 +300,12 @@ public final class ExampleMain
             } else {
               System.out.println("Enabling camera");
               window.confinePointer(true);
-              window.warpPointer(
-                (int) mouse_region.getCenterX(),
-                (int) mouse_region.getCenterY());
+              renderer.setWantWarpPointer();
               input.setRotationHorizontal(0);
               input.setRotationVertical(0);
             }
 
-            camera_enabled.set(!enabled);
+            sim.cameraSetEnabled(!enabled);
             break;
           }
 
@@ -448,6 +375,8 @@ public final class ExampleMain
       @Override public void windowDestroyed(
         final @Nullable WindowEvent e)
       {
+        sim.stop();
+        System.out.println("Exiting");
         System.exit(0);
       }
     });
@@ -459,6 +388,7 @@ public final class ExampleMain
      * Start everything running.
      */
 
+    sim.start();
     anim.start();
   }
 }
