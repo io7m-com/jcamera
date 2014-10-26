@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -50,7 +50,7 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.Animator;
 
 /**
  * Trivial camera example.
@@ -58,8 +58,6 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 public final class ExampleMain
 {
-  private static final int FRAMES_PER_SECOND = 60;
-
   private ExampleMain()
   {
     throw new UnreachableCodeException();
@@ -119,14 +117,25 @@ public final class ExampleMain
     window.setTitle(ExampleMain.class.getCanonicalName());
 
     /**
+     * Tell the screen to refresh frequently, and to print information about
+     * the current frames-per-second every 60 frames.
+     */
+
+    final Animator anim = new Animator();
+    anim.setUpdateFPSFrames(60, System.err);
+    anim.add(window);
+
+    /**
      * @example The main OpenGL event listener. The display function is called
-     *          at around 60fps and will integrate the camera and then render
-     *          the scene.
+     *          repeatedly and will integrate the camera and then render the
+     *          scene.
      */
 
     window.addGLEventListener(new GLEventListener() {
       private @Nullable ExampleScene scene;
       private int                    frame;
+      private long                   time_now;
+      private long                   time_then;
 
       @Override public void init(
         final @Nullable GLAutoDrawable drawable)
@@ -145,6 +154,7 @@ public final class ExampleMain
       {
         assert drawable != null;
         ++this.frame;
+        this.time_now = System.nanoTime();
 
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
@@ -168,7 +178,9 @@ public final class ExampleMain
          */
 
         if (camera_enabled.get()) {
-          integrator.integrate(1.0f / ExampleMain.FRAMES_PER_SECOND);
+          final long interval = this.time_now - this.time_then;
+          final float delta = interval / 1000000000.0f;
+          integrator.integrate(delta);
           camera.cameraMakeViewMatrix(matrix_context, view_matrix);
         } else {
 
@@ -206,6 +218,8 @@ public final class ExampleMain
             (int) mouse_region.getCenterX(),
             (int) mouse_region.getCenterY());
         }
+
+        this.time_then = this.time_now;
       }
 
       @Override public void reshape(
@@ -442,12 +456,9 @@ public final class ExampleMain
     window.setVisible(true);
 
     /**
-     * Tell the screen to refresh frequently.
+     * Start everything running.
      */
 
-    final FPSAnimator anim = new FPSAnimator(ExampleMain.FRAMES_PER_SECOND);
-    anim.setUpdateFPSFrames(ExampleMain.FRAMES_PER_SECOND, System.err);
-    anim.add(window);
     anim.start();
   }
 }

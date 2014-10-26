@@ -37,6 +37,31 @@
     </s:paragraph>
   </s:subsection>
 
+  <s:subsection xml:id="usage.warning">
+    <s:subsection-title>Warning!</s:subsection-title>
+    <s:paragraph>
+      Although the example code given here is acceptable for showing how to use the API,
+      it does suffer from an important flaw: The position of the camera is updated at
+      whatever is the current screen/window refresh rate, because this leads to much
+      shorter example code. Although the API functions take a
+      time period over which to perform integration as an argument, the camera is still
+      using a so-called <s:term s:type="term">variable time step</s:term> as a result. This
+      is arguably the wrong thing to do: The camera should be treated as a physical object
+      within the simulation and updated at a fixed time step along with the rest of the
+      simulation. See the article 
+      <s:link-external s:target="http://gafferongames.com/game-physics/fix-your-timestep/">"Fix Your Timestep!"</s:link-external>
+      for details. To clarify, this is merely an issue with the example code, and not
+      an issue with the <s:term s:type="package">${project.parent.name}</s:term> package
+      itself. Setting up extra code in order to update the camera on a fixed time step
+      would obfuscate the example code here, so a variable time step is used. 
+      If your simulation is updated sixty times per second on a fixed time step, pass 
+      <s:term s:type="expression">1.0 / 60.0</s:term> to the 
+      <s:term s:type="package">${project.parent.name}</s:term> integration functions
+      when updating your simulation, and request a view matrix whenever it is time to
+      render to the screen.
+    </s:paragraph>
+  </s:subsection>
+
   <s:subsection xml:id="usage.fps">
     <s:subsection-title>First-person camera</s:subsection-title>
     <s:paragraph>
@@ -88,9 +113,21 @@
     </s:formal-item>
     <s:paragraph>
       The window must be supplied with callback functions that are executed
-      at roughly sixty times per second. The integrator is told to integrate
-      the position/orientation of the camera, and the cursor is then warped
-      back to the center of the screen. The camera is asked to produce a
+      repeatedly. On some systems, the <s:term s:type="function">display</s:term> 
+      function will be executed at whatever
+      is the current screen refresh rate (60-75fps, usually). On other systems
+      <s:term s:type="function">display</s:term> will be executed thousands of 
+      times per second. The integrator is told to integrate
+      the position/orientation of the camera based on the current delta time, 
+      and the cursor is then warped back to the center of the screen. The
+      delta time is calculated here by taking the current time in nanoseconds
+      at the start of each frame, taking the difference between the current
+      time and the time at the start of the previous frame, and then dividing
+      the result by <s:term s:type="expression">1000000000.0</s:term> to yield
+      a value in seconds. As mentioned previously, a more accurate method is
+      to integrate the position of the camera on a fixed time step along with
+      all other physical simulation that takes place in the application.
+      The camera is asked to produce a
       <s:term s:type="term">view matrix</s:term> which is then used during
       rendering. Additionally, the 
       <s:link s:target="dai.fpsstyle.input.mouse_region">mouse region</s:link>
