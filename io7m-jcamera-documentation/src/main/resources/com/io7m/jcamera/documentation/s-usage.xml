@@ -112,7 +112,13 @@
     <s:paragraph>
       Finally, a keyboard listener is registered in order to tell the declared
       <s:link s:target="dai.fpsstyle.input">input</s:link> about any
-      key events:
+      key events. There is one main issue covered here: If the user has keyboard
+      auto-repeat enabled by their operating system, holding a key will result in
+      an endless stream of "key pressed" and "key released" events. The code here
+      is only interested in receiving the first "key pressed" and last "key released"
+      event for each key, and JOGL's NEWT system marks each event as having been
+      produced by auto-repeat (or not). Therefore, the auto-repeat flag is checked
+      for each event, and the event is discarded if the flag is set.
     </s:paragraph>
     <s:formal-item s:kind="examples">
       <s:formal-item-title>Key listener</s:formal-item-title>

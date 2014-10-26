@@ -11,9 +11,9 @@
     <module name="AnnotationUseStyle"/>
     -->
 
-    <!-- Require that anonymous inner classes are less than 150 lines. -->
+    <!-- Require that anonymous inner classes are less than 200 lines. -->
     <module name="AnonInnerLength">
-      <property name="max" value="150"/>
+      <property name="max" value="200"/>
     </module>
 
     <module name="ArrayTrailingComma"/>
@@ -83,7 +83,7 @@
     <module name="InterfaceIsType"/>
     <module name="JUnitTestCase"/>
     <module name="JavaNCSS">
-      <property name="methodMaximum" value="120"/>
+      <property name="methodMaximum" value="150"/>
     </module>
     <module name="JavadocMethod">
       <property name="scope" value="public"/>

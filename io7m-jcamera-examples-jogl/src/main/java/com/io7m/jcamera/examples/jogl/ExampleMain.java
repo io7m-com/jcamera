@@ -42,6 +42,7 @@ import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.junreachable.UnreachableCodeException;
+import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseAdapter;
@@ -267,6 +268,17 @@ public final class ExampleMain
       {
         assert e != null;
 
+        /**
+         * Ignore events that are the result of keyboard auto-repeat. This
+         * means there's one single event when a key is pressed, and another
+         * when it is released (as opposed to an endless stream of both when
+         * the key is held down).
+         */
+
+        if ((e.getModifiers() & InputEvent.AUTOREPEAT_MASK) == InputEvent.AUTOREPEAT_MASK) {
+          return;
+        }
+
         switch (e.getKeyCode()) {
 
         /**
@@ -276,31 +288,37 @@ public final class ExampleMain
 
           case KeyEvent.VK_A:
           {
+            System.out.println("Started moving left");
             input.setMovingLeft(true);
             break;
           }
           case KeyEvent.VK_W:
           {
+            System.out.println("Started moving forward");
             input.setMovingForward(true);
             break;
           }
           case KeyEvent.VK_S:
           {
+            System.out.println("Started moving backward");
             input.setMovingBackward(true);
             break;
           }
           case KeyEvent.VK_D:
           {
+            System.out.println("Started moving right");
             input.setMovingRight(true);
             break;
           }
           case KeyEvent.VK_F:
           {
+            System.out.println("Started moving up");
             input.setMovingUp(true);
             break;
           }
           case KeyEvent.VK_V:
           {
+            System.out.println("Started moving down");
             input.setMovingDown(true);
             break;
           }
@@ -311,6 +329,17 @@ public final class ExampleMain
         final @Nullable KeyEvent e)
       {
         assert e != null;
+
+        /**
+         * Ignore events that are the result of keyboard auto-repeat. This
+         * means there's one single event when a key is pressed, and another
+         * when it is released (as opposed to an endless stream of both when
+         * the key is held down).
+         */
+
+        if ((e.getModifiers() & InputEvent.AUTOREPEAT_MASK) == InputEvent.AUTOREPEAT_MASK) {
+          return;
+        }
 
         switch (e.getKeyCode()) {
 
@@ -359,31 +388,37 @@ public final class ExampleMain
 
           case KeyEvent.VK_A:
           {
+            System.out.println("Stopped moving left");
             input.setMovingLeft(false);
             break;
           }
           case KeyEvent.VK_W:
           {
+            System.out.println("Stopped moving forward");
             input.setMovingForward(false);
             break;
           }
           case KeyEvent.VK_S:
           {
+            System.out.println("Stopped moving backward");
             input.setMovingBackward(false);
             break;
           }
           case KeyEvent.VK_D:
           {
+            System.out.println("Stopped moving right");
             input.setMovingRight(false);
             break;
           }
           case KeyEvent.VK_F:
           {
+            System.out.println("Stopped moving up");
             input.setMovingUp(false);
             break;
           }
           case KeyEvent.VK_V:
           {
+            System.out.println("Stopped moving down");
             input.setMovingDown(false);
             break;
           }
