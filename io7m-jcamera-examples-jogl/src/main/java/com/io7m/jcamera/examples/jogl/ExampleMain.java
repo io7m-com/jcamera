@@ -258,13 +258,13 @@ public final class ExampleMain
             input.setMovingRight(true);
             break;
           }
-          case KeyEvent.VK_F:
+          case KeyEvent.VK_E:
           {
             System.out.println("Started moving up");
             input.setMovingUp(true);
             break;
           }
-          case KeyEvent.VK_V:
+          case KeyEvent.VK_Q:
           {
             System.out.println("Started moving down");
             input.setMovingDown(true);
@@ -356,13 +356,13 @@ public final class ExampleMain
             input.setMovingRight(false);
             break;
           }
-          case KeyEvent.VK_F:
+          case KeyEvent.VK_E:
           {
             System.out.println("Stopped moving up");
             input.setMovingUp(false);
             break;
           }
-          case KeyEvent.VK_V:
+          case KeyEvent.VK_Q:
           {
             System.out.println("Stopped moving down");
             input.setMovingDown(false);
@@ -380,6 +380,9 @@ public final class ExampleMain
       @Override public void windowDestroyed(
         final @Nullable WindowEvent e)
       {
+        System.out.println("Stopping animator");
+        anim.stop();
+        System.out.println("Stopping simulation");
         sim.stop();
         System.out.println("Exiting");
         System.exit(0);
