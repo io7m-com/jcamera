@@ -279,7 +279,23 @@
         <version>1.2.1</version>
         <executions>
           <execution>
-            <id>make-examples</id>
+            <id>make-example-sim</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>com.io7m.jcamera.documentation.ExampleSplit</mainClass>
+              <arguments>
+                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleSimulation.java</argument>
+                <argument>${project.build.directory}/documentation/</argument>
+                <argument>example-sim-</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>make-example-main</id>
             <phase>prepare-package</phase>
             <goals>
               <goal>java</goal>
@@ -289,7 +305,7 @@
               <arguments>
                 <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleMain.java</argument>
                 <argument>${project.build.directory}/documentation/</argument>
-                <argument>examples-jogl-</argument>
+                <argument>example-main-</argument>
               </arguments>
             </configuration>
           </execution>

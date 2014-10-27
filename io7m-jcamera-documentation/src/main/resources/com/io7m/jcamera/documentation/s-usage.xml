@@ -28,7 +28,7 @@
     <s:paragraph>
       This section attempts to describe how to use the
       <s:term s:type="package">${project.parent.name}</s:term> package. The
-      example code uses <s:link-external s:target="http://jogamp.org/www/jogl">JOGL</s:link-external>
+      example code uses <s:link-external s:target="http://jogamp.org/jogl/www">JOGL</s:link-external>
       but the package can obviously be used under any Java input/windowing system.
       This section doesn't attempt to explain why anything works the way it does -
       readers are encouraged to read the
@@ -37,119 +37,220 @@
     </s:paragraph>
   </s:subsection>
 
-  <s:subsection xml:id="usage.warning">
-    <s:subsection-title>Warning!</s:subsection-title>
-    <s:paragraph>
-      Although the example code given here is acceptable for showing how to use the API,
-      it does suffer from an important flaw: The position of the camera is updated at
-      whatever is the current screen/window refresh rate, because this leads to much
-      shorter example code. Although the API functions take a
-      time period over which to perform integration as an argument, the camera is still
-      using a so-called <s:term s:type="term">variable time step</s:term> as a result. This
-      is arguably the wrong thing to do: The camera should be treated as a physical object
-      within the simulation and updated at a fixed time step along with the rest of the
-      simulation. See the article 
-      <s:link-external s:target="http://gafferongames.com/game-physics/fix-your-timestep/">"Fix Your Timestep!"</s:link-external>
-      for details. To clarify, this is merely an issue with the example code, and not
-      an issue with the <s:term s:type="package">${project.parent.name}</s:term> package
-      itself. Setting up extra code in order to update the camera on a fixed time step
-      would obfuscate the example code here, so a variable time step is used. 
-      If your simulation is updated sixty times per second on a fixed time step, pass 
-      <s:term s:type="expression">1.0 / 60.0</s:term> to the 
-      <s:term s:type="package">${project.parent.name}</s:term> integration functions
-      when updating your simulation, and request a view matrix whenever it is time to
-      render to the screen.
-    </s:paragraph>
-  </s:subsection>
-
   <s:subsection xml:id="usage.fps">
     <s:subsection-title>First-person camera</s:subsection-title>
     <s:paragraph>
-      The complete program sources are given in
-      <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleMain.java">ExampleMain.java</s:link-external>
-      and
-      <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleScene.java">ExampleScene.java</s:link-external>.
-      The <s:term s:type="type">ExampleScene</s:term> type contains the actual OpenGL
-      scene rendering code and should mostly be ignored. The actual camera handling code
-      is given in <s:term s:type="type">ExampleMain</s:term> and is the subject of the
-      tutorial.
+      In order to aid comprehension, and to follow good software engineering
+      practices, the usage example here will be developed as a set of types
+      with well-defined interfaces. Specifically, a simple main program will
+      initialize an OpenGL window with JOGL, and register some keyboard and
+      mouse listeners to supply input to a
+      <s:term s:type="term">simulation</s:term>, which in turn periodically
+      produces new data (a <s:term s:type="term">view matrix</s:term>) for 
+      a <s:term s:type="term">renderer</s:term>.
+      The <s:term s:type="term">renderer</s:term> draws a simple static scene
+      using the view matrix periodically produced by a camera from the
+      <s:term s:type="package">${project.parent.name}</s:term> package. The
+      <s:term s:type="term">simulation</s:term> runs at a fixed time step
+      to provide completely frame rate independent movement (see the article
+      <s:link-external s:target="http://gafferongames.com/game-physics/fix-your-timestep/">"Fix Your Timestep!"</s:link-external>
+      for details on why physical simulations should use fixed time steps).
+      The <s:term s:type="term">renderer</s:term>, however, runs at an arbitrary 
+      frame rate. On some systems the frame rate will be exactly equal to the 
+      screen's vertical refresh rate, whilst on others, the rate will be 
+      thousands of times per second. The desire is to show that the system
+      works equally well no matter what frame rate is used, so no attempt
+      is made to enforce any particular rate. A rough graph of the data
+      flow between components is as follows:
     </s:paragraph>
-    <s:paragraph>
-      A simple <s:link s:target="dai.fpsstyle.behaviour">first-person style</s:link>
-      camera is created as follows:
-    </s:paragraph>
-    <s:formal-item s:kind="examples">
-      <s:formal-item-title>Camera declaration</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-0.txt" parse="text"/></s:verbatim>
+    <s:formal-item s:kind="diagram">
+      <s:formal-item-title>Example data flow</s:formal-item-title>
+      <s:image s:source="images/example_dataflow.png">Example data flow</s:image>
     </s:formal-item>
     <s:paragraph>
-      The camera will produce 
-      <s:link s:target="dai.fpsstyle.input.rotation_coefficients">rotation coefficients</s:link> 
-      and a <s:term s:type="term">view matrix</s:term> that will be used during rendering, so
-      these need to be declared too. Additionally, a
-      <s:link s:target="dai.fpsstyle.input.mouse_region">mouse region</s:link> is declared
-      to map window-space coordinates to rotation coefficients:
+      JOGL works with an event-based model, where mouse and keyboard input
+      causes events to be delivered to mouse and keyboard <s:term s:type="term">listeners</s:term>.
+      Additionally, OpenGL rendering typically occurs via an OpenGL
+      <s:term s:type="term">listener</s:term>: JOGL (or the GPU, or the operating system, 
+      whichever is responsible) indicates that it is time to render the scene, 
+      and the user's registered <s:term s:type="term">listener</s:term> is
+      executed to actually perform the drawing. It's reasonable to assume that
+      input handling and rendering occur on different threads by default, so
+      the code here is careful to operate in a thread-safe manner.
+    </s:paragraph>
+    <s:paragraph>
+      The interface exposed to JOGL by the example renderer is as follows
+      [<s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">ExampleRendererType.java</s:link-external>]:
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>Result declarations</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-1.txt" parse="text"/></s:verbatim>
+      <s:formal-item-title>Renderer interface</s:formal-item-title>
+      <s:verbatim><xi:include href="com/io7m/jcamera/examples/jogl/ExampleRendererType.java" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      In order to provide a camera that actually moves and rotates according
-      to input, an <s:link s:target="dai.fpsstyle.integrators">integrator</s:link>
-      is required:
+      Little is needed in the way of explanation here. The renderer initializes
+      the scene's resources when <s:term s:type="function">init</s:term> is
+      called (such as allocating memory on the GPU for mesh data, compiling shaders, etc).
+      The renderer draws the scene whenever <s:term s:type="function">draw</s:term> is called,
+      and recalculates any internal resources that are dependent on the size
+      of the window (such as the scene's <s:term s:type="term">projection matrix</s:term>)
+      when <s:term s:type="function">reshape</s:term> is called.
+    </s:paragraph>
+    <s:paragraph>
+      The actual implementation of the renderer is of little interest here. It
+      simply draws a hundred or so static quads from the perspective of whatever
+      is the current view matrix. The implementation is given in
+      <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRenderer.java">ExampleRenderer</s:link-external>
+      and will not be referenced again.
+    </s:paragraph>
+    <s:paragraph>
+      The interface exposed to JOGL by the example simulation is as follows
+      [<s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSimulationType.java">ExampleSimulationType.java</s:link-external>]:
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>Integrator declaration</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-2.txt" parse="text"/></s:verbatim>
+      <s:formal-item-title>Simulation interface</s:formal-item-title>
+      <s:verbatim><xi:include href="com/io7m/jcamera/examples/jogl/ExampleSimulationType.java" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      Then, a window is required in which to display the results of OpenGL
-      rendering:
+      Again, little is needed in the way of explanation. The simulation can be
+      started and stopped, and the camera enabled/disabled. If the camera is disabled,
+      a simple fixed view matrix is used rather than having a camera produce one.
+    </s:paragraph>
+    <s:paragraph xml:id="usage.fps.renderer_control">
+      The simulation needs a way to supply the renderer with new view matrices, and
+      also needs a way to periodically warp the mouse cursor to the center of the
+      screen, so the renderer exposes the following interface to the simulation
+      [<s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">ExampleRendererControllerType.java</s:link-external>]:
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>Window declaration</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-3.txt" parse="text"/></s:verbatim>
+      <s:formal-item-title>Renderer control interface</s:formal-item-title>
+      <s:verbatim><xi:include href="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      The window must be supplied with callback functions that are executed
-      repeatedly. On some systems, the <s:term s:type="function">display</s:term> 
-      function will be executed at whatever
-      is the current screen refresh rate (60-75fps, usually). On other systems
-      <s:term s:type="function">display</s:term> will be executed thousands of 
-      times per second. The integrator is told to integrate
-      the position/orientation of the camera based on the current delta time, 
-      and the cursor is then warped back to the center of the screen. The
-      delta time is calculated here by taking the current time in nanoseconds
-      at the start of each frame, taking the difference between the current
-      time and the time at the start of the previous frame, and then dividing
-      the result by <s:term s:type="expression">1000000000.0</s:term> to yield
-      a value in seconds. As mentioned previously, a more accurate method is
-      to integrate the position of the camera on a fixed time step along with
-      all other physical simulation that takes place in the application.
-      The camera is asked to produce a
-      <s:term s:type="term">view matrix</s:term> which is then used during
-      rendering. Additionally, the 
-      <s:link s:target="dai.fpsstyle.input.mouse_region">mouse region</s:link>
-      is notified of any window resizes.
+      The actual implementation of the simulation is as follows
+      [<s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSimulation.java">ExampleSimulation.java</s:link-external>].
+      First:
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>OpenGL event listener</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-4.txt" parse="text"/></s:verbatim>
+      <s:formal-item-title>Camera declarations and storage</s:formal-item-title>
+      <s:verbatim><xi:include href="example-sim-0.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      A mouse listener is registered in order to tell the declared
-      <s:link s:target="dai.fpsstyle.input">input</s:link> about any
-      mouse movement:
+      Then, an <s:link s:target="dai.fpsstyle.integrators">integrator</s:link> is 
+      created to drive the camera, and the integration
+      period required for a fixed time step of <s:term s:type="expression">60</s:term> 
+      frames per second is calculated:
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>Mouse listener</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-5.txt" parse="text"/></s:verbatim>
+      <s:formal-item-title>Integrator</s:formal-item-title>
+      <s:verbatim><xi:include href="example-sim-1.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      Finally, a keyboard listener is registered in order to tell the declared
-      <s:link s:target="dai.fpsstyle.input">input</s:link> about any
-      key events. There is one main issue covered here: If the user has keyboard
+      Finally, to give the camera somewhat more snappy and abrupt behaviour than
+      the default settings, some new acceleration and drag values are configured
+      for the camera:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Acceleration and Drag</s:formal-item-title>
+      <s:verbatim><xi:include href="example-sim-2.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      The <s:term s:type="function">run</s:term> function is executed at a
+      rate of <s:term s:type="expression">60</s:term> times per second, and
+      produces a new view matrix each time, sending it to the renderer. Because
+      the <s:term s:type="function">MatrixM4x4F</s:term> type is mutable by
+      definition, and because the renderer is running on
+      a different thread to the simulation, an immutable snapshot of the matrix is created via the
+      <s:link-external s:target="com/io7m/jcamera/examples/jogl/MatrixSnapshot.java">MatrixSnapshot</s:link-external>
+      type and this is what is actually sent to the renderer. The immutable
+      nature of the snapshot means that it can be safely shared across threads
+      without any need for locks or other synchronization.
+      If the camera is actually enabled, the simulation also instructs the 
+      renderer to warp the mouse cursor back to the center of the screen.
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Run</s:formal-item-title>
+      <s:verbatim><xi:include href="example-sim-3.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      The <s:term s:type="function">start</s:term> function starts the simulation
+      running, complaining loudly if it is already running:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Start</s:formal-item-title>
+      <s:verbatim><xi:include href="example-sim-4.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      The <s:term s:type="function">stop</s:term> function stops the simulation
+      running, complaining loudly if it isn't running, and the remaining self-explanatory
+      functions complete the implementation of the interface.
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Stop</s:formal-item-title>
+      <s:verbatim><xi:include href="example-sim-5.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      All that remains is to have JOGL tell the renderer when to render, and
+      to supply the simulation with input in order to move and orient the
+      camera according to mouse and keyboard input. The main program constructs
+      a new renderer:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (Renderer)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-0.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      Then, a new simulation is constructed, and is passed a reference to the renderer
+      (the type of the simulation constructor is declared such that it only sees
+      a <s:link s:target="usage.fps.renderer_control">small subset</s:link> of
+      the interface exposed by the renderer). The simulation camera's input is
+      also retrieved:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (Simulation)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-1.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      Some storage is allocated, and a 
+      <s:link s:target="dai.fpsstyle.input.mouse_region">mouse region</s:link> is
+      created to map mouse movements to rotational coefficients:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (Mouse region and coefficients)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-2.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      An OpenGL window is created, and an <s:term s:type="type">Animator</s:term>
+      is constructed that will tell the window to refresh frequently:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (Window and animator)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-3.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      A <s:term s:type="type">GLEventListener</s:term> is added to the window.
+      The listener will tell the renderer to draw the scene every time the
+      <s:term s:type="type">Animator</s:term> triggers a redraw:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (GLEventListener)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-4.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      A <s:term s:type="type">MouseListener</s:term> is added to the window.
+      Every time the user moves the mouse, the rotation coefficients are calculated
+      and sent to the simulation camera's input:
+    </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (MouseListener)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-5.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:paragraph>
+      A <s:term s:type="type">KeyListener</s:term> is added to the window.
+      Every time the user presses or releases a key, the simulation camera's
+      input is notified accordingly.
+    </s:paragraph>
+    <s:paragraph>
+      There is one main issue covered here: If the user has keyboard
       auto-repeat enabled by their operating system, holding a key will result in
       an endless stream of "key pressed" and "key released" events. The code here
       is only interested in receiving the first "key pressed" and last "key released"
@@ -158,15 +259,41 @@
       for each event, and the event is discarded if the flag is set.
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>Key listener</s:formal-item-title>
-      <s:verbatim><xi:include href="examples-jogl-6.txt" parse="text"/></s:verbatim>
+      <s:formal-item-title>Main (KeyListener)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-6.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      The example code allows switching between a fixed camera and the first-person
-      camera with the <s:term s:type="constant">M</s:term> key. The code also allows
-      showing/hiding of the mouse cursor with the
-      <s:term s:type="constant">P</s:term> key.
+      Finally, a listener is added to stop the simulation when the user closes
+      the window. Then, the simulation and <s:term s:type="type">Animator</s:term>
+      are started.
     </s:paragraph>
+    <s:formal-item s:kind="examples">
+      <s:formal-item-title>Main (Completion)</s:formal-item-title>
+      <s:verbatim><xi:include href="example-main-7.txt" parse="text"/></s:verbatim>
+    </s:formal-item>
+    <s:formal-item s:kind="diagram">
+      <s:formal-item-title>Example screenshot</s:formal-item-title>
+      <s:image s:source="images/example.png">Example screenshot</s:image>
+    </s:formal-item>
+    <s:paragraph>
+      The list of example source files:
+    </s:paragraph>
+    <s:formal-item s:kind="listings">
+      <s:formal-item-title>Source files</s:formal-item-title>
+      <s:list-unordered>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleMain.java">ExampleMain.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRenderer.java">ExampleRenderer.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">ExampleRendererControllerType.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">ExampleRendererType.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSimulation.java">ExampleSimulation.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSimulationType.java">ExampleSimulationType.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/MatrixSnapshot.java">MatrixSnapshot.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ProjectionMatrix.java">ProjectionMatrix.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ShaderUtilities.java">ShaderUtilities.java</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.v">basic.v</s:link-external></s:list-item>
+        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.f">basic.f</s:link-external></s:list-item>
+      </s:list-unordered>
+    </s:formal-item>
   </s:subsection>
 
 </s:section>

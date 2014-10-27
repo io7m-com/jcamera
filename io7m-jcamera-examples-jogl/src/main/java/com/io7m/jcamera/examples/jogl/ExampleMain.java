@@ -139,6 +139,11 @@ public final class ExampleMain
         assert drawable != null;
         ++this.frame;
 
+        window.setTitle(String.format(
+          "%s - %f fps",
+          ExampleMain.class.getCanonicalName(),
+          anim.getLastFPS()));
+
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
         g.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -368,7 +373,7 @@ public final class ExampleMain
     });
 
     /**
-     * Close the program when the window closes.
+     * @example Close the program when the window closes.
      */
 
     window.addWindowListener(new WindowAdapter() {

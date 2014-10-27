@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -62,7 +62,7 @@ public final class ExampleSimulation implements
   }
 
   /**
-   * Construct a new simulation.
+   * @example Construct a new simulation.
    *
    * @param in_renderer
    *          The interface to the renderer
@@ -75,18 +75,16 @@ public final class ExampleSimulation implements
      * Construct a scheduler to run the simulation at a fixed time step, some
      * preallocated storage that the package uses during the generation of
      * matrices, and save a reference to the renderer.
+     *
+     * Then, allocate a new camera and input, and a couple of flags that
+     * indicate if the camera is actually in use, and that the simulation is
+     * running.
      */
 
     this.scheduler = NullCheck.notNull(Executors.newScheduledThreadPool(1));
     this.matrix_context = new MatrixM4x4F.Context();
     this.matrix = new MatrixM4x4F();
     this.renderer = in_renderer;
-
-    /**
-     * @example Allocate a new camera and input, and a couple of flags that
-     *          indicate if the camera is actually in use, and that the
-     *          simulation is running.
-     */
 
     this.input = JCameraInput.newInput();
     this.camera = JCameraFPSStyle.newCamera();
@@ -101,14 +99,31 @@ public final class ExampleSimulation implements
       JCameraFPSStyleIntegrator.newIntegrator(this.camera, this.input);
 
     /**
-     * @example Work out what fraction of a second the given simulation rate
-     *          is going to require, and what the equivalent period is in
-     *          nanoseconds to pass to the scheduler.
+     * Work out what fraction of a second the given simulation rate is going
+     * to require, and what the equivalent period is in nanoseconds to pass to
+     * the scheduler.
      */
 
     final float rate = 60.0f;
     this.integrator_time_seconds = 1.0f / rate;
     this.integrator_time_nanos = this.integrator_time_seconds * 1000000000.0f;
+
+    /**
+     * @example Configure the integrator. Use a high drag factor to give quite
+     *          abrupt stops, and use high rotational acceleration.
+     */
+
+    this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
+    this.integrator.integratorAngularSetDragVertical(0.000000001f);
+    this.integrator
+      .integratorAngularSetAccelerationHorizontal((float) ((Math.PI / 12) / this.integrator_time_seconds));
+    this.integrator
+      .integratorAngularSetAccelerationVertical((float) ((Math.PI / 12) / this.integrator_time_seconds));
+
+    this.integrator
+      .integratorLinearSetAcceleration((float) (3.0 / this.integrator_time_seconds));
+    this.integrator.integratorLinearSetMaximumSpeed(3.0f);
+    this.integrator.integratorLinearSetDrag(0.000000001f);
   }
 
   /**
