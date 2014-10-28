@@ -225,7 +225,7 @@ public final class ExampleMain
         switch (e.getKeyCode()) {
 
         /**
-         * Standard WASD camera controls, with F and V moving up and down,
+         * Standard WASD camera controls, with E and Q moving up and down,
          * respectively.
          */
 
@@ -317,7 +317,17 @@ public final class ExampleMain
           }
 
           /**
-           * Standard WASD camera controls, with F and V moving up and down,
+           * Pressing F switches between windowed and fullscreen mode.
+           */
+
+          case KeyEvent.VK_F:
+          {
+            window.setFullscreen(!window.isFullscreen());
+            break;
+          }
+
+          /**
+           * Standard WASD camera controls, with E and Q moving up and down,
            * respectively.
            */
 
