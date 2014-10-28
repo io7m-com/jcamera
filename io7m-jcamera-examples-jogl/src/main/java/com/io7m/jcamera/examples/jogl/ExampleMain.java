@@ -65,6 +65,8 @@ public final class ExampleMain
   public static void main(
     final String[] args)
   {
+    ExampleTimer.enableHighResolutionTimer();
+
     /**
      * @example Construct a new renderer.
      */
@@ -236,37 +238,31 @@ public final class ExampleMain
 
           case KeyEvent.VK_A:
           {
-            System.out.println("Started moving left");
             input.setMovingLeft(true);
             break;
           }
           case KeyEvent.VK_W:
           {
-            System.out.println("Started moving forward");
             input.setMovingForward(true);
             break;
           }
           case KeyEvent.VK_S:
           {
-            System.out.println("Started moving backward");
             input.setMovingBackward(true);
             break;
           }
           case KeyEvent.VK_D:
           {
-            System.out.println("Started moving right");
             input.setMovingRight(true);
             break;
           }
           case KeyEvent.VK_E:
           {
-            System.out.println("Started moving up");
             input.setMovingUp(true);
             break;
           }
           case KeyEvent.VK_Q:
           {
-            System.out.println("Started moving down");
             input.setMovingDown(true);
             break;
           }
@@ -334,37 +330,31 @@ public final class ExampleMain
 
           case KeyEvent.VK_A:
           {
-            System.out.println("Stopped moving left");
             input.setMovingLeft(false);
             break;
           }
           case KeyEvent.VK_W:
           {
-            System.out.println("Stopped moving forward");
             input.setMovingForward(false);
             break;
           }
           case KeyEvent.VK_S:
           {
-            System.out.println("Stopped moving backward");
             input.setMovingBackward(false);
             break;
           }
           case KeyEvent.VK_D:
           {
-            System.out.println("Stopped moving right");
             input.setMovingRight(false);
             break;
           }
           case KeyEvent.VK_E:
           {
-            System.out.println("Stopped moving up");
             input.setMovingUp(false);
             break;
           }
           case KeyEvent.VK_Q:
           {
-            System.out.println("Stopped moving down");
             input.setMovingDown(false);
             break;
           }
