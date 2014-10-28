@@ -16,9 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,8 +24,6 @@ import com.io7m.jcamera.JCameraFPSStyleIntegrator;
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleType;
 import com.io7m.jcamera.JCameraInput;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.MatrixM4x4F.Context;
 import com.io7m.jtensors.VectorI3F;
@@ -39,22 +34,18 @@ import com.io7m.jtensors.VectorReadable3FType;
  * fixed time step.
  */
 
-public final class ExampleSimulation implements
-  Runnable,
-  ExampleSimulationType
+public final class ExampleSimulation implements ExampleSimulationType
 {
   private final JCameraFPSStyleType           camera;
   private final AtomicBoolean                 camera_enabled;
   private final AtomicBoolean                 camera_running;
   private final JCameraInput                  input;
   private final JCameraFPSStyleIntegratorType integrator;
-  private final float                         integrator_time_nanos;
+  private final long                          integrator_time_nanos;
   private final float                         integrator_time_seconds;
   private final MatrixM4x4F                   matrix;
   private final Context                       matrix_context;
   private final ExampleRendererControllerType renderer;
-  private @Nullable ScheduledFuture<?>        running_task;
-  private final ScheduledExecutorService      scheduler;
 
   @Override public JCameraInput getInput()
   {
@@ -72,16 +63,14 @@ public final class ExampleSimulation implements
     final ExampleRendererControllerType in_renderer)
   {
     /**
-     * Construct a scheduler to run the simulation at a fixed time step, some
-     * preallocated storage that the package uses during the generation of
-     * matrices, and save a reference to the renderer.
+     * Construct a some preallocated storage that the package uses during the
+     * generation of matrices, and save a reference to the renderer.
      *
      * Then, allocate a new camera and input, and a couple of flags that
      * indicate if the camera is actually in use, and that the simulation is
      * running.
      */
 
-    this.scheduler = NullCheck.notNull(Executors.newScheduledThreadPool(1));
     this.matrix_context = new MatrixM4x4F.Context();
     this.matrix = new MatrixM4x4F();
     this.renderer = in_renderer;
@@ -106,7 +95,8 @@ public final class ExampleSimulation implements
 
     final float rate = 60.0f;
     this.integrator_time_seconds = 1.0f / rate;
-    this.integrator_time_nanos = this.integrator_time_seconds * 1000000000.0f;
+    this.integrator_time_nanos =
+      (long) (this.integrator_time_seconds * 1000000000L);
 
     /**
      * @example Configure the integrator. Use a high drag factor to give quite
@@ -131,7 +121,7 @@ public final class ExampleSimulation implements
    *          matrix.
    */
 
-  @Override public void run()
+  private void runOnce()
   {
     /**
      * If the camera is actually enabled, integrate and produce a view matrix,
@@ -171,6 +161,24 @@ public final class ExampleSimulation implements
   }
 
   /**
+   * @throws InterruptedException
+   */
+
+  private void run()
+    throws InterruptedException
+  {
+    while (this.camera_running.get()) {
+      final long time_start = System.nanoTime();
+      this.runOnce();
+      final long time_end = System.nanoTime();
+
+      Thread.sleep(TimeUnit.MILLISECONDS.convert(
+        this.integrator_time_nanos,
+        TimeUnit.NANOSECONDS));
+    }
+  }
+
+  /**
    * @example Start the simulation running.
    */
 
@@ -179,12 +187,20 @@ public final class ExampleSimulation implements
     if (this.camera_running.compareAndSet(false, true)) {
       System.out.println("Starting simulation");
 
-      this.running_task =
-        this.scheduler.scheduleAtFixedRate(
-          this,
-          0,
-          (long) this.integrator_time_nanos,
-          TimeUnit.NANOSECONDS);
+      final Thread t = new Thread() {
+        @Override public void run()
+        {
+          try {
+            ExampleSimulation.this.run();
+          } catch (final InterruptedException e) {
+            e.printStackTrace();
+            ExampleSimulation.this.camera_running.set(false);
+          }
+        }
+      };
+
+      t.setName("simulation");
+      t.start();
       return;
     }
 
@@ -199,10 +215,6 @@ public final class ExampleSimulation implements
   {
     if (this.camera_running.compareAndSet(true, false)) {
       System.out.println("Stopping simulation");
-
-      assert this.running_task != null;
-      this.running_task.cancel(true);
-      this.running_task = null;
       return;
     }
 
