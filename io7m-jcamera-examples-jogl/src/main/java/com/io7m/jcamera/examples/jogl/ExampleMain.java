@@ -17,6 +17,8 @@
 package com.io7m.jcamera.examples.jogl;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.DebugGL3;
@@ -66,6 +68,8 @@ public final class ExampleMain
     final String[] args)
   {
     ExampleTimer.enableHighResolutionTimer();
+    final ExecutorService background_workers =
+      Executors.newFixedThreadPool(1);
 
     /**
      * @example Construct a new renderer.
@@ -322,7 +326,12 @@ public final class ExampleMain
 
           case KeyEvent.VK_F:
           {
-            window.setFullscreen(!window.isFullscreen());
+            background_workers.execute(new Runnable() {
+              @Override public void run()
+              {
+                window.setFullscreen(!window.isFullscreen());
+              }
+            });
             break;
           }
 
