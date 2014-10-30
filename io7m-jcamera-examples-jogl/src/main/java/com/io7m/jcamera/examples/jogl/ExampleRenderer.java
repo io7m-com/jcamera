@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -291,18 +291,17 @@ final class ExampleRenderer implements
     return Math.abs(r);
   }
 
-  private final Context                    ctx;
-  private @Nullable GL3                    gl;
-  private int                              indices;
-  private int                              mesh;
-  private final MatrixM4x4F                model;
-  private final MatrixM4x4F                modelview;
-  private int                              program;
-  private final MatrixM4x4F                projection;
-  private volatile JCameraFPSStyleSnapshot snapshot;
-  private final MatrixM4x4F                view;
-  private AtomicBoolean                    want_warp;
-  private @Nullable GLWindow               window;
+  private final Context      ctx;
+  private @Nullable GL3      gl;
+  private int                indices;
+  private int                mesh;
+  private final MatrixM4x4F  model;
+  private final MatrixM4x4F  modelview;
+  private int                program;
+  private final MatrixM4x4F  projection;
+  private final MatrixM4x4F  view;
+  private AtomicBoolean      want_warp;
+  private @Nullable GLWindow window;
 
   public ExampleRenderer()
   {
@@ -315,17 +314,16 @@ final class ExampleRenderer implements
     this.view = new MatrixM4x4F();
     this.modelview = new MatrixM4x4F();
     this.want_warp = new AtomicBoolean(false);
-    this.snapshot = JCameraFPSStyle.newCamera().cameraMakeSnapshot();
     this.ctx = new JCameraFPSStyle.Context();
   }
 
-  @Override public void draw()
+  @Override public void draw(
+    final JCameraFPSStyleSnapshot s)
   {
     final GL3 g = this.gl;
 
     if (g != null) {
-      JCameraFPSStyle
-        .cameraMakeViewMatrix(this.ctx, this.snapshot, this.view);
+      JCameraFPSStyle.cameraMakeViewMatrix(this.ctx, s, this.view);
 
       g.glClearDepth(1.0f);
       g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
@@ -451,12 +449,6 @@ final class ExampleRenderer implements
       100.0f,
       fw / fh,
       Math.toRadians(90.0f));
-  }
-
-  @Override public void sendCameraSnapshot(
-    final JCameraFPSStyleSnapshot s)
-  {
-    this.snapshot = s;
   }
 
   @Override public void sendWantWarpPointer()

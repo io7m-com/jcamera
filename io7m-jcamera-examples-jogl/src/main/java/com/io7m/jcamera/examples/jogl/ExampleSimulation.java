@@ -16,10 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.io7m.jcamera.JCameraFPSStyle;
@@ -28,34 +24,23 @@ import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
 import com.io7m.jcamera.JCameraInput;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 
 /**
  * The example physical simulation containing just the camera, updated at a
  * fixed time step.
  */
 
-public final class ExampleSimulation implements
-  Runnable,
-  ExampleSimulationType
+public final class ExampleSimulation implements ExampleSimulationType
 {
   private final JCameraFPSStyleType           camera;
   private final AtomicBoolean                 camera_enabled;
   private final AtomicBoolean                 camera_running;
+  private final JCameraFPSStyleSnapshot       fixed_snapshot;
   private final JCameraInput                  input;
   private final JCameraFPSStyleIntegratorType integrator;
   private final float                         integrator_time_nanos;
   private final float                         integrator_time_seconds;
   private final ExampleRendererControllerType renderer;
-  private @Nullable ScheduledFuture<?>        running_task;
-  private final ScheduledExecutorService      scheduler;
-  private final JCameraFPSStyleSnapshot       fixed_snapshot;
-
-  @Override public JCameraInput getInput()
-  {
-    return this.input;
-  }
 
   /**
    * @example Construct a new simulation.
@@ -67,20 +52,7 @@ public final class ExampleSimulation implements
   public ExampleSimulation(
     final ExampleRendererControllerType in_renderer)
   {
-    /**
-     * Construct a scheduler to run the simulation at a fixed time step, some
-     * preallocated storage that the package uses during the generation of
-     * matrices, and save a reference to the renderer.
-     *
-     * Then, allocate a new camera and input, and a couple of flags that
-     * indicate if the camera is actually in use, and that the simulation is
-     * running. An extra "fixed" camera is used to set the view point when
-     * mouse and keyboard control is disabled.
-     */
-
-    this.scheduler = NullCheck.notNull(Executors.newScheduledThreadPool(1));
     this.renderer = in_renderer;
-
     this.input = JCameraInput.newInput();
     this.camera = JCameraFPSStyle.newCamera();
     final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
@@ -123,12 +95,28 @@ public final class ExampleSimulation implements
     this.integrator.integratorLinearSetDrag(0.000000001f);
   }
 
-  /**
-   * @example Run the simulation for the delta time, and produce a view
-   *          matrix.
-   */
+  @Override public boolean cameraIsEnabled()
+  {
+    return this.camera_enabled.get();
+  }
 
-  @Override public void run()
+  @Override public void cameraSetEnabled(
+    final boolean b)
+  {
+    this.camera_enabled.set(b);
+  }
+
+  @Override public float getDeltaTime()
+  {
+    return this.integrator_time_seconds;
+  }
+
+  @Override public JCameraInput getInput()
+  {
+    return this.input;
+  }
+
+  @Override public JCameraFPSStyleSnapshot integrate()
   {
     /**
      * If the camera is actually enabled, integrate and produce a snapshot,
@@ -139,65 +127,10 @@ public final class ExampleSimulation implements
     if (this.cameraIsEnabled()) {
       this.integrator.integrate(this.integrator_time_seconds);
       final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
-      this.renderer.sendCameraSnapshot(snap);
       this.renderer.sendWantWarpPointer();
-    } else {
-
-      /**
-       * Otherwise, send a simple fixed camera.
-       */
-
-      this.renderer.sendCameraSnapshot(this.fixed_snapshot);
-    }
-  }
-
-  /**
-   * @example Start the simulation running.
-   */
-
-  @Override public void start()
-  {
-    if (this.camera_running.compareAndSet(false, true)) {
-      System.out.println("Starting simulation");
-
-      this.running_task =
-        this.scheduler.scheduleAtFixedRate(
-          this,
-          0,
-          (long) this.integrator_time_nanos,
-          TimeUnit.NANOSECONDS);
-      return;
+      return snap;
     }
 
-    throw new IllegalStateException("Simulation already running");
-  }
-
-  /**
-   * @example Stop the simulation running.
-   */
-
-  @Override public void stop()
-  {
-    if (this.camera_running.compareAndSet(true, false)) {
-      System.out.println("Stopping simulation");
-
-      assert this.running_task != null;
-      this.running_task.cancel(true);
-      this.running_task = null;
-      return;
-    }
-
-    throw new IllegalStateException("Simulation not running");
-  }
-
-  @Override public boolean cameraIsEnabled()
-  {
-    return this.camera_enabled.get();
-  }
-
-  @Override public void cameraSetEnabled(
-    final boolean b)
-  {
-    this.camera_enabled.set(b);
+    return this.fixed_snapshot;
   }
 }

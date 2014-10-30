@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -31,6 +31,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 
+import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraInput;
 import com.io7m.jcamera.JCameraMouseRegion;
 import com.io7m.jcamera.JCameraRotationCoefficients;
@@ -79,12 +80,13 @@ public final class ExampleMain
     final ExampleRenderer renderer = new ExampleRenderer();
 
     /**
-     * @example Construct a new simulation and get access to the camera's
-     *          input.
+     * @example Construct a new simulation, get access to the camera's input,
+     *          and produce an initial snapshot of the camera for later use.
      */
 
     final ExampleSimulationType sim = new ExampleSimulation(renderer);
     final JCameraInput input = sim.getInput();
+    final JCameraFPSStyleSnapshot snap = sim.integrate();
 
     /**
      * @example Declare a structure to hold mouse rotation coefficients, and a
@@ -129,7 +131,7 @@ public final class ExampleMain
       @Override public void init(
         final @Nullable GLAutoDrawable drawable)
       {
-        // Nothing
+        this.time_then = System.nanoTime();
       }
 
       @Override public void dispose(
@@ -138,10 +140,47 @@ public final class ExampleMain
         // Nothing.
       }
 
+      private long                    time_then;
+      private double                  time_accum;
+      private JCameraFPSStyleSnapshot snap_curr = snap;
+      private JCameraFPSStyleSnapshot snap_prev = snap;
+
       @Override public void display(
         final @Nullable GLAutoDrawable drawable)
       {
         assert drawable != null;
+
+        /**
+         * Integrate the camera as many times as necessary for each rendering
+         * frame interval.
+         */
+
+        final long time_now = System.nanoTime();
+        final long time_diff = time_now - this.time_then;
+        final double time_diff_s = time_diff / 1000000000.0;
+        this.time_accum = this.time_accum + time_diff_s;
+        this.time_then = time_now;
+
+        final float sim_delta = sim.getDeltaTime();
+        while (this.time_accum >= sim_delta) {
+          this.snap_prev = this.snap_curr;
+          this.snap_curr = sim.integrate();
+          this.time_accum -= sim_delta;
+        }
+
+        /**
+         * Determine how far the current time is between the current camera
+         * state and the next, and use that value to interpolate between the
+         * two saved states.
+         */
+
+        final float alpha = (float) (this.time_accum / sim_delta);
+        final JCameraFPSStyleSnapshot snap_interpolated =
+          JCameraFPSStyleSnapshot.interpolate(
+            this.snap_prev,
+            this.snap_curr,
+            alpha);
+
         ++this.frame;
 
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
@@ -165,7 +204,7 @@ public final class ExampleMain
          * Draw the scene!
          */
 
-        renderer.draw();
+        renderer.draw(snap_interpolated);
       }
 
       @Override public void reshape(
@@ -387,8 +426,6 @@ public final class ExampleMain
       {
         System.out.println("Stopping animator");
         anim.stop();
-        System.out.println("Stopping simulation");
-        sim.stop();
         System.out.println("Exiting");
         System.exit(0);
       }
@@ -401,7 +438,6 @@ public final class ExampleMain
      * Start everything running.
      */
 
-    sim.start();
     anim.start();
   }
 }

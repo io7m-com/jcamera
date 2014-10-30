@@ -29,12 +29,52 @@ import com.io7m.jtensors.VectorReadable3FType;
 @EqualityStructural public final class JCameraFPSStyleSnapshot implements
   JCameraFPSStyleReadableType
 {
-  private final VectorI3F forward;
-  private final VectorI3F right;
-  private final VectorI3F up;
+  /**
+   * Linearly interpolate between two camera snapshots.
+   *
+   * @param x
+   *          The first snapshot
+   * @param y
+   *          The second snapshot
+   * @param a
+   *          The interpolation value
+   * @return A value between <code>x</code> and <code>y</code>
+   */
+
+  public static JCameraFPSStyleSnapshot interpolate(
+    final JCameraFPSStyleSnapshot x,
+    final JCameraFPSStyleSnapshot y,
+    final float a)
+  {
+    final VectorI3F r_f =
+      VectorI3F.interpolateLinear(
+        x.cameraGetForward(),
+        y.cameraGetForward(),
+        a);
+    final VectorI3F r_u =
+      VectorI3F.interpolateLinear(x.cameraGetUp(), y.cameraGetUp(), a);
+    final VectorI3F r_r =
+      VectorI3F.interpolateLinear(x.cameraGetRight(), y.cameraGetRight(), a);
+    final VectorI3F r_p =
+      VectorI3F.interpolateLinear(
+        x.cameraGetPosition(),
+        y.cameraGetPosition(),
+        a);
+    final float r_h =
+      ((1.0f - a) * x.angle_around_horizontal)
+        + (a * y.angle_around_horizontal);
+    final float r_v =
+      ((1.0f - a) * x.angle_around_vertical) + (a * y.angle_around_vertical);
+    return new JCameraFPSStyleSnapshot(r_f, r_r, r_u, r_h, r_v, r_p);
+  }
+
   private final float     angle_around_horizontal;
   private final float     angle_around_vertical;
+  private final VectorI3F forward;
   private final VectorI3F position;
+  private final VectorI3F right;
+
+  private final VectorI3F up;
 
   JCameraFPSStyleSnapshot(
     final VectorI3F in_forward,
@@ -52,6 +92,16 @@ import com.io7m.jtensors.VectorReadable3FType;
     this.position = NullCheck.notNull(in_position, "Position");
   }
 
+  @Override public float cameraGetAngleAroundHorizontal()
+  {
+    return this.angle_around_horizontal;
+  }
+
+  @Override public float cameraGetAngleAroundVertical()
+  {
+    return this.angle_around_vertical;
+  }
+
   @Override public VectorReadable3FType cameraGetForward()
   {
     return this.forward;
@@ -67,19 +117,9 @@ import com.io7m.jtensors.VectorReadable3FType;
     return this.right;
   }
 
-  @Override public int hashCode()
+  @Override public VectorReadable3FType cameraGetUp()
   {
-    final int prime = 31;
-    int result = 1;
-    result =
-      (prime * result) + Float.floatToIntBits(this.angle_around_horizontal);
-    result =
-      (prime * result) + Float.floatToIntBits(this.angle_around_vertical);
-    result = (prime * result) + this.forward.hashCode();
-    result = (prime * result) + this.position.hashCode();
-    result = (prime * result) + this.right.hashCode();
-    result = (prime * result) + this.up.hashCode();
-    return result;
+    return this.up;
   }
 
   @Override public boolean equals(
@@ -105,18 +145,18 @@ import com.io7m.jtensors.VectorReadable3FType;
       && this.up.equals(other.up);
   }
 
-  @Override public VectorReadable3FType cameraGetUp()
+  @Override public int hashCode()
   {
-    return this.up;
-  }
-
-  @Override public float cameraGetAngleAroundHorizontal()
-  {
-    return this.angle_around_horizontal;
-  }
-
-  @Override public float cameraGetAngleAroundVertical()
-  {
-    return this.angle_around_vertical;
+    final int prime = 31;
+    int result = 1;
+    result =
+      (prime * result) + Float.floatToIntBits(this.angle_around_horizontal);
+    result =
+      (prime * result) + Float.floatToIntBits(this.angle_around_vertical);
+    result = (prime * result) + this.forward.hashCode();
+    result = (prime * result) + this.position.hashCode();
+    result = (prime * result) + this.right.hashCode();
+    result = (prime * result) + this.up.hashCode();
+    return result;
   }
 }

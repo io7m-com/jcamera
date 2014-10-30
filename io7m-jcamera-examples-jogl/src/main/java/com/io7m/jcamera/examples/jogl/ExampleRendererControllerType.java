@@ -16,24 +16,12 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import com.io7m.jcamera.JCameraFPSStyleSnapshot;
-
 /**
  * The interface that the simulation uses to talk to the renderer.
  */
 
 public interface ExampleRendererControllerType
 {
-  /**
-   * Send a snapshot of the current camera to the renderer.
-   * 
-   * @param s
-   *          The snapshot.
-   */
-
-  void sendCameraSnapshot(
-    final JCameraFPSStyleSnapshot s);
-
   /**
    * Tell the renderer/windowing system that it should warp the pointer to the
    * center of the screen.
