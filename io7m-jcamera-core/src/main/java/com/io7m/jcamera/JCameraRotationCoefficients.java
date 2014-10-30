@@ -16,13 +16,14 @@
 
 package com.io7m.jcamera;
 
+import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jnull.Nullable;
 
 /**
  * Mutable rotation coefficients.
  */
 
-public final class JCameraRotationCoefficients
+@EqualityStructural public final class JCameraRotationCoefficients
 {
   private volatile float horizontal;
   private volatile float vertical;
