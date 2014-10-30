@@ -30,6 +30,9 @@ import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLException;
 
+import com.io7m.jcamera.JCameraFPSStyle;
+import com.io7m.jcamera.JCameraFPSStyle.Context;
+import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.MatrixM4x4F;
@@ -37,9 +40,7 @@ import com.io7m.jtensors.VectorI3F;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.opengl.GLWindow;
 
-final class ExampleRenderer implements
-  ExampleRendererControllerType,
-  ExampleRendererType
+final class ExampleRenderer implements ExampleRendererType
 {
   private static final int VERTEX_COLOR_OFFSET_BYTES;
   private static final int VERTEX_COMPONENTS;
@@ -57,22 +58,6 @@ final class ExampleRenderer implements
       ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_COMPONENTS;
     VERTICES_TOTAL_SIZE_BYTES =
       ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_SIZE_BYTES;
-  }
-
-  /**
-   * A "repeatable random" function. Will always return the same pseudo-random
-   * value for a given <code>x</code> value.
-   */
-
-  private static float noise(
-    final float x)
-  {
-    final int z = (int) x;
-    final int q = (z << 13) ^ z;
-    final int s =
-      ((q * ((q * q * 15731) + 789221)) + 1376312589) & 0x7fffffff;
-    final float r = 1.0f - (s / 1073741824.0f);
-    return Math.abs(r);
   }
 
   private static int compileFragmentShader(
@@ -288,17 +273,33 @@ final class ExampleRenderer implements
     return p;
   }
 
-  private @Nullable GL3           gl;
-  private int                     indices;
-  private int                     mesh;
-  private int                     program;
-  private final MatrixM4x4F       projection;
-  private final MatrixM4x4F       model;
-  private final MatrixM4x4F       modelview;
-  private final MatrixM4x4F       view;
-  private @Nullable GLWindow      window;
-  private AtomicBoolean           want_warp;
-  private volatile MatrixSnapshot view_new;
+  /**
+   * A "repeatable random" function. Will always return the same pseudo-random
+   * value for a given <code>x</code> value.
+   */
+
+  private static float noise(
+    final float x)
+  {
+    final int z = (int) x;
+    final int q = (z << 13) ^ z;
+    final int s =
+      ((q * ((q * q * 15731) + 789221)) + 1376312589) & 0x7fffffff;
+    final float r = 1.0f - (s / 1073741824.0f);
+    return Math.abs(r);
+  }
+
+  private final Context      ctx;
+  private @Nullable GL3      gl;
+  private int                indices;
+  private int                mesh;
+  private final MatrixM4x4F  model;
+  private final MatrixM4x4F  modelview;
+  private int                program;
+  private final MatrixM4x4F  projection;
+  private final MatrixM4x4F  view;
+  private AtomicBoolean      want_warp;
+  private @Nullable GLWindow window;
 
   public ExampleRenderer()
   {
@@ -311,29 +312,16 @@ final class ExampleRenderer implements
     this.view = new MatrixM4x4F();
     this.modelview = new MatrixM4x4F();
     this.want_warp = new AtomicBoolean(false);
-    this.view_new = MatrixSnapshot.pack(this.view);
+    this.ctx = new JCameraFPSStyle.Context();
   }
 
-  @Override public void init(
-    final GLWindow in_window,
-    final GL3 in_gl)
-    throws IOException
-  {
-    final GL3 g = NullCheck.notNull(in_gl, "GL");
-    this.gl = g;
-    this.window = NullCheck.notNull(in_window, "Drawable");
-    this.program = ExampleRenderer.makeProgram(g);
-    this.mesh = ExampleRenderer.makeMesh(g);
-    this.indices = ExampleRenderer.makeIndices(g);
-    this.want_warp = new AtomicBoolean(false);
-  }
-
-  @Override public void draw()
+  @Override public void draw(
+    final JCameraFPSStyleSnapshot s)
   {
     final GL3 g = this.gl;
 
     if (g != null) {
-      this.view_new.unpack(this.view);
+      JCameraFPSStyle.cameraMakeViewMatrix(this.ctx, s, this.view);
 
       g.glClearDepth(1.0f);
       g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
@@ -433,6 +421,20 @@ final class ExampleRenderer implements
     }
   }
 
+  @Override public void init(
+    final GLWindow in_window,
+    final GL3 in_gl)
+    throws IOException
+  {
+    final GL3 g = NullCheck.notNull(in_gl, "GL");
+    this.gl = g;
+    this.window = NullCheck.notNull(in_window, "Drawable");
+    this.program = ExampleRenderer.makeProgram(g);
+    this.mesh = ExampleRenderer.makeMesh(g);
+    this.indices = ExampleRenderer.makeIndices(g);
+    this.want_warp = new AtomicBoolean(false);
+  }
+
   @Override public void reshape(
     final int width,
     final int height)
@@ -447,14 +449,8 @@ final class ExampleRenderer implements
       Math.toRadians(90.0f));
   }
 
-  @Override public void setWantWarpPointer()
+  @Override public void sendWantWarpPointer()
   {
     this.want_warp.set(true);
-  }
-
-  @Override public void setViewMatrix(
-    final MatrixSnapshot m)
-  {
-    this.view_new = m;
   }
 }

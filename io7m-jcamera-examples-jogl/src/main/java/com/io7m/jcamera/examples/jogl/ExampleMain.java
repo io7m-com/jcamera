@@ -19,6 +19,7 @@ package com.io7m.jcamera.examples.jogl;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.DebugGL3;
@@ -27,9 +28,9 @@ import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 
+import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraInput;
 import com.io7m.jcamera.JCameraMouseRegion;
 import com.io7m.jcamera.JCameraRotationCoefficients;
@@ -75,15 +76,16 @@ public final class ExampleMain
      * @example Construct a new renderer.
      */
 
-    final ExampleRenderer renderer = new ExampleRenderer();
+    final ExampleRendererType renderer = new ExampleRenderer();
 
     /**
-     * @example Construct a new simulation and get access to the camera's
-     *          input.
+     * @example Construct a new simulation, get access to the camera's input,
+     *          and produce an initial snapshot of the camera for later use.
      */
 
     final ExampleSimulationType sim = new ExampleSimulation(renderer);
     final JCameraInput input = sim.getInput();
+    final JCameraFPSStyleSnapshot snap = sim.integrate();
 
     /**
      * @example Declare a structure to hold mouse rotation coefficients, and a
@@ -93,11 +95,11 @@ public final class ExampleMain
 
     final JCameraRotationCoefficients rotations =
       new JCameraRotationCoefficients();
-    final JCameraMouseRegion mouse_region =
-      JCameraMouseRegion.newRegion(
+    final AtomicReference<JCameraMouseRegion> mouse_region =
+      new AtomicReference<JCameraMouseRegion>(JCameraMouseRegion.newRegion(
         JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
         640,
-        480);
+        480));
 
     /**
      * @example Initialize JOGL and open a window.
@@ -123,12 +125,26 @@ public final class ExampleMain
      */
 
     window.addGLEventListener(new GLEventListener() {
-      private int frame;
+
+      /**
+       * Initialize the simulation.
+       */
 
       @Override public void init(
         final @Nullable GLAutoDrawable drawable)
       {
-        // Nothing
+        try {
+          assert drawable != null;
+
+          final GL3 g = new DebugGL3(drawable.getGL().getGL3());
+          assert g != null;
+
+          this.time_then = System.nanoTime();
+          renderer.init(window, g);
+          renderer.reshape(window.getWidth(), window.getHeight());
+        } catch (final IOException e) {
+          throw new RuntimeException(e);
+        }
       }
 
       @Override public void dispose(
@@ -137,34 +153,56 @@ public final class ExampleMain
         // Nothing.
       }
 
+      private long                    time_then;
+      private double                  time_accum;
+      private JCameraFPSStyleSnapshot snap_curr = snap;
+      private JCameraFPSStyleSnapshot snap_prev = snap;
+
       @Override public void display(
         final @Nullable GLAutoDrawable drawable)
       {
         assert drawable != null;
-        ++this.frame;
+
+        /**
+         * Integrate the camera as many times as necessary for each rendering
+         * frame interval.
+         */
+
+        final long time_now = System.nanoTime();
+        final long time_diff = time_now - this.time_then;
+        final double time_diff_s = time_diff / 1000000000.0;
+        this.time_accum = this.time_accum + time_diff_s;
+        this.time_then = time_now;
+
+        final float sim_delta = sim.getDeltaTime();
+        while (this.time_accum >= sim_delta) {
+          this.snap_prev = this.snap_curr;
+          this.snap_curr = sim.integrate();
+          this.time_accum -= sim_delta;
+        }
+
+        /**
+         * Determine how far the current time is between the current camera
+         * state and the next, and use that value to interpolate between the
+         * two saved states.
+         */
+
+        final float alpha = (float) (this.time_accum / sim_delta);
+        final JCameraFPSStyleSnapshot snap_interpolated =
+          JCameraFPSStyleSnapshot.interpolate(
+            this.snap_prev,
+            this.snap_curr,
+            alpha);
 
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
         g.glClear(GL.GL_COLOR_BUFFER_BIT);
 
-        if (this.frame == 1) {
-          return;
-        }
-
-        if (this.frame == 2) {
-          try {
-            renderer.init(window, g);
-            renderer.reshape(window.getWidth(), window.getHeight());
-          } catch (final IOException e) {
-            throw new GLException(e);
-          }
-        }
-
         /**
          * Draw the scene!
          */
 
-        renderer.draw();
+        renderer.draw(snap_interpolated);
       }
 
       @Override public void reshape(
@@ -174,8 +212,10 @@ public final class ExampleMain
         final int width,
         final int height)
       {
-        mouse_region.setWidth(width);
-        mouse_region.setHeight(height);
+        mouse_region.set(JCameraMouseRegion.newRegion(
+          JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
+          width,
+          height));
         renderer.reshape(width, height);
       }
     });
@@ -197,7 +237,7 @@ public final class ExampleMain
          */
 
         if (sim.cameraIsEnabled()) {
-          mouse_region.getCoefficients(e.getX(), e.getY(), rotations);
+          mouse_region.get().getCoefficients(e.getX(), e.getY(), rotations);
           input.addRotationAroundHorizontal(rotations.getHorizontal());
           input.addRotationAroundVertical(rotations.getVertical());
         }
@@ -298,7 +338,7 @@ public final class ExampleMain
             } else {
               System.out.println("Enabling camera");
               window.confinePointer(true);
-              renderer.setWantWarpPointer();
+              renderer.sendWantWarpPointer();
               input.setRotationHorizontal(0);
               input.setRotationVertical(0);
             }
@@ -384,8 +424,6 @@ public final class ExampleMain
       {
         System.out.println("Stopping animator");
         anim.stop();
-        System.out.println("Stopping simulation");
-        sim.stop();
         System.out.println("Exiting");
         System.exit(0);
       }
@@ -398,7 +436,6 @@ public final class ExampleMain
      * Start everything running.
      */
 
-    sim.start();
     anim.start();
   }
 }

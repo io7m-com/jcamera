@@ -28,7 +28,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
    * @return The camera that will be affected by the integrator
    */
 
-  JCameraFPSStyleType integratorGetCamera();
+  JCameraFPSStyleReadableType integratorGetCamera();
 
   /**
    * Set the linear acceleration to <code>a</code>.

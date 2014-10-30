@@ -111,14 +111,15 @@
       <s:verbatim><xi:include href="com/io7m/jcamera/examples/jogl/ExampleSimulationType.java" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      Again, little is needed in the way of explanation. The simulation can be
-      started and stopped, and the camera enabled/disabled. If the camera is disabled,
-      a simple fixed view matrix is used rather than having a camera produce one.
+      Again, little is needed in the way of explanation. The simulation provides a
+      camera that can be enabled and disabled. If the camera is disabled,
+      a simple fixed camera is used rather than having the camera be driven by
+      keyboard and mouse input.
     </s:paragraph>
     <s:paragraph xml:id="usage.fps.renderer_control">
-      The simulation needs a way to supply the renderer with new view matrices, and
-      also needs a way to periodically warp the mouse cursor to the center of the
-      screen, so the renderer exposes the following interface to the simulation
+      The simulation needs a way to periodically warp the mouse cursor to the 
+      center of the screen if the movable camera is enabled, so the renderer 
+      exposes the following interface to the simulation
       [<s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">ExampleRendererControllerType.java</s:link-external>]:
     </s:paragraph>
     <s:formal-item s:kind="examples">
@@ -154,39 +155,18 @@
       <s:verbatim><xi:include href="example-sim-2.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      The <s:term s:type="function">run</s:term> function is executed at a
+      The <s:term s:type="function">integrate</s:term> function is executed at a
       rate of <s:term s:type="expression">60</s:term> times per second, and
-      produces a new view matrix each time, sending it to the renderer. Because
-      the <s:term s:type="function">MatrixM4x4F</s:term> type is mutable by
-      definition, and because the renderer is running on
-      a different thread to the simulation, an immutable snapshot of the matrix is created via the
-      <s:link-external s:target="com/io7m/jcamera/examples/jogl/MatrixSnapshot.java">MatrixSnapshot</s:link-external>
-      type and this is what is actually sent to the renderer. The immutable
-      nature of the snapshot means that it can be safely shared across threads
-      without any need for locks or other synchronization.
+      produces a new snapshot each time, which is passed to the renderer. 
+      The immutable nature of the snapshot means that it can be safely shared 
+      across threads without any need for locks or other synchronization.
       If the camera is actually enabled, the simulation also instructs the 
-      renderer to warp the mouse cursor back to the center of the screen.
+      renderer to warp the mouse cursor back to the center of the screen. The
+      rest of the functions complete the interface.
     </s:paragraph>
     <s:formal-item s:kind="examples">
-      <s:formal-item-title>Run</s:formal-item-title>
+      <s:formal-item-title>Integrate</s:formal-item-title>
       <s:verbatim><xi:include href="example-sim-3.txt" parse="text"/></s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      The <s:term s:type="function">start</s:term> function starts the simulation
-      running, complaining loudly if it is already running:
-    </s:paragraph>
-    <s:formal-item s:kind="examples">
-      <s:formal-item-title>Start</s:formal-item-title>
-      <s:verbatim><xi:include href="example-sim-4.txt" parse="text"/></s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      The <s:term s:type="function">stop</s:term> function stops the simulation
-      running, complaining loudly if it isn't running, and the remaining self-explanatory
-      functions complete the implementation of the interface.
-    </s:paragraph>
-    <s:formal-item s:kind="examples">
-      <s:formal-item-title>Stop</s:formal-item-title>
-      <s:verbatim><xi:include href="example-sim-5.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
       All that remains is to have JOGL tell the renderer when to render, and
@@ -236,6 +216,11 @@
       <s:verbatim><xi:include href="example-main-4.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
+      The <s:term s:type="function">display</s:term> method linearly interpolates
+      between the most recently received camera snapshots in order to provide smooth
+      animation independent of the simulation and/or frame rate.
+    </s:paragraph>
+    <s:paragraph>
       A <s:term s:type="type">MouseListener</s:term> is added to the window.
       Every time the user moves the mouse, the rotation coefficients are calculated
       and sent to the simulation camera's input:
@@ -263,9 +248,9 @@
       <s:verbatim><xi:include href="example-main-6.txt" parse="text"/></s:verbatim>
     </s:formal-item>
     <s:paragraph>
-      Finally, a listener is added to stop the simulation when the user closes
-      the window. Then, the simulation and <s:term s:type="type">Animator</s:term>
-      are started.
+      Finally, a listener is added to stop rendering when the user closes
+      the window. Then, the <s:term s:type="type">Animator</s:term>
+      is started.
     </s:paragraph>
     <s:formal-item s:kind="examples">
       <s:formal-item-title>Main (Completion)</s:formal-item-title>
@@ -287,7 +272,6 @@
         <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">ExampleRendererType.java</s:link-external></s:list-item>
         <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSimulation.java">ExampleSimulation.java</s:link-external></s:list-item>
         <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSimulationType.java">ExampleSimulationType.java</s:link-external></s:list-item>
-        <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/MatrixSnapshot.java">MatrixSnapshot.java</s:link-external></s:list-item>
         <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ProjectionMatrix.java">ProjectionMatrix.java</s:link-external></s:list-item>
         <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ShaderUtilities.java">ShaderUtilities.java</s:link-external></s:list-item>
         <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.v">basic.v</s:link-external></s:list-item>

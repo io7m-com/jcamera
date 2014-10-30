@@ -16,9 +16,13 @@
 
 package com.io7m.jcamera;
 
+import com.io7m.jequality.annotations.EqualityReference;
+import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jnull.NullCheck;
+import com.io7m.jnull.Nullable;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jtensors.MatrixM4x4F;
+import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM3F;
 import com.io7m.jtensors.VectorReadable3FType;
 
@@ -26,8 +30,86 @@ import com.io7m.jtensors.VectorReadable3FType;
  * The default implementation of {@link JCameraFPSStyleType}.
  */
 
-public final class JCameraFPSStyle implements JCameraFPSStyleType
+@EqualityStructural public final class JCameraFPSStyle implements
+  JCameraFPSStyleType
 {
+  /**
+   * Preallocated storage.
+   */
+
+  @EqualityReference public static final class Context
+  {
+    private final MatrixM4x4F derived_matrix_r;
+    private final MatrixM4x4F derived_matrix_t;
+    private final VectorM3F   temporary;
+
+    /**
+     * Create new temporary storage for calculating matrices.
+     */
+
+    public Context()
+    {
+      this.derived_matrix_r = new MatrixM4x4F();
+      this.derived_matrix_t = new MatrixM4x4F();
+      this.temporary = new VectorM3F();
+    }
+  }
+
+  /**
+   * Construct a view matrix for the camera <code>c</code>, using preallocated
+   * storage in <code>ctx</code> and writing the result to <code>m</code>.
+   *
+   * @param ctx
+   *          Preallocated storage
+   * @param c
+   *          The camera
+   * @param m
+   *          The output matrix
+   */
+
+  @SuppressWarnings("synthetic-access") public static
+    void
+    cameraMakeViewMatrix(
+      final Context ctx,
+      final JCameraFPSStyleReadableType c,
+      final MatrixM4x4F m)
+  {
+    /**
+     * Calculate basis vectors for rotated coordinate system.
+     */
+
+    final VectorReadable3FType right = c.cameraGetRight();
+    final VectorReadable3FType up = c.cameraGetUp();
+    final VectorReadable3FType forward = c.cameraGetForward();
+    final MatrixM4x4F r = ctx.derived_matrix_r;
+    MatrixM4x4F.setIdentity(r);
+    r.set(0, 0, right.getXF());
+    r.set(0, 1, right.getYF());
+    r.set(0, 2, right.getZF());
+    r.set(1, 0, up.getXF());
+    r.set(1, 1, up.getYF());
+    r.set(1, 2, up.getZF());
+    r.set(2, 0, -forward.getXF());
+    r.set(2, 1, -forward.getYF());
+    r.set(2, 2, -forward.getZF());
+
+    /**
+     * Calculate translation matrix.
+     */
+
+    final VectorReadable3FType pos = c.cameraGetPosition();
+    final MatrixM4x4F t = ctx.derived_matrix_t;
+    MatrixM4x4F.setIdentity(t);
+    ctx.temporary.set3F(-pos.getXF(), -pos.getYF(), -pos.getZF());
+    MatrixM4x4F.makeTranslation3F(ctx.temporary, ctx.derived_matrix_t);
+
+    /**
+     * Produce final transform.
+     */
+
+    MatrixM4x4F.multiply(ctx.derived_matrix_r, ctx.derived_matrix_t, m);
+  }
+
   /**
    * @return A new FPS camera
    */
@@ -37,19 +119,34 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
     return new JCameraFPSStyle();
   }
 
-  private boolean           clamp_horizontal;
-  private float             clamp_horizontal_max;
-  private float             clamp_horizontal_min;
-  private boolean           derived_current;
-  private final VectorM3F   derived_forward;
-  private final MatrixM4x4F derived_matrix_r;
-  private final MatrixM4x4F derived_matrix_t;
-  private final VectorM3F   derived_right;
-  private final VectorM3F   derived_up;
-  private float             input_angle_around_horizontal;
-  private float             input_angle_around_vertical;
-  private final VectorM3F   input_position;
-  private final VectorM3F   temporary;
+  /**
+   * @return A new FPS camera based on the given camera.
+   * @param c
+   *          An existing camera
+   */
+
+  public static JCameraFPSStyleType newCameraFrom(
+    final JCameraFPSStyleReadableType c)
+  {
+    final JCameraFPSStyle r = new JCameraFPSStyle();
+    r.cameraSetPosition(r.cameraGetPosition());
+    r.cameraSetAngleAroundHorizontal(c.cameraGetAngleAroundHorizontal());
+    r.cameraSetAngleAroundVertical(c.cameraGetAngleAroundVertical());
+    return r;
+  }
+
+  private boolean         clamp_horizontal;
+  private float           clamp_horizontal_max;
+  private float           clamp_horizontal_min;
+  private boolean         derived_current;
+  private final VectorM3F derived_forward;
+  private final VectorM3F derived_right;
+  private final VectorM3F derived_up;
+  private float           input_angle_around_horizontal;
+  private float           input_angle_around_vertical;
+  private final VectorM3F input_position;
+
+  private final VectorM3F temporary;
 
   private JCameraFPSStyle()
   {
@@ -61,8 +158,6 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
     this.derived_up = new VectorM3F();
     this.derived_right = new VectorM3F();
     this.derived_forward = new VectorM3F();
-    this.derived_matrix_r = new MatrixM4x4F();
-    this.derived_matrix_t = new MatrixM4x4F();
     this.temporary = new VectorM3F();
 
     this.clamp_horizontal = true;
@@ -85,6 +180,16 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
     this.clamp_horizontal = true;
     this.clamp_horizontal_max = max;
     this.clamp_horizontal_min = min;
+  }
+
+  @Override public float cameraGetAngleAroundHorizontal()
+  {
+    return this.input_angle_around_horizontal;
+  }
+
+  @Override public float cameraGetAngleAroundVertical()
+  {
+    return this.input_angle_around_vertical;
   }
 
   @Override public VectorReadable3FType cameraGetForward()
@@ -110,48 +215,16 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
     return this.derived_up;
   }
 
-  @Override public void cameraMakeViewMatrix(
-    final MatrixM4x4F.Context context,
-    final MatrixM4x4F m)
+  @Override public JCameraFPSStyleSnapshot cameraMakeSnapshot()
   {
-    NullCheck.notNull(context, "Context");
-    NullCheck.notNull(m, "Matrix");
-
     this.deriveVectors();
-
-    /**
-     * Calculate basis vectors for rotated coordinate system.
-     */
-
-    final MatrixM4x4F r = this.derived_matrix_r;
-    MatrixM4x4F.setIdentity(r);
-    r.set(0, 0, this.derived_right.getXF());
-    r.set(0, 1, this.derived_right.getYF());
-    r.set(0, 2, this.derived_right.getZF());
-    r.set(1, 0, this.derived_up.getXF());
-    r.set(1, 1, this.derived_up.getYF());
-    r.set(1, 2, this.derived_up.getZF());
-    r.set(2, 0, -this.derived_forward.getXF());
-    r.set(2, 1, -this.derived_forward.getYF());
-    r.set(2, 2, -this.derived_forward.getZF());
-
-    /**
-     * Calculate translation matrix.
-     */
-
-    final MatrixM4x4F t = this.derived_matrix_t;
-    MatrixM4x4F.setIdentity(t);
-    this.temporary.set3F(
-      -this.input_position.getXF(),
-      -this.input_position.getYF(),
-      -this.input_position.getZF());
-    MatrixM4x4F.makeTranslation3F(this.temporary, this.derived_matrix_t);
-
-    /**
-     * Produce final transform.
-     */
-
-    MatrixM4x4F.multiply(this.derived_matrix_r, this.derived_matrix_t, m);
+    return new JCameraFPSStyleSnapshot(
+      new VectorI3F(this.derived_forward),
+      new VectorI3F(this.derived_right),
+      new VectorI3F(this.derived_up),
+      this.input_angle_around_horizontal,
+      this.input_angle_around_vertical,
+      new VectorI3F(this.input_position));
   }
 
   @Override public void cameraMoveForward(
@@ -203,6 +276,18 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
   {
     this.derived_current = false;
     this.input_angle_around_vertical += r;
+  }
+
+  @Override public void cameraSetAngleAroundHorizontal(
+    final float h)
+  {
+    this.input_angle_around_horizontal = h;
+  }
+
+  @Override public void cameraSetAngleAroundVertical(
+    final float v)
+  {
+    this.input_angle_around_vertical = v;
   }
 
   /**
@@ -275,9 +360,48 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
     }
   }
 
-  @Override public VectorReadable3FType getPosition()
+  @Override public boolean equals(
+    final @Nullable Object obj)
   {
-    return this.input_position;
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (this.getClass() != obj.getClass()) {
+      return false;
+    }
+    final JCameraFPSStyle other = (JCameraFPSStyle) obj;
+    return (this.clamp_horizontal == other.clamp_horizontal)
+      && (Float.floatToIntBits(this.clamp_horizontal_max) == Float
+        .floatToIntBits(other.clamp_horizontal_max))
+      && (Float.floatToIntBits(this.clamp_horizontal_min) == Float
+        .floatToIntBits(other.clamp_horizontal_min))
+      && (Float.floatToIntBits(this.input_angle_around_horizontal) == Float
+        .floatToIntBits(other.input_angle_around_horizontal))
+      && (Float.floatToIntBits(this.input_angle_around_vertical) == Float
+        .floatToIntBits(other.input_angle_around_vertical))
+      && this.input_position.equals(other.input_position);
+  }
+
+  @Override public int hashCode()
+  {
+    final int prime = 31;
+    int result = 1;
+    result = (prime * result) + (this.clamp_horizontal ? 1231 : 1237);
+    result =
+      (prime * result) + Float.floatToIntBits(this.clamp_horizontal_max);
+    result =
+      (prime * result) + Float.floatToIntBits(this.clamp_horizontal_min);
+    result =
+      (prime * result)
+        + Float.floatToIntBits(this.input_angle_around_horizontal);
+    result =
+      (prime * result)
+        + Float.floatToIntBits(this.input_angle_around_vertical);
+    result = (prime * result) + this.input_position.hashCode();
+    return result;
   }
 
   @Override public String toString()

@@ -35,7 +35,9 @@ import com.io7m.jtensors.VectorReadable3FType;
  * </p>
  */
 
-public interface JCameraFPSStyleType extends JCameraType
+public interface JCameraFPSStyleType extends
+  JCameraType,
+  JCameraFPSStyleReadableType
 {
   /**
    * Do not clamp rotations around the horizontal axis.
@@ -58,30 +60,6 @@ public interface JCameraFPSStyleType extends JCameraType
   void cameraClampHorizontalEnable(
     final float min,
     final float max);
-
-  /**
-   * @return The forward direction for the camera.
-   */
-
-  VectorReadable3FType cameraGetForward();
-
-  /**
-   * @return The position of the camera.
-   */
-
-  VectorReadable3FType cameraGetPosition();
-
-  /**
-   * @return The right direction for the camera.
-   */
-
-  VectorReadable3FType cameraGetRight();
-
-  /**
-   * @return The up direction for the camera.
-   */
-
-  VectorReadable3FType cameraGetUp();
 
   /**
    * <p>
@@ -211,8 +189,28 @@ public interface JCameraFPSStyleType extends JCameraType
     final float z);
 
   /**
-   * @return The current camera position.
+   * Set the angle around the horizontal axis to <code>h</code>.
+   *
+   * @param h
+   *          The angle.
    */
 
-  VectorReadable3FType getPosition();
+  void cameraSetAngleAroundHorizontal(
+    final float h);
+
+  /**
+   * Set the angle around the vertical axis to <code>v</code>.
+   *
+   * @param v
+   *          The angle.
+   */
+
+  void cameraSetAngleAroundVertical(
+    final float v);
+
+  /**
+   * @return An immutable snapshot of the current camera state.
+   */
+
+  JCameraFPSStyleSnapshot cameraMakeSnapshot();
 }

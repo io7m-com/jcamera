@@ -90,5 +90,5 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    * @return The camera that will be affected by the integrator
    */
 
-  JCameraFPSStyleType integratorGetCamera();
+  JCameraFPSStyleReadableType integratorGetCamera();
 }

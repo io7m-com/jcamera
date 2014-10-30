@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -20,13 +20,14 @@ import java.io.IOException;
 
 import javax.media.opengl.GL3;
 
+import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.jogamp.newt.opengl.GLWindow;
 
 /**
  * The interface exposed by the renderer to JOGL.
  */
 
-interface ExampleRendererType
+public interface ExampleRendererType extends ExampleRendererControllerType
 {
   /**
    * Initialize the scene, using the given window and OpenGL interface.
@@ -46,9 +47,13 @@ interface ExampleRendererType
 
   /**
    * Draw the scene.
+   *
+   * @param s
+   *          The current camera snapshot
    */
 
-  void draw();
+  void draw(
+    final JCameraFPSStyleSnapshot s);
 
   /**
    * Indicate that the screen has been resized.
