@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,17 +16,10 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.TimeZone;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.DebugGL3;
@@ -79,9 +72,6 @@ public final class ExampleMain
     final ExecutorService background_workers =
       Executors.newFixedThreadPool(1);
 
-    final ConcurrentLinkedQueue<String> events =
-      new ConcurrentLinkedQueue<String>();
-
     /**
      * @example Construct a new renderer.
      */
@@ -93,7 +83,7 @@ public final class ExampleMain
      *          input.
      */
 
-    final ExampleSimulationType sim = new ExampleSimulation(renderer, events);
+    final ExampleSimulationType sim = new ExampleSimulation(renderer);
     final JCameraInput input = sim.getInput();
 
     /**
@@ -104,11 +94,11 @@ public final class ExampleMain
 
     final JCameraRotationCoefficients rotations =
       new JCameraRotationCoefficients();
-    final JCameraMouseRegion mouse_region =
-      JCameraMouseRegion.newRegion(
+    final AtomicReference<JCameraMouseRegion> mouse_region =
+      new AtomicReference<JCameraMouseRegion>(JCameraMouseRegion.newRegion(
         JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
         640,
-        480);
+        480));
 
     /**
      * @example Initialize JOGL and open a window.
@@ -154,8 +144,6 @@ public final class ExampleMain
         assert drawable != null;
         ++this.frame;
 
-        events.add(String.format("render %d", System.nanoTime()));
-
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
         g.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -187,8 +175,10 @@ public final class ExampleMain
         final int width,
         final int height)
       {
-        mouse_region.setWidth(width);
-        mouse_region.setHeight(height);
+        mouse_region.set(JCameraMouseRegion.newRegion(
+          JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
+          width,
+          height));
         renderer.reshape(width, height);
       }
     });
@@ -210,7 +200,7 @@ public final class ExampleMain
          */
 
         if (sim.cameraIsEnabled()) {
-          mouse_region.getCoefficients(e.getX(), e.getY(), rotations);
+          mouse_region.get().getCoefficients(e.getX(), e.getY(), rotations);
           input.addRotationAroundHorizontal(rotations.getHorizontal());
           input.addRotationAroundVertical(rotations.getVertical());
         }
@@ -311,7 +301,7 @@ public final class ExampleMain
             } else {
               System.out.println("Enabling camera");
               window.confinePointer(true);
-              renderer.setWantWarpPointer();
+              renderer.sendWantWarpPointer();
               input.setRotationHorizontal(0);
               input.setRotationVertical(0);
             }
@@ -399,10 +389,6 @@ public final class ExampleMain
         anim.stop();
         System.out.println("Stopping simulation");
         sim.stop();
-
-        System.out.println("Writing event log");
-        ExampleMain.writeEventLog(events);
-
         System.out.println("Exiting");
         System.exit(0);
       }
@@ -417,27 +403,5 @@ public final class ExampleMain
 
     sim.start();
     anim.start();
-  }
-
-  protected static void writeEventLog(
-    final ConcurrentLinkedQueue<String> events)
-  {
-    try {
-      final Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-      final SimpleDateFormat sdf =
-        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:s.SZ");
-      final File file = new File(sdf.format(c.getTime()) + ".log");
-
-      final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-      final Iterator<String> iter = events.iterator();
-      while (iter.hasNext()) {
-        bw.write(iter.next());
-        bw.write("\n");
-      }
-      bw.flush();
-      bw.close();
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
   }
 }

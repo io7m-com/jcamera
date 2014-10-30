@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,6 +16,7 @@
 
 package com.io7m.jcamera;
 
+import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
 
@@ -23,7 +24,7 @@ import com.io7m.jranges.RangeCheck;
  * A rectangular region that maps mouse positions to rotational coefficients.
  */
 
-public final class JCameraMouseRegion
+@EqualityReference public final class JCameraMouseRegion
 {
   /**
    * Construct a new mouse region.
@@ -45,11 +46,11 @@ public final class JCameraMouseRegion
     return new JCameraMouseRegion(in_origin, in_width, in_height);
   }
 
-  private float               center_x;
-  private float               center_y;
-  private float               height;
-  private JCameraScreenOrigin origin;
-  private float               width;
+  private final float               center_x;
+  private final float               center_y;
+  private final float               height;
+  private final JCameraScreenOrigin origin;
+  private final float               width;
 
   private JCameraMouseRegion(
     final JCameraScreenOrigin in_origin,
@@ -57,8 +58,22 @@ public final class JCameraMouseRegion
     final float in_height)
   {
     this.origin = NullCheck.notNull(in_origin, "Origin");
-    this.setWidth(in_width);
-    this.setHeight(in_height);
+
+    this.height =
+      (float) RangeCheck.checkGreaterEqualDouble(
+        in_height,
+        "Height",
+        2.0f,
+        "Minimum height");
+    this.center_y = this.height / 2.0f;
+
+    this.width =
+      (float) RangeCheck.checkGreaterEqualDouble(
+        in_width,
+        "Width",
+        2.0f,
+        "Minimum width");
+    this.center_x = this.width / 2.0f;
   }
 
   /**
@@ -144,59 +159,5 @@ public final class JCameraMouseRegion
   public float getWidth()
   {
     return this.width;
-  }
-
-  /**
-   * Set the height of the region. The value is required to be
-   * <code>>= 2</code.
-   *
-   * @param in_height
-   *          The height of the region
-   */
-
-  public void setHeight(
-    final float in_height)
-  {
-    this.height =
-      (float) RangeCheck.checkGreaterEqualDouble(
-        in_height,
-        "Height",
-        2.0f,
-        "Minimum height");
-    this.center_y = this.height / 2.0f;
-  }
-
-  /**
-   * Set the screen origin used to define the mapping from screen-space
-   * coordinates to region-space coordinates.
-   *
-   * @param in_origin
-   *          The origin
-   */
-
-  public void setScreenOrigin(
-    final JCameraScreenOrigin in_origin)
-  {
-    this.origin = NullCheck.notNull(in_origin, "Origin");
-  }
-
-  /**
-   * Set the width of the region. The value is required to be <code>>= 2</code
-   * .
-   *
-   * @param in_width
-   *          The width of the region
-   */
-
-  public void setWidth(
-    final float in_width)
-  {
-    this.width =
-      (float) RangeCheck.checkGreaterEqualDouble(
-        in_width,
-        "Width",
-        2.0f,
-        "Minimum width");
-    this.center_x = this.width / 2.0f;
   }
 }

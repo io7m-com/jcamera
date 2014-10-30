@@ -22,17 +22,9 @@ import org.junit.Test;
 import com.io7m.jcamera.JCameraMouseRegion;
 import com.io7m.jcamera.JCameraRotationCoefficients;
 import com.io7m.jcamera.JCameraScreenOrigin;
-import com.io7m.jtensors.VectorReadable2FType;
 
 @SuppressWarnings("static-method") public final class JCameraMouseRegionTest
 {
-  private static void dumpVector(
-    final String name,
-    final VectorReadable2FType v)
-  {
-    System.out.printf("%-18s : %f %f\n", name, v.getXF(), v.getYF());
-  }
-
   @Test public void testCoefficientsBottomLeft()
   {
     final JCameraRotationCoefficients out = new JCameraRotationCoefficients();
@@ -58,17 +50,14 @@ import com.io7m.jtensors.VectorReadable2FType;
   @Test public void testCoefficientsBottomLeftExhaustive()
   {
     final JCameraRotationCoefficients out = new JCameraRotationCoefficients();
-    final JCameraMouseRegion r =
-      JCameraMouseRegion.newRegion(
-        JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-        640,
-        480);
 
     for (int width = 2; width <= 640; ++width) {
       for (int height = 2; height <= 480; ++height) {
-        r.setWidth(width);
-        r.setHeight(height);
-        r.setScreenOrigin(JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT);
+        final JCameraMouseRegion r =
+          JCameraMouseRegion.newRegion(
+            JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
+            width,
+            height);
 
         Assert.assertEquals(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,

@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,7 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -26,14 +25,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.io7m.jcamera.JCameraFPSStyle;
 import com.io7m.jcamera.JCameraFPSStyleIntegrator;
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
+import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
 import com.io7m.jcamera.JCameraInput;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.MatrixM4x4F.Context;
-import com.io7m.jtensors.VectorI3F;
-import com.io7m.jtensors.VectorReadable3FType;
 
 /**
  * The example physical simulation containing just the camera, updated at a
@@ -51,12 +47,10 @@ public final class ExampleSimulation implements
   private final JCameraFPSStyleIntegratorType integrator;
   private final float                         integrator_time_nanos;
   private final float                         integrator_time_seconds;
-  private final MatrixM4x4F                   matrix;
-  private final Context                       matrix_context;
   private final ExampleRendererControllerType renderer;
   private @Nullable ScheduledFuture<?>        running_task;
   private final ScheduledExecutorService      scheduler;
-  private final ConcurrentLinkedQueue<String> events;
+  private final JCameraFPSStyleSnapshot       fixed_snapshot;
 
   @Override public JCameraInput getInput()
   {
@@ -68,16 +62,11 @@ public final class ExampleSimulation implements
    *
    * @param in_renderer
    *          The interface to the renderer
-   * @param in_events
-   *          Event log
    */
 
   public ExampleSimulation(
-    final ExampleRendererControllerType in_renderer,
-    final ConcurrentLinkedQueue<String> in_events)
+    final ExampleRendererControllerType in_renderer)
   {
-    this.events = in_events;
-
     /**
      * Construct a scheduler to run the simulation at a fixed time step, some
      * preallocated storage that the package uses during the generation of
@@ -85,16 +74,17 @@ public final class ExampleSimulation implements
      *
      * Then, allocate a new camera and input, and a couple of flags that
      * indicate if the camera is actually in use, and that the simulation is
-     * running.
+     * running. An extra "fixed" camera is used to set the view point when
+     * mouse and keyboard control is disabled.
      */
 
     this.scheduler = NullCheck.notNull(Executors.newScheduledThreadPool(1));
-    this.matrix_context = new MatrixM4x4F.Context();
-    this.matrix = new MatrixM4x4F();
     this.renderer = in_renderer;
 
     this.input = JCameraInput.newInput();
     this.camera = JCameraFPSStyle.newCamera();
+    final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
+    this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
     this.camera_enabled = new AtomicBoolean(false);
     this.camera_running = new AtomicBoolean(false);
 
@@ -140,43 +130,25 @@ public final class ExampleSimulation implements
 
   @Override public void run()
   {
-    this.events.add(String.format("simulation %d", System.nanoTime()));
-
     /**
-     * If the camera is actually enabled, integrate and produce a view matrix,
+     * If the camera is actually enabled, integrate and produce a snapshot,
      * and then tell the renderer/window system that it should warp the
      * pointer back to the center of the screen.
      */
 
     if (this.cameraIsEnabled()) {
       this.integrator.integrate(this.integrator_time_seconds);
-      this.camera.cameraMakeViewMatrix(this.matrix_context, this.matrix);
-      this.renderer.setWantWarpPointer();
+      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
+      this.renderer.sendCameraSnapshot(snap);
+      this.renderer.sendWantWarpPointer();
     } else {
 
       /**
-       * Otherwise, produce a view matrix that simulates a simple fixed
-       * camera.
+       * Otherwise, send a simple fixed camera.
        */
 
-      MatrixM4x4F.setIdentity(this.matrix);
-      final VectorReadable3FType origin = new VectorI3F(0.0f, 2.0f, 3.0f);
-      final VectorReadable3FType target = new VectorI3F(0.0f, 0.0f, -3.0f);
-      final VectorReadable3FType up = new VectorI3F(0.0f, 1.0f, 0.0f);
-      MatrixM4x4F.lookAtWithContext(
-        this.matrix_context,
-        origin,
-        target,
-        up,
-        this.matrix);
+      this.renderer.sendCameraSnapshot(this.fixed_snapshot);
     }
-
-    /**
-     * Send whatever view matrix was created to the renderer.
-     */
-
-    final MatrixSnapshot snap = MatrixSnapshot.pack(this.matrix);
-    this.renderer.setViewMatrix(snap);
   }
 
   /**

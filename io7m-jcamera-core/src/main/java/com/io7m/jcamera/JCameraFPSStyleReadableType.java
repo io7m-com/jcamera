@@ -14,30 +14,49 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jcamera.examples.jogl;
+package com.io7m.jcamera;
 
-import com.io7m.jcamera.JCameraFPSStyleSnapshot;
+import com.io7m.jtensors.VectorReadable3FType;
 
 /**
- * The interface that the simulation uses to talk to the renderer.
+ * Readable interface to {@link JCameraFPSStyleType}.
  */
 
-public interface ExampleRendererControllerType
+public interface JCameraFPSStyleReadableType
 {
   /**
-   * Send a snapshot of the current camera to the renderer.
-   * 
-   * @param s
-   *          The snapshot.
+   * @return The angle around the horizontal axis.
    */
 
-  void sendCameraSnapshot(
-    final JCameraFPSStyleSnapshot s);
+  float cameraGetAngleAroundHorizontal();
 
   /**
-   * Tell the renderer/windowing system that it should warp the pointer to the
-   * center of the screen.
+   * @return The angle around the vertical axis.
    */
 
-  void sendWantWarpPointer();
+  float cameraGetAngleAroundVertical();
+
+  /**
+   * @return The forward direction for the camera.
+   */
+
+  VectorReadable3FType cameraGetForward();
+
+  /**
+   * @return The position of the camera.
+   */
+
+  VectorReadable3FType cameraGetPosition();
+
+  /**
+   * @return The right direction for the camera.
+   */
+
+  VectorReadable3FType cameraGetRight();
+
+  /**
+   * @return The up direction for the camera.
+   */
+
+  VectorReadable3FType cameraGetUp();
 }
