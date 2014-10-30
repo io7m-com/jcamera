@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="example_dataflow.svg">
   <defs
      id="defs4">
     <marker
@@ -40,7 +40,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="349.17555"
+     inkscape:cx="351.17555"
      inkscape:cy="219.39269"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -76,7 +76,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -204,7 +204,7 @@
          sodipodi:role="line"
          id="tspan4599"
          x="192"
-         y="796.36218">view matrices</tspan><tspan
+         y="796.36218">camera snapshots</tspan><tspan
          sodipodi:role="line"
          x="192"
          y="818.86218"

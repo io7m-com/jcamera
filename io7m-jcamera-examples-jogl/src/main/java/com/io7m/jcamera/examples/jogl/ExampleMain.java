@@ -28,7 +28,6 @@ import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
@@ -77,7 +76,7 @@ public final class ExampleMain
      * @example Construct a new renderer.
      */
 
-    final ExampleRenderer renderer = new ExampleRenderer();
+    final ExampleRendererType renderer = new ExampleRenderer();
 
     /**
      * @example Construct a new simulation, get access to the camera's input,
@@ -126,12 +125,26 @@ public final class ExampleMain
      */
 
     window.addGLEventListener(new GLEventListener() {
-      private int frame;
+
+      /**
+       * Initialize the simulation.
+       */
 
       @Override public void init(
         final @Nullable GLAutoDrawable drawable)
       {
-        this.time_then = System.nanoTime();
+        try {
+          assert drawable != null;
+
+          final GL3 g = new DebugGL3(drawable.getGL().getGL3());
+          assert g != null;
+
+          this.time_then = System.nanoTime();
+          renderer.init(window, g);
+          renderer.reshape(window.getWidth(), window.getHeight());
+        } catch (final IOException e) {
+          throw new RuntimeException(e);
+        }
       }
 
       @Override public void dispose(
@@ -181,24 +194,9 @@ public final class ExampleMain
             this.snap_curr,
             alpha);
 
-        ++this.frame;
-
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
         g.glClear(GL.GL_COLOR_BUFFER_BIT);
-
-        if (this.frame == 1) {
-          return;
-        }
-
-        if (this.frame == 2) {
-          try {
-            renderer.init(window, g);
-            renderer.reshape(window.getWidth(), window.getHeight());
-          } catch (final IOException e) {
-            throw new GLException(e);
-          }
-        }
 
         /**
          * Draw the scene!

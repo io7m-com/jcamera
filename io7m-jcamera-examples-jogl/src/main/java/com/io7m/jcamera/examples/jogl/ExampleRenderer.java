@@ -40,9 +40,7 @@ import com.io7m.jtensors.VectorI3F;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.opengl.GLWindow;
 
-final class ExampleRenderer implements
-  ExampleRendererControllerType,
-  ExampleRendererType
+final class ExampleRenderer implements ExampleRendererType
 {
   private static final int VERTEX_COLOR_OFFSET_BYTES;
   private static final int VERTEX_COMPONENTS;

@@ -34,11 +34,9 @@ public final class ExampleSimulation implements ExampleSimulationType
 {
   private final JCameraFPSStyleType           camera;
   private final AtomicBoolean                 camera_enabled;
-  private final AtomicBoolean                 camera_running;
   private final JCameraFPSStyleSnapshot       fixed_snapshot;
   private final JCameraInput                  input;
   private final JCameraFPSStyleIntegratorType integrator;
-  private final float                         integrator_time_nanos;
   private final float                         integrator_time_seconds;
   private final ExampleRendererControllerType renderer;
 
@@ -58,7 +56,6 @@ public final class ExampleSimulation implements ExampleSimulationType
     final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
     this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
     this.camera_enabled = new AtomicBoolean(false);
-    this.camera_running = new AtomicBoolean(false);
 
     /**
      * @example Construct an integrator using the default implementations.
@@ -69,13 +66,11 @@ public final class ExampleSimulation implements ExampleSimulationType
 
     /**
      * Work out what fraction of a second the given simulation rate is going
-     * to require, and what the equivalent period is in nanoseconds to pass to
-     * the scheduler.
+     * to require.
      */
 
     final float rate = 60.0f;
     this.integrator_time_seconds = 1.0f / rate;
-    this.integrator_time_nanos = this.integrator_time_seconds * 1000000000.0f;
 
     /**
      * @example Configure the integrator. Use a high drag factor to give quite
@@ -93,6 +88,29 @@ public final class ExampleSimulation implements ExampleSimulationType
       .integratorLinearSetAcceleration((float) (3.0 / this.integrator_time_seconds));
     this.integrator.integratorLinearSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearSetDrag(0.000000001f);
+  }
+
+  /**
+   * @example Integrate the camera.
+   * @return A new camera snapshot.
+   */
+
+  @Override public JCameraFPSStyleSnapshot integrate()
+  {
+    /**
+     * If the camera is actually enabled, integrate and produce a snapshot,
+     * and then tell the renderer/window system that it should warp the
+     * pointer back to the center of the screen.
+     */
+
+    if (this.cameraIsEnabled()) {
+      this.integrator.integrate(this.integrator_time_seconds);
+      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
+      this.renderer.sendWantWarpPointer();
+      return snap;
+    }
+
+    return this.fixed_snapshot;
   }
 
   @Override public boolean cameraIsEnabled()
@@ -114,23 +132,5 @@ public final class ExampleSimulation implements ExampleSimulationType
   @Override public JCameraInput getInput()
   {
     return this.input;
-  }
-
-  @Override public JCameraFPSStyleSnapshot integrate()
-  {
-    /**
-     * If the camera is actually enabled, integrate and produce a snapshot,
-     * and then tell the renderer/window system that it should warp the
-     * pointer back to the center of the screen.
-     */
-
-    if (this.cameraIsEnabled()) {
-      this.integrator.integrate(this.integrator_time_seconds);
-      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
-      this.renderer.sendWantWarpPointer();
-      return snap;
-    }
-
-    return this.fixed_snapshot;
   }
 }

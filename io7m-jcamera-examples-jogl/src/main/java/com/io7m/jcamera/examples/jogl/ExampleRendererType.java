@@ -27,7 +27,7 @@ import com.jogamp.newt.opengl.GLWindow;
  * The interface exposed by the renderer to JOGL.
  */
 
-interface ExampleRendererType
+public interface ExampleRendererType extends ExampleRendererControllerType
 {
   /**
    * Initialize the scene, using the given window and OpenGL interface.
@@ -47,6 +47,9 @@ interface ExampleRendererType
 
   /**
    * Draw the scene.
+   *
+   * @param s
+   *          The current camera snapshot
    */
 
   void draw(
