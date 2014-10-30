@@ -16,7 +16,15 @@
 
 package com.io7m.jcamera.examples.jogl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.TimeZone;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -71,6 +79,9 @@ public final class ExampleMain
     final ExecutorService background_workers =
       Executors.newFixedThreadPool(1);
 
+    final ConcurrentLinkedQueue<String> events =
+      new ConcurrentLinkedQueue<String>();
+
     /**
      * @example Construct a new renderer.
      */
@@ -82,7 +93,7 @@ public final class ExampleMain
      *          input.
      */
 
-    final ExampleSimulationType sim = new ExampleSimulation(renderer);
+    final ExampleSimulationType sim = new ExampleSimulation(renderer, events);
     final JCameraInput input = sim.getInput();
 
     /**
@@ -142,6 +153,8 @@ public final class ExampleMain
       {
         assert drawable != null;
         ++this.frame;
+
+        events.add(String.format("render %d", System.nanoTime()));
 
         final GL3 g = new DebugGL3(drawable.getGL().getGL3());
         assert g != null;
@@ -386,6 +399,10 @@ public final class ExampleMain
         anim.stop();
         System.out.println("Stopping simulation");
         sim.stop();
+
+        System.out.println("Writing event log");
+        ExampleMain.writeEventLog(events);
+
         System.out.println("Exiting");
         System.exit(0);
       }
@@ -400,5 +417,27 @@ public final class ExampleMain
 
     sim.start();
     anim.start();
+  }
+
+  protected static void writeEventLog(
+    final ConcurrentLinkedQueue<String> events)
+  {
+    try {
+      final Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+      final SimpleDateFormat sdf =
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:s.SZ");
+      final File file = new File(sdf.format(c.getTime()) + ".log");
+
+      final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+      final Iterator<String> iter = events.iterator();
+      while (iter.hasNext()) {
+        bw.write(iter.next());
+        bw.write("\n");
+      }
+      bw.flush();
+      bw.close();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
   }
 }
