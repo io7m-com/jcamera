@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -56,9 +56,9 @@ public final class ExampleSplit
       for (;;) {
         final String line = br.readLine();
         if (line == null) {
-          throw new IllegalStateException("No @example annotation in file");
+          throw new IllegalStateException("No $example annotation in file");
         }
-        if (line.contains("@example")) {
+        if (line.contains("$example")) {
           lines.add(previous);
           lines.add(line);
           break;
@@ -74,7 +74,7 @@ public final class ExampleSplit
         count = ExampleSplit.writeExample(count, output, basename, lines);
         break;
       }
-      if (line.contains("@example")) {
+      if (line.contains("$example")) {
         final String previous = lines.remove(lines.size() - 1);
         count = ExampleSplit.writeExample(count, output, basename, lines);
         lines.add(previous);

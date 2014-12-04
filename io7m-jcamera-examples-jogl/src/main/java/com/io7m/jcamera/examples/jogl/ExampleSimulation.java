@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -41,7 +41,7 @@ public final class ExampleSimulation implements ExampleSimulationType
   private final ExampleRendererControllerType renderer;
 
   /**
-   * @example Construct a new simulation.
+   * $example: Construct a new simulation.
    *
    * @param in_renderer
    *          The interface to the renderer
@@ -58,7 +58,7 @@ public final class ExampleSimulation implements ExampleSimulationType
     this.camera_enabled = new AtomicBoolean(false);
 
     /**
-     * @example Construct an integrator using the default implementations.
+     * $example: Construct an integrator using the default implementations.
      */
 
     this.integrator =
@@ -73,8 +73,8 @@ public final class ExampleSimulation implements ExampleSimulationType
     this.integrator_time_seconds = 1.0f / rate;
 
     /**
-     * @example Configure the integrator. Use a high drag factor to give quite
-     *          abrupt stops, and use high rotational acceleration.
+     * $example: Configure the integrator. Use a high drag factor to give
+     * quite abrupt stops, and use high rotational acceleration.
      */
 
     this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
@@ -91,7 +91,8 @@ public final class ExampleSimulation implements ExampleSimulationType
   }
 
   /**
-   * @example Integrate the camera.
+   * $example: Integrate the camera.
+   *
    * @return A new camera snapshot.
    */
 

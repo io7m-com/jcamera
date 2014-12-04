@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -369,7 +369,11 @@ final class ExampleRenderer implements ExampleRendererType
       {
         final int uid = g.glGetUniformLocation(this.program, "m_projection");
         assert uid != -1;
-        g.glUniformMatrix4fv(uid, 1, false, this.projection.getFloatBuffer());
+        g.glUniformMatrix4fv(
+          uid,
+          1,
+          false,
+          this.projection.getDirectFloatBuffer());
       }
 
       g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, this.indices);
@@ -385,20 +389,18 @@ final class ExampleRenderer implements ExampleRendererType
             10.0f - (ExampleRenderer.noise(index * 100) * 20.0f);
 
           MatrixM4x4F.setIdentity(this.model);
-          MatrixM4x4F.translateByVector3FInPlace(this.model, new VectorI3F(
-            x,
-            y,
-            -z));
+          MatrixM4x4F.makeTranslation3FInto(
+            new VectorI3F(x, y, -z),
+            this.model);
 
           MatrixM4x4F.setIdentity(this.modelview);
           MatrixM4x4F.multiply(this.view, this.model, this.modelview);
 
-          g
-            .glUniformMatrix4fv(
-              uid,
-              1,
-              false,
-              this.modelview.getFloatBuffer());
+          g.glUniformMatrix4fv(
+            uid,
+            1,
+            false,
+            this.modelview.getDirectFloatBuffer());
 
           g.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
         }

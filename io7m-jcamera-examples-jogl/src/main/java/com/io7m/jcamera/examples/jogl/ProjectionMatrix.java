@@ -38,12 +38,16 @@ public final class ProjectionMatrix
    * location of the far clipping plane.
    * </p>
    * <p>
-   * Note that iff <code>z_far >= Double.POSITIVE_INFINITY</code>, the
+   * Note that iff <code>z_far &gt;= Double.POSITIVE_INFINITY</code>, the
    * function produces an "infinite projection matrix", suitable for use in
    * code that deals with shadow volumes.
+   * </p>
    * <p>
-   *
-   * @link http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html
+   * See <a
+   * href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
+   * Gems</a>.
+   * </p>
+   * 
    * @param x_min
    *          The minimum X clip plane.
    * @param x_max
@@ -190,12 +194,15 @@ public final class ProjectionMatrix
    * <code>x/z</code> plane.
    * </p>
    * <p>
-   * Note that iff <code>z_far >= Double.POSITIVE_INFINITY</code>, the
+   * Note that iff <code>z_far &gt;= Double.POSITIVE_INFINITY</code>, the
    * function produces an "infinite projection matrix", suitable for use in
    * code that deals with shadow volumes.
+   * </p>
    * <p>
-   *
-   * @link http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html
+   * See <a
+   * href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
+   * Gems</a>.
+   * </p>
    *
    * @param z_near
    *          The near clipping plane coordinate.

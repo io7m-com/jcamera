@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -23,7 +23,6 @@ import com.io7m.jtensors.VectorReadable3FType;
  * The type of <i>first-person shooter</i> style flying cameras that allow
  * for:
  * </p>
- * <p>
  * <ul>
  * <li>Rotation around a local X axis</li>
  * <li>Rotation around a global Y axis</li>
@@ -32,7 +31,6 @@ import com.io7m.jtensors.VectorReadable3FType;
  * <li>Movement <i>forward</i> and <i>backward</i> based on the current
  * orientation on the global Y and local X axes</li>
  * </ul>
- * </p>
  */
 
 public interface JCameraFPSStyleType extends

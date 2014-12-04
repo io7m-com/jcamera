@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -73,14 +73,14 @@ public final class ExampleMain
       Executors.newFixedThreadPool(1);
 
     /**
-     * @example Construct a new renderer.
+     * $example: Construct a new renderer.
      */
 
     final ExampleRendererType renderer = new ExampleRenderer();
 
     /**
-     * @example Construct a new simulation, get access to the camera's input,
-     *          and produce an initial snapshot of the camera for later use.
+     * $example: Construct a new simulation, get access to the camera's input,
+     * and produce an initial snapshot of the camera for later use.
      */
 
     final ExampleSimulationType sim = new ExampleSimulation(renderer);
@@ -88,9 +88,9 @@ public final class ExampleMain
     final JCameraFPSStyleSnapshot snap = sim.integrate();
 
     /**
-     * @example Declare a structure to hold mouse rotation coefficients, and a
-     *          mouse region configured with an origin that matches that of
-     *          JOGL's windowing system.
+     * $example: Declare a structure to hold mouse rotation coefficients, and
+     * a mouse region configured with an origin that matches that of JOGL's
+     * windowing system.
      */
 
     final JCameraRotationCoefficients rotations =
@@ -102,7 +102,7 @@ public final class ExampleMain
         480));
 
     /**
-     * @example Initialize JOGL and open a window.
+     * $example: Initialize JOGL and open a window.
      */
 
     final GLProfile profile = GLProfile.get(GLProfile.GL3);
@@ -119,9 +119,9 @@ public final class ExampleMain
     anim.add(window);
 
     /**
-     * @example The main OpenGL event listener. The display function is called
-     *          repeatedly and will integrate the camera and then render the
-     *          scene.
+     * $example: The main OpenGL event listener. The display function is
+     * called repeatedly and will integrate the camera and then render the
+     * scene.
      */
 
     window.addGLEventListener(new GLEventListener() {
@@ -221,8 +221,8 @@ public final class ExampleMain
     });
 
     /**
-     * @example Mouse event listener, called asynchronously whenever the mouse
-     *          moves.
+     * $example: Mouse event listener, called asynchronously whenever the
+     * mouse moves.
      */
 
     window.addMouseListener(new MouseAdapter() {
@@ -245,8 +245,8 @@ public final class ExampleMain
     });
 
     /**
-     * @example Keyboard event listener. Called asynchronously whenever the
-     *          user presses or releases a key on the keyboard.
+     * $example: Keyboard event listener. Called asynchronously whenever the
+     * user presses or releases a key on the keyboard.
      */
 
     window.addKeyListener(new KeyListener() {
@@ -415,7 +415,7 @@ public final class ExampleMain
     });
 
     /**
-     * @example Close the program when the window closes.
+     * $example: Close the program when the window closes.
      */
 
     window.addWindowListener(new WindowAdapter() {
