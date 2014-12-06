@@ -26,6 +26,7 @@ import com.io7m.jcamera.JCameraFPSStyleType;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrixM4x4F;
 
 @SuppressWarnings("static-method") public final class JCameraFPSStyleTest
 {
@@ -41,15 +42,28 @@ import com.io7m.jtensors.VectorReadable3FType;
       v.getZF());
   }
 
+  private interface WorldSpace
+  {
+    // Nothing
+  }
+
+  private interface ViewSpace
+  {
+    // Nothing
+  }
+
   @Test public void testDirectionsHorizontal()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
     final MatrixM4x4F m = new MatrixM4x4F();
+    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
+      new PMatrixM4x4F<WorldSpace, ViewSpace>();
     final Context ctx = new JCameraFPSStyle.Context();
 
     for (float index = 0.0f; index < 360.0f; index += 0.1f) {
       c.cameraRotateAroundHorizontal(0.1f);
       JCameraFPSStyle.cameraMakeViewMatrix(ctx, c, m);
+      JCameraFPSStyle.cameraMakeViewPMatrix(ctx, c, pm);
     }
   }
 
@@ -408,11 +422,14 @@ import com.io7m.jtensors.VectorReadable3FType;
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
     final MatrixM4x4F m = new MatrixM4x4F();
+    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
+      new PMatrixM4x4F<WorldSpace, ViewSpace>();
     final Context ctx = new JCameraFPSStyle.Context();
 
     for (float index = 0.0f; index < 360.0f; index += 0.1f) {
       c.cameraRotateAroundVertical(0.1f);
       JCameraFPSStyle.cameraMakeViewMatrix(ctx, c, m);
+      JCameraFPSStyle.cameraMakeViewPMatrix(ctx, c, pm);
     }
   }
 
