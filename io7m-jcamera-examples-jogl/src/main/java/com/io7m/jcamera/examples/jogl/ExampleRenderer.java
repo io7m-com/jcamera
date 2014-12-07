@@ -386,23 +386,10 @@ final class ExampleRenderer implements ExampleRendererType
           final float y = 0.0f;
           final float z =
             10.0f - (ExampleRenderer.noise(index * 100) * 20.0f);
-
-          MatrixM4x4F.setIdentity(this.model);
-          MatrixM4x4F.makeTranslation3FInto(
-            new VectorI3F(x, y, -z),
-            this.model);
-
-          MatrixM4x4F.setIdentity(this.modelview);
-          MatrixM4x4F.multiply(this.view, this.model, this.modelview);
-
-          g.glUniformMatrix4fv(
-            uid,
-            1,
-            false,
-            this.modelview.getDirectFloatBuffer());
-
-          g.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
+          this.drawQuad(g, uid, x, y, z);
         }
+
+        this.drawQuad(g, uid, 0.0f, 0.0f, 0.0f);
       }
 
       g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -420,6 +407,29 @@ final class ExampleRenderer implements ExampleRendererType
         this.want_warp.set(false);
       }
     }
+  }
+
+  private void drawQuad(
+    final GL3 g,
+    final int uid,
+    final float x,
+    final float y,
+    final float z)
+  {
+    MatrixM4x4F.setIdentity(this.model);
+    MatrixM4x4F.makeTranslation3FInto(new VectorI3F(x, y, -z), this.model);
+
+    MatrixM4x4F.setIdentity(this.modelview);
+    MatrixM4x4F.multiply(this.view, this.model, this.modelview);
+
+    g
+      .glUniformMatrix4fv(
+        uid,
+        1,
+        false,
+        this.modelview.getDirectFloatBuffer());
+
+    g.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
   }
 
   @Override public void init(
