@@ -35,6 +35,25 @@ import com.io7m.jtensors.parameterized.PVectorM3F;
   private final PVectorM3F<?>      ptemporary;
   private final VectorM3F          temporary;
 
+  /**
+   * Create new temporary storage for calculating matrices.
+   */
+
+  public JCameraContext()
+  {
+    this.derived_matrix_r = new MatrixM4x4F();
+    this.derived_matrix_t = new MatrixM4x4F();
+    this.derived_pmatrix_r = new PMatrixM4x4F<Object, Object>();
+    this.derived_pmatrix_t = new PMatrixM4x4F<Object, Object>();
+    this.temporary = new VectorM3F();
+    this.ptemporary = new PVectorM3F<Object>();
+  }
+
+  PVectorM3F<?> getPTemporaryVector()
+  {
+    return this.ptemporary;
+  }
+
   MatrixM4x4F getTemporaryMatrixR()
   {
     return this.derived_matrix_r;
@@ -55,27 +74,8 @@ import com.io7m.jtensors.parameterized.PVectorM3F;
     return this.derived_pmatrix_t;
   }
 
-  PVectorM3F<?> getPTemporaryVector()
-  {
-    return this.ptemporary;
-  }
-
   VectorM3F getTemporaryVector()
   {
     return this.temporary;
-  }
-
-  /**
-   * Create new temporary storage for calculating matrices.
-   */
-
-  public JCameraContext()
-  {
-    this.derived_matrix_r = new MatrixM4x4F();
-    this.derived_matrix_t = new MatrixM4x4F();
-    this.derived_pmatrix_r = new PMatrixM4x4F<Object, Object>();
-    this.derived_pmatrix_t = new PMatrixM4x4F<Object, Object>();
-    this.temporary = new VectorM3F();
-    this.ptemporary = new PVectorM3F<Object>();
   }
 }

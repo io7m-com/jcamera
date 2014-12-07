@@ -161,6 +161,26 @@ public interface JCameraFPSStyleType extends
     float r);
 
   /**
+   * Set the angle around the horizontal axis to <code>h</code>.
+   *
+   * @param h
+   *          The angle.
+   */
+
+  void cameraSetAngleAroundHorizontal(
+    final float h);
+
+  /**
+   * Set the angle around the vertical axis to <code>v</code>.
+   *
+   * @param v
+   *          The angle.
+   */
+
+  void cameraSetAngleAroundVertical(
+    final float v);
+
+  /**
    * Set the position of the camera.
    *
    * @param v
@@ -185,24 +205,4 @@ public interface JCameraFPSStyleType extends
     final float x,
     final float y,
     final float z);
-
-  /**
-   * Set the angle around the horizontal axis to <code>h</code>.
-   *
-   * @param h
-   *          The angle.
-   */
-
-  void cameraSetAngleAroundHorizontal(
-    final float h);
-
-  /**
-   * Set the angle around the vertical axis to <code>v</code>.
-   *
-   * @param v
-   *          The angle.
-   */
-
-  void cameraSetAngleAroundVertical(
-    final float v);
 }

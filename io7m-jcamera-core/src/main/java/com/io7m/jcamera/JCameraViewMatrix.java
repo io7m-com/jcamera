@@ -30,11 +30,6 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 @EqualityReference public final class JCameraViewMatrix
 {
-  private JCameraViewMatrix()
-  {
-    throw new UnreachableCodeException();
-  }
-
   /**
    * Construct a view matrix from the given position, forward, up, and, right
    * vectors.
@@ -160,5 +155,10 @@ import com.io7m.junreachable.UnreachableCodeException;
       (PMatrixM4x4F<Object, T1>) r,
       (PMatrixM4x4F<T0, Object>) t,
       m);
+  }
+
+  private JCameraViewMatrix()
+  {
+    throw new UnreachableCodeException();
   }
 }
