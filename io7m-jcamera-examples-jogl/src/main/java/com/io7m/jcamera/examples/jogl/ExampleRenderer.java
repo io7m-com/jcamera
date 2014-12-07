@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -31,7 +31,6 @@ import javax.media.opengl.GL3;
 import javax.media.opengl.GLException;
 
 import com.io7m.jcamera.JCameraContext;
-import com.io7m.jcamera.JCameraFPSStyle;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
@@ -289,17 +288,17 @@ final class ExampleRenderer implements ExampleRendererType
     return Math.abs(r);
   }
 
-  private final JCameraContext      ctx;
-  private @Nullable GL3      gl;
-  private int                indices;
-  private int                mesh;
-  private final MatrixM4x4F  model;
-  private final MatrixM4x4F  modelview;
-  private int                program;
-  private final MatrixM4x4F  projection;
-  private final MatrixM4x4F  view;
-  private AtomicBoolean      want_warp;
-  private @Nullable GLWindow window;
+  private final JCameraContext ctx;
+  private @Nullable GL3        gl;
+  private int                  indices;
+  private int                  mesh;
+  private final MatrixM4x4F    model;
+  private final MatrixM4x4F    modelview;
+  private int                  program;
+  private final MatrixM4x4F    projection;
+  private final MatrixM4x4F    view;
+  private AtomicBoolean        want_warp;
+  private @Nullable GLWindow   window;
 
   public ExampleRenderer()
   {
@@ -321,7 +320,7 @@ final class ExampleRenderer implements ExampleRendererType
     final GL3 g = this.gl;
 
     if (g != null) {
-      JCameraFPSStyle.cameraMakeViewMatrix(this.ctx, s, this.view);
+      s.cameraMakeViewMatrix(this.ctx, this.view);
 
       g.glClearDepth(1.0f);
       g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
