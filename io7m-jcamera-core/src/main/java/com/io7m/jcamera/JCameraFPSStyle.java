@@ -16,7 +16,6 @@
 
 package com.io7m.jcamera;
 
-import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
@@ -26,7 +25,6 @@ import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM3F;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.jtensors.parameterized.PMatrixM4x4F;
-import com.io7m.jtensors.parameterized.PVectorM3F;
 
 /**
  * The default implementation of {@link JCameraFPSStyleType}.
@@ -35,154 +33,6 @@ import com.io7m.jtensors.parameterized.PVectorM3F;
 @EqualityStructural public final class JCameraFPSStyle implements
   JCameraFPSStyleType
 {
-  /**
-   * Preallocated storage.
-   */
-
-  @EqualityReference public static final class Context
-  {
-    private final MatrixM4x4F        derived_matrix_r;
-    private final MatrixM4x4F        derived_matrix_t;
-    private final PMatrixM4x4F<?, ?> derived_pmatrix_r;
-    private final PMatrixM4x4F<?, ?> derived_pmatrix_t;
-    private final PVectorM3F<?>      ptemporary;
-    private final VectorM3F          temporary;
-
-    /**
-     * Create new temporary storage for calculating matrices.
-     */
-
-    public Context()
-    {
-      this.derived_matrix_r = new MatrixM4x4F();
-      this.derived_matrix_t = new MatrixM4x4F();
-      this.derived_pmatrix_r = new PMatrixM4x4F<Object, Object>();
-      this.derived_pmatrix_t = new PMatrixM4x4F<Object, Object>();
-      this.temporary = new VectorM3F();
-      this.ptemporary = new PVectorM3F<Object>();
-    }
-  }
-
-  /**
-   * Construct a view matrix for the camera <code>c</code>, using preallocated
-   * storage in <code>ctx</code> and writing the result to <code>m</code>.
-   *
-   * @param ctx
-   *          Preallocated storage
-   * @param c
-   *          The camera
-   * @param m
-   *          The output matrix
-   */
-
-  @SuppressWarnings("synthetic-access") public static
-    void
-    cameraMakeViewMatrix(
-      final Context ctx,
-      final JCameraFPSStyleReadableType c,
-      final MatrixM4x4F m)
-  {
-    /**
-     * Calculate basis vectors for rotated coordinate system.
-     */
-
-    final VectorReadable3FType right = c.cameraGetRight();
-    final VectorReadable3FType up = c.cameraGetUp();
-    final VectorReadable3FType forward = c.cameraGetForward();
-    final MatrixM4x4F r = ctx.derived_matrix_r;
-    MatrixM4x4F.setIdentity(r);
-    r.set(0, 0, right.getXF());
-    r.set(0, 1, right.getYF());
-    r.set(0, 2, right.getZF());
-    r.set(1, 0, up.getXF());
-    r.set(1, 1, up.getYF());
-    r.set(1, 2, up.getZF());
-    r.set(2, 0, -forward.getXF());
-    r.set(2, 1, -forward.getYF());
-    r.set(2, 2, -forward.getZF());
-
-    /**
-     * Calculate translation matrix.
-     */
-
-    final VectorReadable3FType pos = c.cameraGetPosition();
-    final MatrixM4x4F t = ctx.derived_matrix_t;
-    MatrixM4x4F.setIdentity(t);
-    ctx.temporary.set3F(-pos.getXF(), -pos.getYF(), -pos.getZF());
-    MatrixM4x4F.makeTranslation3FInto(ctx.temporary, ctx.derived_matrix_t);
-
-    /**
-     * Produce final transform.
-     */
-
-    MatrixM4x4F.multiply(ctx.derived_matrix_r, ctx.derived_matrix_t, m);
-  }
-
-  /**
-   * Construct a view matrix for the camera <code>c</code>, using preallocated
-   * storage in <code>ctx</code> and writing the result to <code>m</code>.
-   *
-   * @param ctx
-   *          Preallocated storage
-   * @param c
-   *          The camera
-   * @param m
-   *          The output matrix
-   * @param <T0>
-   *          The source coordinate system
-   * @param <T1>
-   *          The target coordiante system
-   */
-
-  @SuppressWarnings({ "synthetic-access", "unchecked" }) public static
-    <T0, T1>
-    void
-    cameraMakeViewPMatrix(
-      final Context ctx,
-      final JCameraFPSStyleReadableType c,
-      final PMatrixM4x4F<T0, T1> m)
-  {
-    /**
-     * Calculate basis vectors for rotated coordinate system.
-     */
-
-    final VectorReadable3FType right = c.cameraGetRight();
-    final VectorReadable3FType up = c.cameraGetUp();
-    final VectorReadable3FType forward = c.cameraGetForward();
-    final PMatrixM4x4F<Object, Object> r =
-      (PMatrixM4x4F<Object, Object>) ctx.derived_pmatrix_r;
-    PMatrixM4x4F.setIdentity(r);
-    r.set(0, 0, right.getXF());
-    r.set(0, 1, right.getYF());
-    r.set(0, 2, right.getZF());
-    r.set(1, 0, up.getXF());
-    r.set(1, 1, up.getYF());
-    r.set(1, 2, up.getZF());
-    r.set(2, 0, -forward.getXF());
-    r.set(2, 1, -forward.getYF());
-    r.set(2, 2, -forward.getZF());
-
-    /**
-     * Calculate translation matrix.
-     */
-
-    final VectorReadable3FType pos = c.cameraGetPosition();
-    final PMatrixM4x4F<Object, Object> t =
-      (PMatrixM4x4F<Object, Object>) ctx.derived_pmatrix_t;
-    PMatrixM4x4F.setIdentity(t);
-    ctx.ptemporary.set3F(-pos.getXF(), -pos.getYF(), -pos.getZF());
-    PMatrixM4x4F.makeTranslation3FInto(ctx.ptemporary, t);
-
-    /**
-     * Produce final transform.
-     */
-
-    PMatrixM4x4F.multiply(
-      (PMatrixM4x4F<Object, T1>) r,
-      (PMatrixM4x4F<T0, Object>) t,
-      m);
-  }
-
   /**
    * @return A new FPS camera
    */
@@ -218,7 +68,6 @@ import com.io7m.jtensors.parameterized.PVectorM3F;
   private float           input_angle_around_horizontal;
   private float           input_angle_around_vertical;
   private final VectorM3F input_position;
-
   private final VectorM3F temporary;
 
   private JCameraFPSStyle()
@@ -298,6 +147,32 @@ import com.io7m.jtensors.parameterized.PVectorM3F;
       this.input_angle_around_horizontal,
       this.input_angle_around_vertical,
       new VectorI3F(this.input_position));
+  }
+
+  @Override public void cameraMakeViewMatrix(
+    final JCameraContext ctx,
+    final MatrixM4x4F m)
+  {
+    JCameraViewMatrix.makeViewMatrix(
+      ctx,
+      m,
+      this.cameraGetPosition(),
+      this.cameraGetRight(),
+      this.cameraGetUp(),
+      this.cameraGetForward());
+  }
+
+  @Override public <T0, T1> void cameraMakeViewPMatrix(
+    final JCameraContext ctx,
+    final PMatrixM4x4F<T0, T1> m)
+  {
+    JCameraViewMatrix.makeViewPMatrix(
+      ctx,
+      m,
+      this.cameraGetPosition(),
+      this.cameraGetRight(),
+      this.cameraGetUp(),
+      this.cameraGetForward());
   }
 
   @Override public void cameraMoveForward(

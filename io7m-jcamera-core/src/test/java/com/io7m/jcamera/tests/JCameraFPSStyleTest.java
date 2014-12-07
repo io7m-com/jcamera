@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -19,17 +19,30 @@ package com.io7m.jcamera.tests;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.io7m.jcamera.JCameraContext;
 import com.io7m.jcamera.JCameraFPSStyle;
-import com.io7m.jcamera.JCameraFPSStyle.Context;
 import com.io7m.jcamera.JCameraFPSStyleReadableType;
+import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
+import com.io7m.jtensors.MatrixI4x4F;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrixI4x4F;
 import com.io7m.jtensors.parameterized.PMatrixM4x4F;
 
 @SuppressWarnings("static-method") public final class JCameraFPSStyleTest
 {
+  private interface ViewSpace
+  {
+    // Nothing
+  }
+
+  private interface WorldSpace
+  {
+    // Nothing
+  }
+
   private static void dumpVector(
     final String name,
     final VectorReadable3FType v)
@@ -42,28 +55,13 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       v.getZF());
   }
 
-  private interface WorldSpace
-  {
-    // Nothing
-  }
-
-  private interface ViewSpace
-  {
-    // Nothing
-  }
-
   @Test public void testDirectionsHorizontal()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final MatrixM4x4F m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final Context ctx = new JCameraFPSStyle.Context();
 
     for (float index = 0.0f; index < 360.0f; index += 0.1f) {
       c.cameraRotateAroundHorizontal(0.1f);
-      JCameraFPSStyle.cameraMakeViewMatrix(ctx, c, m);
-      JCameraFPSStyle.cameraMakeViewPMatrix(ctx, c, pm);
+      this.compareSnapshot(c);
     }
   }
 
@@ -102,6 +100,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnDown45()
@@ -141,6 +141,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnDown90()
@@ -181,6 +183,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnLeft90()
@@ -220,6 +224,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnRight180()
@@ -259,6 +265,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnRight270()
@@ -298,6 +306,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnRight90()
@@ -337,6 +347,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnUp45()
@@ -376,6 +388,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsTurnUp90()
@@ -416,20 +430,17 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testDirectionsVertical()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final MatrixM4x4F m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final Context ctx = new JCameraFPSStyle.Context();
 
     for (float index = 0.0f; index < 360.0f; index += 0.1f) {
       c.cameraRotateAroundVertical(0.1f);
-      JCameraFPSStyle.cameraMakeViewMatrix(ctx, c, m);
-      JCameraFPSStyle.cameraMakeViewPMatrix(ctx, c, pm);
+      this.compareSnapshot(c);
     }
   }
 
@@ -450,6 +461,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testStrafeInitial()
@@ -469,6 +482,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testStrafeLeft90_0()
@@ -489,6 +504,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testStrafeLeft90_1()
@@ -509,6 +526,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testStrafeLeft90_2()
@@ -530,6 +549,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
   }
 
   @Test public void testStrafeLeft90_3()
@@ -551,5 +572,66 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       Assert.assertEquals(expected.getYF(), actual.getYF(), 0.00001f);
       Assert.assertEquals(expected.getZF(), actual.getZF(), 0.00001f);
     }
+
+    this.compareSnapshot(c);
+  }
+
+  private void compareVector(
+    final VectorReadable3FType a,
+    final VectorReadable3FType b)
+  {
+    Assert.assertEquals(a.getXF(), b.getXF(), 0.0);
+    Assert.assertEquals(a.getYF(), b.getYF(), 0.0);
+    Assert.assertEquals(a.getZF(), b.getZF(), 0.0);
+  }
+
+  private void compareSnapshot(
+    final JCameraFPSStyleReadableType c)
+  {
+    final JCameraFPSStyleSnapshot snap = c.cameraMakeSnapshot();
+    Assert.assertEquals(
+      snap.cameraGetAngleAroundHorizontal(),
+      c.cameraGetAngleAroundHorizontal(),
+      0.0);
+    Assert.assertEquals(
+      snap.cameraGetAngleAroundVertical(),
+      c.cameraGetAngleAroundVertical(),
+      0.0);
+    this.compareVector(snap.cameraGetForward(), c.cameraGetForward());
+    this.compareVector(snap.cameraGetRight(), c.cameraGetRight());
+    this.compareVector(snap.cameraGetUp(), c.cameraGetUp());
+    this.compareVector(snap.cameraGetPosition(), c.cameraGetPosition());
+
+    final MatrixM4x4F m = new MatrixM4x4F();
+    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
+      new PMatrixM4x4F<WorldSpace, ViewSpace>();
+    final MatrixM4x4F snap_m = new MatrixM4x4F();
+    final PMatrixM4x4F<WorldSpace, ViewSpace> snap_pm =
+      new PMatrixM4x4F<WorldSpace, ViewSpace>();
+    final JCameraContext ctx = new JCameraContext();
+
+    c.cameraMakeViewMatrix(ctx, m);
+    c.cameraMakeViewPMatrix(ctx, pm);
+
+    final PMatrixI4x4F<WorldSpace, ViewSpace> ipm =
+      PMatrixI4x4F.newFromReadable(pm);
+    final MatrixI4x4F im = MatrixI4x4F.newFromReadable(m);
+
+    snap.cameraMakeViewMatrix(ctx, snap_m);
+    snap.cameraMakeViewPMatrix(ctx, snap_pm);
+
+    final PMatrixI4x4F<WorldSpace, ViewSpace> snap_ipm =
+      PMatrixI4x4F.newFromReadable(snap_pm);
+    final MatrixI4x4F snap_im = MatrixI4x4F.newFromReadable(snap_m);
+
+    Assert.assertEquals(im, snap_im);
+    Assert.assertEquals(ipm, snap_ipm);
+
+    final JCameraFPSStyleSnapshot snap2 = c.cameraMakeSnapshot();
+    final JCameraFPSStyleSnapshot snap3 = snap.cameraMakeSnapshot();
+
+    Assert.assertEquals(snap, snap2);
+    Assert.assertEquals(snap2, snap3);
+    Assert.assertEquals(snap, snap3);
   }
 }

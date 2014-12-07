@@ -16,12 +16,11 @@
 
 package com.io7m.jcamera;
 
-
 /**
  * The type of cameras.
  */
 
-public interface JCameraType
+public interface JCameraType extends JCameraReadableType
 {
   // No extra functions.
 }

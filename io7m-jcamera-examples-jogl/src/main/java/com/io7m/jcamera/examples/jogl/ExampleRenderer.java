@@ -30,8 +30,8 @@ import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLException;
 
+import com.io7m.jcamera.JCameraContext;
 import com.io7m.jcamera.JCameraFPSStyle;
-import com.io7m.jcamera.JCameraFPSStyle.Context;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
@@ -289,7 +289,7 @@ final class ExampleRenderer implements ExampleRendererType
     return Math.abs(r);
   }
 
-  private final Context      ctx;
+  private final JCameraContext      ctx;
   private @Nullable GL3      gl;
   private int                indices;
   private int                mesh;
@@ -312,7 +312,7 @@ final class ExampleRenderer implements ExampleRendererType
     this.view = new MatrixM4x4F();
     this.modelview = new MatrixM4x4F();
     this.want_warp = new AtomicBoolean(false);
-    this.ctx = new JCameraFPSStyle.Context();
+    this.ctx = new JCameraContext();
   }
 
   @Override public void draw(

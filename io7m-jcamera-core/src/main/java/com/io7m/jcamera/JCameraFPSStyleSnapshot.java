@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -19,8 +19,10 @@ package com.io7m.jcamera;
 import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
+import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrixM4x4F;
 
 /**
  * An immutable snapshot of a {@link JCameraFPSStyle}.
@@ -73,7 +75,6 @@ import com.io7m.jtensors.VectorReadable3FType;
   private final VectorI3F forward;
   private final VectorI3F position;
   private final VectorI3F right;
-
   private final VectorI3F up;
 
   JCameraFPSStyleSnapshot(
@@ -120,6 +121,37 @@ import com.io7m.jtensors.VectorReadable3FType;
   @Override public VectorReadable3FType cameraGetUp()
   {
     return this.up;
+  }
+
+  @Override public JCameraFPSStyleSnapshot cameraMakeSnapshot()
+  {
+    return this;
+  }
+
+  @Override public void cameraMakeViewMatrix(
+    final JCameraContext ctx,
+    final MatrixM4x4F m)
+  {
+    JCameraViewMatrix.makeViewMatrix(
+      ctx,
+      m,
+      this.cameraGetPosition(),
+      this.cameraGetRight(),
+      this.cameraGetUp(),
+      this.cameraGetForward());
+  }
+
+  @Override public <T0, T1> void cameraMakeViewPMatrix(
+    final JCameraContext ctx,
+    final PMatrixM4x4F<T0, T1> m)
+  {
+    JCameraViewMatrix.makeViewPMatrix(
+      ctx,
+      m,
+      this.cameraGetPosition(),
+      this.cameraGetRight(),
+      this.cameraGetUp(),
+      this.cameraGetForward());
   }
 
   @Override public boolean equals(
