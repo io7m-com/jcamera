@@ -1,1 +1,1 @@
-io7m-jcamera 0.2.2
+io7m-jcamera 0.3.0
