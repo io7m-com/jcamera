@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -27,14 +27,6 @@ import com.io7m.jranges.RangeCheck;
 @EqualityReference public final class JCameraFPSStyleLinearIntegrator implements
   JCameraFPSStyleLinearIntegratorType
 {
-  private static float clamp(
-    final float x,
-    final float min,
-    final float max)
-  {
-    return Math.max(Math.min(x, max), min);
-  }
-
   /**
    * Construct a new integrator.
    *
@@ -47,23 +39,23 @@ import com.io7m.jranges.RangeCheck;
 
   public static JCameraFPSStyleLinearIntegratorType newIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraInput in_input)
+    final JCameraFPSStyleInput in_input)
   {
     return new JCameraFPSStyleLinearIntegrator(in_camera, in_input);
   }
 
-  private float                     acceleration;
-  private final JCameraFPSStyleType camera;
-  private float                     drag;
-  private final JCameraInput        input;
-  private float                     maximum_speed;
-  private float                     speed_forward;
-  private float                     speed_right;
-  private float                     speed_up;
+  private float                      acceleration;
+  private final JCameraFPSStyleType  camera;
+  private float                      drag;
+  private final JCameraFPSStyleInput input;
+  private float                      maximum_speed;
+  private float                      speed_forward;
+  private float                      speed_right;
+  private float                      speed_up;
 
   private JCameraFPSStyleLinearIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraInput in_input)
+    final JCameraFPSStyleInput in_input)
   {
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
@@ -104,12 +96,7 @@ import com.io7m.jranges.RangeCheck;
       s -= this.acceleration * time;
     }
 
-    s =
-      JCameraFPSStyleLinearIntegrator.clamp(
-        s,
-        -this.maximum_speed,
-        this.maximum_speed);
-
+    s = Clamp.clamp(s, -this.maximum_speed, this.maximum_speed);
     this.camera.cameraMoveForward(s * time);
     return this.applyDrag(s, time);
   }
@@ -128,12 +115,7 @@ import com.io7m.jranges.RangeCheck;
       s -= this.acceleration * time;
     }
 
-    s =
-      JCameraFPSStyleLinearIntegrator.clamp(
-        s,
-        -this.maximum_speed,
-        this.maximum_speed);
-
+    s = Clamp.clamp(s, -this.maximum_speed, this.maximum_speed);
     this.camera.cameraMoveRight(s * time);
     return this.applyDrag(s, time);
   }
@@ -152,12 +134,7 @@ import com.io7m.jranges.RangeCheck;
       s -= this.acceleration * time;
     }
 
-    s =
-      JCameraFPSStyleLinearIntegrator.clamp(
-        s,
-        -this.maximum_speed,
-        this.maximum_speed);
-
+    s = Clamp.clamp(s, -this.maximum_speed, this.maximum_speed);
     this.camera.cameraMoveUp(s * time);
     return this.applyDrag(s, time);
   }
@@ -167,7 +144,7 @@ import com.io7m.jranges.RangeCheck;
     return this.camera;
   }
 
-  @Override public JCameraInput integratorGetInput()
+  @Override public JCameraFPSStyleInput integratorGetInput()
   {
     return this.input;
   }

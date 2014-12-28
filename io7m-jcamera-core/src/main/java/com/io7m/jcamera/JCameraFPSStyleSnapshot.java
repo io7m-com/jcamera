@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -17,6 +17,7 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityStructural;
+import com.io7m.jinterp.InterpolationF;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.MatrixM4x4F;
@@ -25,11 +26,12 @@ import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.jtensors.parameterized.PMatrixM4x4F;
 
 /**
- * An immutable snapshot of a {@link JCameraFPSStyle}.
+ * An immutable snapshot of a {@link JCameraFPSStyleType}.
  */
 
 @EqualityStructural public final class JCameraFPSStyleSnapshot implements
-  JCameraFPSStyleReadableType
+  JCameraFPSStyleReadableType,
+  JCameraReadableSnapshotType
 {
   /**
    * Linearly interpolate between two camera snapshots.
@@ -63,10 +65,15 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
         y.cameraGetPosition(),
         a);
     final float r_h =
-      ((1.0f - a) * x.angle_around_horizontal)
-        + (a * y.angle_around_horizontal);
+      InterpolationF.interpolateLinear(
+        x.angle_around_horizontal,
+        y.angle_around_horizontal,
+        a);
     final float r_v =
-      ((1.0f - a) * x.angle_around_vertical) + (a * y.angle_around_vertical);
+      InterpolationF.interpolateLinear(
+        x.angle_around_vertical,
+        y.angle_around_vertical,
+        a);
     return new JCameraFPSStyleSnapshot(r_f, r_r, r_u, r_h, r_v, r_p);
   }
 

@@ -288,9 +288,9 @@
             <configuration>
               <mainClass>com.io7m.jcamera.documentation.ExampleSplit</mainClass>
               <arguments>
-                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleSimulation.java</argument>
+                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java</argument>
                 <argument>${project.build.directory}/documentation/</argument>
-                <argument>example-sim-</argument>
+                <argument>example-fps-sim-</argument>
               </arguments>
             </configuration>
           </execution>
@@ -304,9 +304,9 @@
             <configuration>
               <mainClass>com.io7m.jcamera.documentation.ExampleSplit</mainClass>
               <arguments>
-                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleMain.java</argument>
+                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java</argument>
                 <argument>${project.build.directory}/documentation/</argument>
-                <argument>example-main-</argument>
+                <argument>example-fps-main-</argument>
               </arguments>
             </configuration>
           </execution>

@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- *
+ * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -35,14 +35,6 @@ import com.io7m.jranges.RangeCheck;
     return (float) (f * Math.pow(drag, time));
   }
 
-  private static float clamp(
-    final float x,
-    final float min,
-    final float max)
-  {
-    return Math.max(Math.min(x, max), min);
-  }
-
   /**
    * Construct a new integrator.
    *
@@ -55,25 +47,25 @@ import com.io7m.jranges.RangeCheck;
 
   public static JCameraFPSStyleAngularIntegratorType newIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraInput in_input)
+    final JCameraFPSStyleInput in_input)
   {
     return new JCameraFPSStyleAngularIntegrator(in_camera, in_input);
   }
 
-  private float                     acceleration_horizontal;
-  private float                     acceleration_vertical;
-  private final JCameraFPSStyleType camera;
-  private float                     drag_horizontal;
-  private float                     drag_vertical;
-  private final JCameraInput        input;
-  private float                     maximum_speed_horizontal;
-  private float                     maximum_speed_vertical;
-  private float                     speed_horizontal;
-  private float                     speed_vertical;
+  private float                      acceleration_horizontal;
+  private float                      acceleration_vertical;
+  private final JCameraFPSStyleType  camera;
+  private float                      drag_horizontal;
+  private float                      drag_vertical;
+  private final JCameraFPSStyleInput input;
+  private float                      maximum_speed_horizontal;
+  private float                      maximum_speed_vertical;
+  private float                      speed_horizontal;
+  private float                      speed_vertical;
 
   private JCameraFPSStyleAngularIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraInput in_input)
+    final JCameraFPSStyleInput in_input)
   {
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
@@ -89,27 +81,39 @@ import com.io7m.jranges.RangeCheck;
   @Override public void integrate(
     final float time)
   {
-    this.integrateHorizontal(time);
+    this.speed_horizontal = this.integrateHorizontal(time);
     this.integrateVertical(time);
   }
 
-  private void integrateHorizontal(
+  private float integrateHorizontal(
     final float time)
   {
     final float r = this.input.takeRotationHorizontal();
     final float s =
       this.speed_horizontal + (r * (this.acceleration_horizontal * time));
+
     final float sc =
-      JCameraFPSStyleAngularIntegrator.clamp(
+      Clamp.clamp(
         s,
         -this.maximum_speed_horizontal,
         this.maximum_speed_horizontal);
-    this.camera.cameraRotateAroundHorizontal(sc);
-    this.speed_horizontal =
-      JCameraFPSStyleAngularIntegrator.applyDrag(
-        sc,
-        this.drag_horizontal,
-        time);
+
+    /**
+     * If applying the movement resulted in a value that was clamped, then
+     * remove all speed in that direction by returning zero. Otherwise, the
+     * user has to achieve a greater than or equal speed in the opposite
+     * direction just to get the camera to appear to start moving.
+     */
+
+    final boolean clamped = this.camera.cameraRotateAroundHorizontal(sc);
+    if (clamped) {
+      return 0.0f;
+    }
+
+    return JCameraFPSStyleAngularIntegrator.applyDrag(
+      sc,
+      this.drag_horizontal,
+      time);
   }
 
   private void integrateVertical(
@@ -119,7 +123,7 @@ import com.io7m.jranges.RangeCheck;
     final float s =
       this.speed_vertical + (r * (this.acceleration_vertical * time));
     final float sc =
-      JCameraFPSStyleAngularIntegrator.clamp(
+      Clamp.clamp(
         s,
         -this.maximum_speed_vertical,
         this.maximum_speed_vertical);
@@ -202,7 +206,7 @@ import com.io7m.jranges.RangeCheck;
     return this.camera;
   }
 
-  @Override public JCameraInput integratorGetInput()
+  @Override public JCameraFPSStyleInput integratorGetInput()
   {
     return this.input;
   }

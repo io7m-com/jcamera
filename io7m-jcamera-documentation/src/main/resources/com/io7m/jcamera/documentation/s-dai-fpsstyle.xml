@@ -35,40 +35,6 @@
       the mouse, and to move forwards, backwards, left, right, up, and down 
       using the keyboard.
     </s:paragraph>
-    <s:paragraph>
-      The intention here is to first describe a simple 
-      purely mathematical rendering-and-input-system-independent 
-      <s:term s:type="term">camera</s:term> that can be positioned and 
-      oriented, but that does not 
-      know anything about integration of its position and rotation over 
-      time. A separate system (the <s:term s:type="term">integrator</s:term>)
-      is built upon this camera that provides interpolation of the position 
-      and orientation over time to provide configurable smooth animation. 
-      Finally, a system (the <s:term s:type="term">input</s:term>) is described 
-      that actually attaches the camera system to a keyboard and mouse package. 
-      The input package used in the examples is that of
-      <s:link-external s:target="http://jogamp.org/www/jogl">JOGL</s:link-external>,
-      but the system is specifically described in a manner to allow it to
-      be easily adapted to any other input package. Essentially, the
-      <s:term s:type="package">${project.parent.name}</s:term> package
-      tries to provide a cleanly-separated system-independent core, with
-      the addition of a system to allow it to be attached to system-specific
-      keyboard/mouse input packages. This is essential for the correctness
-      of the software and also for the actual ease of understanding of the
-      mathematics and implementation <s:footnote>
-        Most camera systems documented (usually in blogs) online either 
-        describe only the mathematics and fail to describe the intricacies of driving
-        the system with input, or violently mash all of the mathematics
-        into an existing assumption-ridden input and rendering system - 
-        meaning that the reader has to fully understand an input system 
-        or rendering system that they may not ever have even seen before 
-        just to understand how the camera works.
-      </s:footnote>.
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Architecture</s:formal-item-title>
-      <s:image s:source="images/system.png">Architecture</s:image>
-    </s:formal-item>
   </s:subsection>
 
   <s:subsection xml:id="dai.fpsstyle.behaviour">
@@ -225,7 +191,7 @@
       <s:image s:source="images/fps_keyboard_up_local_0.png">Keyboard up local 0</s:image>
     </s:formal-item>
     <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard up global 1</s:formal-item-title>
+      <s:formal-item-title>Keyboard up local 1</s:formal-item-title>
       <s:image s:source="images/fps_keyboard_up_local_1.png">Keyboard up local 1</s:image>
     </s:formal-item>
     <s:paragraph>
@@ -354,7 +320,7 @@
       and <s:term s:type="expression">Y</s:term> axes typically used in
       OpenGL.
     </s:paragraph>
-    <s:paragraph>
+    <s:paragraph xml:id="dai.fpssstyle.camera_math.movement">
       With the <s:term s:type="expression">forward</s:term> and
       <s:term s:type="expression">right</s:term> vectors calculated, it is
       now trivial to derive forward/backward and left/right movement. Forward
@@ -412,7 +378,7 @@
       <s:formal-item-title>Down movement</s:formal-item-title>
       <s:verbatim><xi:include href="haskell/Down.hs" parse="text"/></s:verbatim>
     </s:formal-item>
-    <s:paragraph>
+    <s:paragraph xml:id="dai.fpssstyle.camera_math.view_matrix">
       The <s:term s:type="expression">right</s:term>,
       <s:term s:type="expression">up</s:term>, and
       <s:term s:type="expression">forward</s:term> vectors form an orthonormal
@@ -474,8 +440,8 @@
     </s:paragraph>
     <s:paragraph>
       Additionally, the horizontal angle <s:term s:type="expression">h</s:term> can be 
-      <s:term s:type="term">clamped</s:term> to a given range (and is clamped by default).
-      XXX: Link to reason why when written.
+      <s:link s:target="dai.fpsstyle.angular_integrators.clamping">clamped</s:link> to a 
+      given range (and is clamped by default).
     </s:paragraph>
   </s:subsection>
 
@@ -518,9 +484,18 @@
     <s:paragraph xml:id="dai.fpsstyle.input.rotation_coefficients">
       The situation for mouse movement is slightly more complex. Most OS-specific
       windowing systems will provide the user with the current mouse cursor coordinates
-      as a pair of integers relative to some origin. Some systems have the origin
-      <s:term s:type="expression">(0, 0)</s:term> at the top-left corner of the
+      as a pair of integer offsets (in pixels) relative to some origin. Some systems 
+      have the origin <s:term s:type="expression">(0, 0)</s:term> at the top-left corner of the
       screen/window, whilst others have it at the bottom-left corner of the window.
+      Additionally, the density of displays is increasing at a steady rate. A monitor
+      manufactured five years ago may be 40cm wide and have a resolution that fits
+      1440 pixels into that width. A modern display may be the same width but have
+      over four times as many pixels in the same space. A camera system that 
+      recklessly consumes coordinates given in pixels is going to behave differently 
+      on a screen that has a higher density of pixels than it would on an older, lower 
+      resolution display.
+    </s:paragraph>
+    <s:paragraph>
       In order for the <s:term s:type="package">${project.parent.name}</s:term> package
       to remain system-independent, it's necessary to provide a way to map mouse input
       to a simple and consistent set of generic
@@ -610,7 +585,7 @@
       the current rotation coefficients from an input at a (typically) fixed 
       rate. The current rotation coefficients stored in an input therefore 
       represent the sum of mouse movements for a given elapsed time period. To this
-      end, the <s:link-external s:target="com/io7m/jcamera/JCameraInput.java">JCameraInput</s:link-external>
+      end, the <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleInput.java">JCameraFPSStyleInput</s:link-external>
       type in the <s:term s:type="package">${project.parent.name}</s:term> package provides
       an interface where the user simply submits new rotation coefficients each time
       they are received, and the type keeps a running total of the coefficients. This
@@ -618,11 +593,21 @@
       has to ask for mouse input, or is receiving it piecemeal via some event system.
     </s:paragraph>
     <s:paragraph>
+      By taking the width and height of the screen in pixels, and dividing as
+      shown in the above equations, the resulting coefficients are
+      <s:term s:type="term">screen-density independent</s:term>. In other words,
+      if the user moves the cursor halfway across the screen on a very high
+      density display, the resulting coefficients are the same as those resulting
+      from a user moving the cursor across the same distance on a much lower
+      density display, even though the distances expressed in pixels are very
+      different.
+    </s:paragraph>
+    <s:paragraph>
       In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      inputs are represented by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraInput.java">JCameraInput</s:link-external>
+      fps-style inputs are represented by the
+      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleInput.java">JCameraFPSStyleInput</s:link-external>
       type, and mouse regions are represented by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraMouseRegion.java">JCameraMouseRegion</s:link-external>
+      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleMouseRegion.java">JCameraFPSStyleMouseRegion</s:link-external>
       type.
     </s:paragraph>
   </s:subsection>
@@ -815,7 +800,7 @@
       <s:link s:target="dai.fpsstyle.input.rotation_coefficients">rotation coefficients</s:link>
       taken from the input.
     </s:paragraph>
-    <s:paragraph>
+    <s:paragraph xml:id="dai.fpsstyle.angular_integrators.clamping">
       Rotation around the horizontal axis is identical, except that the actual
       camera itself may <s:term s:type="term">clamp</s:term> rotations around
       the horizontal axis. The reason for this is simple: If rotations are not

@@ -1,10 +1,10 @@
 /*
  * Copyright © 2014 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -43,7 +43,7 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     // Nothing
   }
 
-  private static void dumpVector(
+  @SuppressWarnings("boxing") private static void dumpVector(
     final String name,
     final VectorReadable3FType v)
   {
@@ -53,6 +53,89 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       v.getXF(),
       v.getYF(),
       v.getZF());
+  }
+
+  private void compareSnapshot(
+    final JCameraFPSStyleReadableType c)
+  {
+    final JCameraFPSStyleSnapshot snap = c.cameraMakeSnapshot();
+    Assert.assertEquals(
+      snap.cameraGetAngleAroundHorizontal(),
+      c.cameraGetAngleAroundHorizontal(),
+      0.0);
+    Assert.assertEquals(
+      snap.cameraGetAngleAroundVertical(),
+      c.cameraGetAngleAroundVertical(),
+      0.0);
+    this.compareVector(snap.cameraGetForward(), c.cameraGetForward());
+    this.compareVector(snap.cameraGetRight(), c.cameraGetRight());
+    this.compareVector(snap.cameraGetUp(), c.cameraGetUp());
+    this.compareVector(snap.cameraGetPosition(), c.cameraGetPosition());
+
+    final MatrixM4x4F m = new MatrixM4x4F();
+    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
+      new PMatrixM4x4F<WorldSpace, ViewSpace>();
+    final MatrixM4x4F snap_m = new MatrixM4x4F();
+    final PMatrixM4x4F<WorldSpace, ViewSpace> snap_pm =
+      new PMatrixM4x4F<WorldSpace, ViewSpace>();
+    final JCameraContext ctx = new JCameraContext();
+
+    c.cameraMakeViewMatrix(ctx, m);
+    c.cameraMakeViewPMatrix(ctx, pm);
+
+    final PMatrixI4x4F<WorldSpace, ViewSpace> ipm =
+      PMatrixI4x4F.newFromReadable(pm);
+    final MatrixI4x4F im = MatrixI4x4F.newFromReadable(m);
+
+    snap.cameraMakeViewMatrix(ctx, snap_m);
+    snap.cameraMakeViewPMatrix(ctx, snap_pm);
+
+    final PMatrixI4x4F<WorldSpace, ViewSpace> snap_ipm =
+      PMatrixI4x4F.newFromReadable(snap_pm);
+    final MatrixI4x4F snap_im = MatrixI4x4F.newFromReadable(snap_m);
+
+    Assert.assertEquals(im, snap_im);
+    Assert.assertEquals(ipm, snap_ipm);
+
+    final JCameraFPSStyleSnapshot snap2 = c.cameraMakeSnapshot();
+    final JCameraFPSStyleSnapshot snap3 = snap.cameraMakeSnapshot();
+
+    Assert.assertEquals(snap, snap2);
+    Assert.assertEquals(snap2, snap3);
+    Assert.assertEquals(snap, snap3);
+  }
+
+  private void compareVector(
+    final VectorReadable3FType a,
+    final VectorReadable3FType b)
+  {
+    Assert.assertEquals(a.getXF(), b.getXF(), 0.0);
+    Assert.assertEquals(a.getYF(), b.getYF(), 0.0);
+    Assert.assertEquals(a.getZF(), b.getZF(), 0.0);
+  }
+
+  @Test public void testClampHorizontal_0()
+  {
+    final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
+    c0.cameraClampHorizontalEnable(-2.0f, 2.0f);
+    c0.cameraSetAngleAroundHorizontal(-10.0f);
+    Assert.assertEquals(-2.0f, c0.cameraGetAngleAroundHorizontal(), 0.0f);
+  }
+
+  @Test public void testClampHorizontal_1()
+  {
+    final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
+    c0.cameraClampHorizontalEnable(-2.0f, 2.0f);
+    c0.cameraSetAngleAroundHorizontal(10.0f);
+    Assert.assertEquals(2.0f, c0.cameraGetAngleAroundHorizontal(), 0.0f);
+  }
+
+  @Test public void testClampHorizontal_2()
+  {
+    final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
+    c0.cameraClampHorizontalDisable();
+    c0.cameraSetAngleAroundHorizontal(10.0f);
+    Assert.assertEquals(10.0f, c0.cameraGetAngleAroundHorizontal(), 0.0f);
   }
 
   @Test public void testDirectionsHorizontal()
@@ -444,6 +527,32 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     }
   }
 
+  @Test public void testEquality()
+  {
+    final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
+
+    c0.cameraRotateAroundVertical((float) (Math.random() * 100.0f));
+    c0.cameraRotateAroundHorizontal((float) (Math.random() * 100.0f));
+    c0.cameraMoveRight((float) (Math.random() * 100.0f));
+    c0.cameraMoveUp((float) (Math.random() * 100.0f));
+    c0.cameraMoveForward((float) (Math.random() * 100.0f));
+
+    final JCameraFPSStyleType c1 = JCameraFPSStyle.newCameraFrom(c0);
+
+    System.out.println("c0: " + c0);
+    System.out.println("c1: " + c1);
+
+    Assert.assertEquals(c0, c1);
+    Assert.assertNotEquals(c0, null);
+    Assert.assertNotEquals(c0, Integer.valueOf(23));
+
+    Assert.assertEquals(c0.hashCode(), c1.hashCode());
+    Assert.assertEquals(c0.toString(), c1.toString());
+
+    this.compareSnapshot(c1);
+    this.compareSnapshot(c0);
+  }
+
   @Test public void testMoveForwardInitial()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
@@ -463,6 +572,68 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     }
 
     this.compareSnapshot(c);
+  }
+
+  @Test public void testSnapshotEquality()
+  {
+    final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
+
+    c0.cameraRotateAroundVertical((float) (Math.random() * 100.0f));
+    c0.cameraRotateAroundHorizontal((float) (Math.random() * 100.0f));
+    c0.cameraMoveRight((float) (Math.random() * 100.0f));
+    c0.cameraMoveUp((float) (Math.random() * 100.0f));
+    c0.cameraMoveForward((float) (Math.random() * 100.0f));
+
+    final JCameraFPSStyleType c1 = JCameraFPSStyle.newCameraFrom(c0);
+
+    c1.cameraRotateAroundVertical((float) (Math.random() * 100.0f));
+    c1.cameraRotateAroundHorizontal((float) (Math.random() * 100.0f));
+    c1.cameraMoveRight((float) (Math.random() * 100.0f));
+    c1.cameraMoveUp((float) (Math.random() * 100.0f));
+    c1.cameraMoveForward((float) (Math.random() * 100.0f));
+
+    System.out.println("c0: " + c0);
+    System.out.println("c1: " + c1);
+
+    final JCameraFPSStyleSnapshot snap_0 = c0.cameraMakeSnapshot();
+    final JCameraFPSStyleSnapshot snap_1 = c1.cameraMakeSnapshot();
+
+    Assert.assertEquals(snap_0, snap_0);
+    Assert.assertNotEquals(snap_0, snap_1);
+    Assert.assertNotEquals(snap_0, null);
+    Assert.assertNotEquals(snap_0, Integer.valueOf(23));
+
+    Assert.assertEquals(snap_0.hashCode(), snap_0.hashCode());
+    Assert.assertNotEquals(snap_0.hashCode(), snap_1.hashCode());
+
+    Assert.assertEquals(snap_0.toString(), snap_0.toString());
+    Assert.assertNotEquals(snap_0.toString(), snap_1.toString());
+  }
+
+  @Test public void testSnapshotInterpolation()
+  {
+    final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
+
+    c0.cameraRotateAroundVertical((float) (Math.random() * 100.0f));
+    c0.cameraRotateAroundHorizontal((float) (Math.random() * 100.0f));
+    c0.cameraMoveRight((float) (Math.random() * 100.0f));
+    c0.cameraMoveUp((float) (Math.random() * 100.0f));
+    c0.cameraMoveForward((float) (Math.random() * 100.0f));
+
+    final JCameraFPSStyleType c1 = JCameraFPSStyle.newCamera();
+
+    System.out.println("c0: " + c0);
+    System.out.println("c1: " + c1);
+
+    final JCameraFPSStyleSnapshot snap_0 = c0.cameraMakeSnapshot();
+    final JCameraFPSStyleSnapshot snap_1 = c1.cameraMakeSnapshot();
+
+    Assert.assertEquals(
+      snap_0,
+      JCameraFPSStyleSnapshot.interpolate(snap_0, snap_1, 0.0f));
+    Assert.assertEquals(
+      snap_1,
+      JCameraFPSStyleSnapshot.interpolate(snap_0, snap_1, 1.0f));
   }
 
   @Test public void testStrafeInitial()
@@ -574,64 +745,5 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     }
 
     this.compareSnapshot(c);
-  }
-
-  private void compareVector(
-    final VectorReadable3FType a,
-    final VectorReadable3FType b)
-  {
-    Assert.assertEquals(a.getXF(), b.getXF(), 0.0);
-    Assert.assertEquals(a.getYF(), b.getYF(), 0.0);
-    Assert.assertEquals(a.getZF(), b.getZF(), 0.0);
-  }
-
-  private void compareSnapshot(
-    final JCameraFPSStyleReadableType c)
-  {
-    final JCameraFPSStyleSnapshot snap = c.cameraMakeSnapshot();
-    Assert.assertEquals(
-      snap.cameraGetAngleAroundHorizontal(),
-      c.cameraGetAngleAroundHorizontal(),
-      0.0);
-    Assert.assertEquals(
-      snap.cameraGetAngleAroundVertical(),
-      c.cameraGetAngleAroundVertical(),
-      0.0);
-    this.compareVector(snap.cameraGetForward(), c.cameraGetForward());
-    this.compareVector(snap.cameraGetRight(), c.cameraGetRight());
-    this.compareVector(snap.cameraGetUp(), c.cameraGetUp());
-    this.compareVector(snap.cameraGetPosition(), c.cameraGetPosition());
-
-    final MatrixM4x4F m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final MatrixM4x4F snap_m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> snap_pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final JCameraContext ctx = new JCameraContext();
-
-    c.cameraMakeViewMatrix(ctx, m);
-    c.cameraMakeViewPMatrix(ctx, pm);
-
-    final PMatrixI4x4F<WorldSpace, ViewSpace> ipm =
-      PMatrixI4x4F.newFromReadable(pm);
-    final MatrixI4x4F im = MatrixI4x4F.newFromReadable(m);
-
-    snap.cameraMakeViewMatrix(ctx, snap_m);
-    snap.cameraMakeViewPMatrix(ctx, snap_pm);
-
-    final PMatrixI4x4F<WorldSpace, ViewSpace> snap_ipm =
-      PMatrixI4x4F.newFromReadable(snap_pm);
-    final MatrixI4x4F snap_im = MatrixI4x4F.newFromReadable(snap_m);
-
-    Assert.assertEquals(im, snap_im);
-    Assert.assertEquals(ipm, snap_ipm);
-
-    final JCameraFPSStyleSnapshot snap2 = c.cameraMakeSnapshot();
-    final JCameraFPSStyleSnapshot snap3 = snap.cameraMakeSnapshot();
-
-    Assert.assertEquals(snap, snap2);
-    Assert.assertEquals(snap2, snap3);
-    Assert.assertEquals(snap, snap3);
   }
 }

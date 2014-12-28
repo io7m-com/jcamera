@@ -52,23 +52,24 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     final JCameraFPSStyleReadableType c)
   {
     final JCameraFPSStyle r = new JCameraFPSStyle();
-    r.cameraSetPosition(r.cameraGetPosition());
     r.cameraSetAngleAroundHorizontal(c.cameraGetAngleAroundHorizontal());
     r.cameraSetAngleAroundVertical(c.cameraGetAngleAroundVertical());
+    r.cameraSetPosition(c.cameraGetPosition());
     return r;
   }
 
-  private boolean         clamp_horizontal;
-  private float           clamp_horizontal_max;
-  private float           clamp_horizontal_min;
-  private boolean         derived_current;
-  private final VectorM3F derived_forward;
-  private final VectorM3F derived_right;
-  private final VectorM3F derived_up;
-  private float           input_angle_around_horizontal;
-  private float           input_angle_around_vertical;
-  private final VectorM3F input_position;
-  private final VectorM3F temporary;
+  private final JCameraSignallingClamp clamp;
+  private boolean                      clamp_horizontal;
+  private float                        clamp_horizontal_max;
+  private float                        clamp_horizontal_min;
+  private boolean                      derived_current;
+  private final VectorM3F              derived_forward;
+  private final VectorM3F              derived_right;
+  private final VectorM3F              derived_up;
+  private float                        input_angle_around_horizontal;
+  private float                        input_angle_around_vertical;
+  private final VectorM3F              input_position;
+  private final VectorM3F              temporary;
 
   private JCameraFPSStyle()
   {
@@ -85,6 +86,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.clamp_horizontal = true;
     this.clamp_horizontal_max = (float) (Math.PI / 64.0f) * 31.0f;
     this.clamp_horizontal_min = -this.clamp_horizontal_max;
+
+    this.clamp = new JCameraSignallingClamp();
   }
 
   @Override public void cameraClampHorizontalDisable()
@@ -153,6 +156,7 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     final JCameraContext ctx,
     final MatrixM4x4F m)
   {
+    this.deriveVectors();
     JCameraViewMatrix.makeViewMatrix(
       ctx,
       m,
@@ -166,6 +170,7 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     final JCameraContext ctx,
     final PMatrixM4x4F<T0, T1> m)
   {
+    this.deriveVectors();
     JCameraViewMatrix.makeViewPMatrix(
       ctx,
       m,
@@ -204,19 +209,7 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
   {
     this.derived_current = false;
     this.input_angle_around_horizontal += r;
-
-    if (this.clamp_horizontal) {
-      if (this.input_angle_around_horizontal > this.clamp_horizontal_max) {
-        this.input_angle_around_horizontal = this.clamp_horizontal_max;
-        return true;
-      }
-      if (this.input_angle_around_horizontal < this.clamp_horizontal_min) {
-        this.input_angle_around_horizontal = this.clamp_horizontal_min;
-        return true;
-      }
-    }
-
-    return false;
+    return this.clampHorizontal();
   }
 
   @Override public void cameraRotateAroundVertical(
@@ -229,7 +222,9 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
   @Override public void cameraSetAngleAroundHorizontal(
     final float h)
   {
+    this.derived_current = false;
     this.input_angle_around_horizontal = h;
+    this.clampHorizontal();
   }
 
   @Override public void cameraSetAngleAroundVertical(
@@ -268,6 +263,20 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     final float z)
   {
     this.input_position.set3F(x, y, z);
+  }
+
+  private boolean clampHorizontal()
+  {
+    if (this.clamp_horizontal) {
+      this.clamp.clamp(
+        this.input_angle_around_horizontal,
+        this.clamp_horizontal_min,
+        this.clamp_horizontal_max);
+      this.input_angle_around_horizontal = this.clamp.getValue();
+      return this.clamp.isClamped();
+    }
+
+    return false;
   }
 
   /**

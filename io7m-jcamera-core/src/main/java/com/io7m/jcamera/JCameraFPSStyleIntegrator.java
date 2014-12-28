@@ -39,7 +39,7 @@ import com.io7m.junreachable.UnreachableCodeException;
 
   public static JCameraFPSStyleIntegratorType newIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraInput in_input)
+    final JCameraFPSStyleInput in_input)
   {
     final JCameraFPSStyleAngularIntegratorType ai =
       JCameraFPSStyleAngularIntegrator.newIntegrator(in_camera, in_input);
@@ -122,7 +122,7 @@ import com.io7m.junreachable.UnreachableCodeException;
         return li.integratorGetCamera();
       }
 
-      @Override public JCameraInput integratorGetInput()
+      @Override public JCameraFPSStyleInput integratorGetInput()
       {
         return ai.integratorGetInput();
       }

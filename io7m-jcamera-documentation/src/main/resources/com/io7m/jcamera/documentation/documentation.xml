@@ -112,6 +112,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.]]>
     <s:part-title>Usage</s:part-title>
     <s:part-contents/>
     <xi:include href="s-usage.xml"/>
+    <xi:include href="s-usage-fps.xml"/>
+    <xi:include href="s-usage-files.xml"/>
   </s:part>
 
   <s:part xml:id="dai">
@@ -119,6 +121,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.]]>
     <s:part-contents/>
     <xi:include href="s-dai-conventions.xml"/>
     <xi:include href="s-dai-fpsstyle.xml"/>
+    <xi:include href="s-dai-spherical.xml"/>
   </s:part>
 
   <s:part>

@@ -20,7 +20,9 @@ import java.io.IOException;
 
 import javax.media.opengl.GL3;
 
-import com.io7m.jcamera.JCameraFPSStyleSnapshot;
+import com.io7m.jcamera.JCameraReadableSnapshotType;
+import com.io7m.jfunctional.OptionType;
+import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
 
 /**
@@ -49,11 +51,14 @@ public interface ExampleRendererType extends ExampleRendererControllerType
    * Draw the scene.
    *
    * @param s
-   *          The current camera snapshot
+   *          A camera snapshot
+   * @param target
+   *          An optional target to be drawn
    */
 
   void draw(
-    final JCameraFPSStyleSnapshot s);
+    final JCameraReadableSnapshotType s,
+    final OptionType<VectorReadable3FType> target);
 
   /**
    * Indicate that the screen has been resized.
