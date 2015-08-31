@@ -1,0 +1,15 @@
+    /**
+     * $example: Declare a structure to hold mouse rotation coefficients, and
+     * a mouse region configured with an origin that matches that of JOGL's
+     * windowing system.
+     */
+
+    final JCameraRotationCoefficients rotations =
+      new JCameraRotationCoefficients();
+    final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region =
+      new AtomicReference<JCameraFPSStyleMouseRegion>(
+        JCameraFPSStyleMouseRegion.newRegion(
+          JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
+          640,
+          480));
+

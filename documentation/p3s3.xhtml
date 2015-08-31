@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>io7m-jcamera 0.3.0 Documentation: 3.3. Spherical Camera</title><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-layout.css"/><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-colour.css"/><link rel="stylesheet" type="text/css" href="documentation.css"/></head><body><div class="st200_body"><div class="brand">
+  <div class="brand_left">
+    <a href="http://io7m.com/">io7m</a>
+  </div>
+  <div class="brand_right">
+    <a href="http://io7m.github.io/jcamera/">io7m-jcamera</a> 0.3.0
+  </div>
+</div><div class="st200_navbar st200_navbar_top"><table class="st200_navbar_table" summary="Navigation bar"><tr><td class="st200_navbar_prev_title_cell">3.2. FPS Camera</td><td class="st200_navbar_up_title_cell">3. Design And Implementation</td><td class="st200_navbar_next_title_cell">4. API Reference</td></tr><tr><td class="st200_navbar_prev_file_cell"><a href="p3s2.xhtml#st200_p3s2">Previous</a></td><td class="st200_navbar_up_file_cell"><a href="p3.xhtml#st200_p3">Up</a></td><td class="st200_navbar_next_file_cell"><a href="p4.xhtml#st200_p4">Next</a></td></tr></table><hr class="st200_hr"/></div><div class="st200_section_container"><div class="st200_section_title_number"><a id="st200_p3s3" href="#st200_p3s3">3.3</a></div><div class="st200_section_title">Spherical Camera</div><ul class="st200_contents st200_section_contents_outer st200_section_contents"><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss1">3.3.1. Overview</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss2">3.3.2. Camera Behaviour</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss3">3.3.3. Camera Mathematics</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss4">3.3.4. Camera Implementation</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss5">3.3.5. Input</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss6">3.3.6. Integrators</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss7">3.3.7. Linear Integrators</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss8">3.3.8. Angular Integrators</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p3s3.xhtml#st200_p3s3ss9">3.3.9. Aggregate Integrators</a></li></ul><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss1" href="#st200_p3s3ss1">3.3.1</a></div><div class="st200_subsection_title">Overview</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss1pg1" href="#st200_p3s3ss1pg1">1</a></div><div class="st200_paragraph">
+      Most real-time strategy games implement some variation of a
+      so-called <span class="st200_term term">spherical</span> camera (also 
+      sometimes known as an <span class="st200_term term">orbital</span> camera).
+      A spherical camera always points towards, and stays a given distance
+      from, a <span class="st200_term term">target point</span>.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss1pg2" href="#st200_p3s3ss1pg2">2</a></div><div class="st200_paragraph">
+      One of the classic examples of this type of camera was implemented
+      in Bungie's 
+      <a class="st200_link_external" href="https://en.wikipedia.org/wiki/Myth_II:_Soulblighter">Myth II: Soulblighter</a>.
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss1fo1" href="#st200_p3s3ss1fo1">3.3.1.1. Myth II: Soulblighter</a></div><img class="st200_image" alt="Myth II: Soulblighter" src="images/soulblighter.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss1pg3" href="#st200_p3s3ss1pg3">3</a></div><div class="st200_paragraph">
+      The camera described here implements a useful subset of the 
+      capabilities of <span class="st200_term term">Myth II's</span> camera
+      system <span class="st200_footnote_reference"><a id="st200_fn_4_ref" href="#st200_fn_4">[4]</a></span>.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss1pg4" href="#st200_p3s3ss1pg4">4</a></div><div class="st200_paragraph">
+      A restricted form of this camera is present in Blizzard's
+      <a class="st200_link_external" href="https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty">Starcraft II</a>.
+      The mouse-control scheme for <span class="st200_term term">Starcraft's</span> 
+      camera is generally considered to be the definitive one amongst 
+      real-time strategy games, and the camera described here shamelessly 
+      duplicates it.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss1pg5" href="#st200_p3s3ss1pg5">5</a></div><div class="st200_paragraph">
+      It is recommended that the reader fully understand the implementation
+      and mathematics of <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss1">fps-style cameras</a>
+      as most of the implementation described here uses the same approach
+      and concepts.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss2" href="#st200_p3s3ss2">3.3.2</a></div><div class="st200_subsection_title">Camera Behaviour</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg1" href="#st200_p3s3ss2pg1">1</a></div><div class="st200_paragraph">
+      A spherical camera remains at a given <span class="st200_term term">radius</span> from
+      a movable <span class="st200_term term">target point</span>. The orientation of the
+      camera is derived from a <span class="st200_term term">heading</span> angle and an
+      <span class="st200_term term">incline</span> angle.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg2" href="#st200_p3s3ss2pg2">2</a></div><div class="st200_paragraph">
+      With no input from the mouse, the camera remains at its
+      current orientation:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo1" href="#st200_p3s3ss2fo1">3.3.2.1. No input</a></div><img class="st200_image" alt="No input" src="images/spherical_neutral.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg3" href="#st200_p3s3ss2pg3">3</a></div><div class="st200_paragraph">
+      The red sphere indicates the <span class="st200_term term">target point</span>.
+      The camera remains at a given <span class="st200_term term">radius</span> from
+      the target point, with the cyan ring indicating the path that the camera
+      would take if the <span class="st200_term term">incline</span> were to change,
+      and the magenta ring indicating the path that the camera would take if
+      the <span class="st200_term term">heading</span> were to change. If the user
+      presses the whatever key is assigned to <span class="st200_term term">orbit left</span>,
+      the camera <span class="st200_term term">heading</span> angle begins to
+      <span class="st200_term term">decrease</span> at a configurable rate. 
+      This results in the camera rotating horizontally around the target point:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo2" href="#st200_p3s3ss2fo2">3.3.2.2. Orbit Heading</a></div><img class="st200_image" alt="Orbit Heading" src="images/spherical_orbit_heading_0.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg4" href="#st200_p3s3ss2pg4">4</a></div><div class="st200_paragraph">
+      If the user presses whatever key is assigned to <span class="st200_term term">orbit right</span>,
+      the camera begins to rotate around the same arc but in the opposite direction.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg5" href="#st200_p3s3ss2pg5">5</a></div><div class="st200_paragraph">
+      If the user presses whatever key is assigned to <span class="st200_term term">orbit up</span>,
+      the camera <span class="st200_term term">incline</span> angle begins to
+      <span class="st200_term term">increase</span> at a configurable rate. This results in
+      the camera rotating vertically around the target point:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo3" href="#st200_p3s3ss2fo3">3.3.2.3. Orbit Incline</a></div><img class="st200_image" alt="Orbit Incline" src="images/spherical_orbit_incline_0.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg6" href="#st200_p3s3ss2pg6">6</a></div><div class="st200_paragraph">
+      If the user presses whatever key is assigned to <span class="st200_term term">orbit down</span>,
+      the camera begins to rotate around the same arc but in the opposite direction.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg7" href="#st200_p3s3ss2pg7">7</a></div><div class="st200_paragraph">
+      If the user presses whatever key is assigned to <span class="st200_term term">zoom out</span>,
+      the <span class="st200_term term">radius</span> begins to increase at a configurable
+      rate. This results in the camera giving the effect of 
+      <span class="st200_term term">zooming out</span>:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo4" href="#st200_p3s3ss2fo4">3.3.2.4. Zoom</a></div><img class="st200_image" alt="Orbit Incline" src="images/spherical_zoom_0.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg8" href="#st200_p3s3ss2pg8">8</a></div><div class="st200_paragraph">
+      If the user presses whatever key is assigned to <span class="st200_term term">zoom in</span>,
+      the <span class="st200_term term">radius</span> begins to decrease at a configurable
+      rate. This results in the camera giving the effect of 
+      <span class="st200_term term">zooming in</span>.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg9" href="#st200_p3s3ss2pg9">9</a></div><div class="st200_paragraph">
+      The <span class="st200_term term">target point</span> can also move according to
+      user input:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo5" href="#st200_p3s3ss2fo5">3.3.2.5. Target point movement</a></div><img class="st200_image" alt="Target point movement" src="images/spherical_move_0.png"/></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo6" href="#st200_p3s3ss2fo6">3.3.2.6. Target point movement</a></div><img class="st200_image" alt="Target point movement" src="images/spherical_move_1.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg10" href="#st200_p3s3ss2pg10">10</a></div><div class="st200_paragraph">
+      Whether target point movement occurs due to keyboard or mouse input is
+      a matter of taste. The implementation described here provides both. Movement
+      of the target point occurs along directions derived from the camera's current
+      orientation. When the user instructs the target point to move
+      <span class="st200_term term">up</span>, the point begins to move towards
+      positive infinity on the global Y axis. When the user instructs the target
+      point to move <span class="st200_term term">forward</span>, the target point begins
+      to move along the direction defined by projecting the camera's current
+      <span class="st200_term term">forward</span> vector onto the horizontal plane.
+      When the user instructs the target
+      point to move <span class="st200_term term">right</span>, the target point begins
+      to move along the direction defined by projecting the camera's current
+      <span class="st200_term term">right</span> vector onto the horizontal plane.
+      The precise definitions of these vectors are given in the following section
+      on the mathematics of the camera.
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss2fo7" href="#st200_p3s3ss2fo7">3.3.2.7. Right and Forward</a></div><img class="st200_image" alt="Right and Forward" src="images/spherical_forward.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg11" href="#st200_p3s3ss2pg11">11</a></div><div class="st200_paragraph">
+      Moving the target point via keyboard input works in a familiar and
+      unsurprising manner: When the user presses whatever key is assigned
+      to a particular direction, the camera moves in that direction until
+      the user releases the key.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss2pg12" href="#st200_p3s3ss2pg12">12</a></div><div class="st200_paragraph">
+      Moving the target point via mouse input is more complicated, however.
+      Mouse movement is provided by both <span class="st200_term term">dragging</span> 
+      and <span class="st200_term term">edge scrolling</span>. When the user
+      <span class="st200_term term">drags</span> the mouse in a given direction,
+      the camera appears to move in the opposite direction by an amount
+      proportional to the drag distance. When the user moves the mouse
+      cursor to the <span class="st200_term term">edge</span> of the screen,
+      the camera appears to move in at a constant rate in a direction
+      relative to the edge of the screen, until the user moves the mouse
+      cursor away from that edge. These descriptions are somewhat vague,
+      and a more formal description is given in the section on
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss3">camera mathematics</a>.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss3" href="#st200_p3s3ss3">3.3.3</a></div><div class="st200_subsection_title">Camera Mathematics</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg1" href="#st200_p3s3ss3pg1">1</a></div><div class="st200_paragraph">
+      A <span class="st200_term term">spherical</span> camera can be represented
+      as a 4-tuple <span class="st200_term expression">(t, h, i, r)</span>, where
+      <span class="st200_term expression">t</span> is the position of the target point,
+      <span class="st200_term expression">h</span> is an angle around the
+      global Y axis (the <span class="st200_term term">heading</span>),
+      <span class="st200_term expression">i</span> is an angle around the
+      local X axis in radians (the <span class="st200_term term">incline</span>),
+      and <span class="st200_term expression">r</span> is the camera's distance
+      from the target point (the <span class="st200_term term">radius</span>). Astute
+      readers will notice that the defined angles are coordinates in a
+      <a class="st200_link_external" href="https://en.wikipedia.org/wiki/Spherical_coordinate_system">spherical coordinate system</a>,
+      and therefore the movement of the camera around the target point
+      always describes a sphere of radius <span class="st200_term expression">r</span>.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg2" href="#st200_p3s3ss3pg2">2</a></div><div class="st200_paragraph">
+      As with <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss3">fps-style</a>
+      cameras, in order to implement forward/backward and
+      left/right movement (and to derive a final
+      <span class="st200_term term">view matrix</span> so that the camera
+      can be used to produce a viewing transform for 3D graphics), it's 
+      necessary to derive a 3-tuple of orthonormal
+      direction vectors <span class="st200_term expression">(forward, right, up)</span>
+      from the camera's angles and radius.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg3" href="#st200_p3s3ss3pg3">3</a></div><div class="st200_paragraph">
+      In order to derive the vectors, it's necessary to first work out
+      the orientation of the camera. In order to calculate a full viewing
+      transform, it's also necessary to calculate the actual world-space
+      position <span class="st200_term expression">p</span> of the camera. 
+      As stated in the description of the
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss2">camera behaviour</a>,
+      the camera is always oriented towards <span class="st200_term expression">t</span>. 
+      The mathematics of determining the camera's world-space position and orientation can 
+      be simplified if <span class="st200_term expression">t</span> is considered as 
+      the origin of a new local coordinate system that will be referred to as 
+      <span class="st200_term term">target-space</span>. Transforming a world-space
+      position <span class="st200_term expression">w</span> to
+      target-space simply requires subtracting <span class="st200_term expression">t</span>
+      from <span class="st200_term expression">w</span>. Transforming a target-space
+      position <span class="st200_term expression">u</span> to world-space requires
+      adding <span class="st200_term expression">t</span> to
+      <span class="st200_term expression">u</span>. The following diagram illustrates
+      all of the above, flattened onto the X/Z (horizontal) plane for ease of
+      viewing:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo1" href="#st200_p3s3ss3fo1">3.3.3.1. Camera configuration on X/Z</a></div><img class="st200_image" alt="Camera configuration on X/Z" src="images/spherical_spaces.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg4" href="#st200_p3s3ss3pg4">4</a></div><div class="st200_paragraph">
+      Firstly, then, to calculate the target-space camera position
+      <span class="st200_term expression">q</span> the same equations are
+      used as were used when calculating the 
+      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss3">direction vectors</a>
+      for the fps-style camera. Firstly, a direction vector 
+      <span class="st200_term expression">d</span> is calculated
+      that points towards <span class="st200_term expression">q</span> from the
+      origin:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo2" href="#st200_p3s3ss3fo2">3.3.3.2. x of d</a></div><img class="st200_image" alt="x of d" src="images/spherical_q_x.png"/></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo3" href="#st200_p3s3ss3fo3">3.3.3.3. y of d</a></div><img class="st200_image" alt="y of d" src="images/spherical_q_y.png"/></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo4" href="#st200_p3s3ss3fo4">3.3.3.4. z of d</a></div><img class="st200_image" alt="z of d" src="images/spherical_q_z.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg5" href="#st200_p3s3ss3pg5">5</a></div><div class="st200_paragraph">
+      Then, <span class="st200_term expression">q</span> is simply 
+      <span class="st200_term expression">d</span> scaled by
+      <span class="st200_term expression">r</span>:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo5" href="#st200_p3s3ss3fo5">3.3.3.5. Target-space Q</a></div><pre class="st200_verbatim">q = Vector3f.scale d r</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg6" href="#st200_p3s3ss3pg6">6</a></div><div class="st200_paragraph">
+      The world-space camera position <span class="st200_term expression">p</span>
+      is simply <span class="st200_term expression">q</span> added to
+      <span class="st200_term expression">t</span>:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo6" href="#st200_p3s3ss3fo6">3.3.3.6. World-space P</a></div><pre class="st200_verbatim">p = Vector3f.add3 q t</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg7" href="#st200_p3s3ss3pg7">7</a></div><div class="st200_paragraph">
+      As stated, the aim is to construct a 
+      <span class="st200_term term">forward</span> vector that points
+      towards <span class="st200_term expression">t</span> from
+      <span class="st200_term expression">p</span>. This is simply
+      the negation of <span class="st200_term expression">d</span>:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo7" href="#st200_p3s3ss3fo7">3.3.3.7. Forward</a></div><pre class="st200_verbatim">forward = Vector3f.normalize (Vector3f.scale d -1)</pre></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo8" href="#st200_p3s3ss3fo8">3.3.3.8. Camera configuration on X/Z</a></div><img class="st200_image" alt="Camera configuration on X/Z" src="images/spherical_df.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg8" href="#st200_p3s3ss3pg8">8</a></div><div class="st200_paragraph">
+      Constructing the
+      <span class="st200_term term">up</span> vector for the
+      camera is achieved by performing the exact same calculation
+      as for the <span class="st200_term term">forward</span> vector
+      but with <span class="st200_term expression">i - (π / 2)</span>.
+      Intuitively, this works by calculating 
+      <span class="st200_term term">q</span> as if it had been orbited
+      downwards around the sphere, and then taking the negation
+      of the resulting direction vector as normal:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo9" href="#st200_p3s3ss3fo9">3.3.3.9. Up</a></div><img class="st200_image" alt="Up" src="images/spherical_up.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg9" href="#st200_p3s3ss3pg9">9</a></div><div class="st200_paragraph">
+      Finally, calculating the <span class="st200_term term">right</span> vector is
+      simply the cross product of the <span class="st200_term term">forward</span> and
+      <span class="st200_term term">up</span> vectors.
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo10" href="#st200_p3s3ss3fo10">3.3.3.10. Right</a></div><pre class="st200_verbatim">right = Vector3f.cross forward up</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg10" href="#st200_p3s3ss3pg10">10</a></div><div class="st200_paragraph">
+      As stated earlier, forward/backward and left/right movement
+      occurs only on the horizontal plane. Because the camera is
+      not allowed to <span class="st200_term term">roll</span>, the calculated
+      <span class="st200_term term">right</span> vector is always parallel
+      to the horizontal plane and can therefore be used directly. Because
+      the camera inclination is variable, however, the calculated
+      <span class="st200_term term">forward</span> vector is only parallel
+      to the horizontal plane when <span class="st200_term expression">i = 0</span>.
+      It's therefore necessary to calculate a
+      <span class="st200_term term">forward_on_xz</span> vector that is always
+      parallel to the horizontal plane. This is achieved by projecting
+      the <span class="st200_term term">forward</span> vector onto the X/Z
+      plane via a simple orthographic projection:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo11" href="#st200_p3s3ss3fo11">3.3.3.11. Forward on X/Z</a></div><pre class="st200_verbatim">project :: Vector3f.T -&gt; Vector3f.T
+project v =
+  let vx = Vector3f.x v
+      vz = Vector3f.z v
+  in Vector3f.normalize (Vector3f.V3 vx 0.0 vz)
+
+forward_on_xz :: Vector3f.T
+forward_on_xz = project forward</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg11" href="#st200_p3s3ss3pg11">11</a></div><div class="st200_paragraph">
+      There is an issue here: The projection of the forward vector resulting
+      from an incline of exactly <span class="st200_term expression">(π / 2)</span> 
+      or <span class="st200_term expression">(-π / 2)</span> radians results in a
+      <span class="st200_term term">forward</span> vector equal to
+      <span class="st200_term expression">(0, ±1, 0)</span>, the projection of which
+      is the zero vector <span class="st200_term expression">(0, 0, 0)</span>. This
+      means that when the camera is looking directly up towards (or directly down upon)
+      the target position, the camera cannot be moved forwards or backwards.
+      In practice, it is rare that the incline will be exactly either these 
+      values. The problem can be worked around entirely by clamping the possible
+      incline ranges to <span class="st200_term expression">[(π / 2) + e, (-π / 2) - e]</span>,
+      where <span class="st200_term expression">e</span> is an arbitrary very small value.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg12" href="#st200_p3s3ss3pg12">12</a></div><div class="st200_paragraph">
+      A complete listing of all the equations given so far, using
+      the default inclination and heading angles, and the default
+      camera position is as follows
+      [<a class="st200_link_external" href="haskell/ExampleSphericalDefaultVectors.hs">ExampleSphericalDefaultVectors.hs</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo12" href="#st200_p3s3ss3fo12">3.3.3.12. Default Vectors</a></div><pre class="st200_verbatim">module ExampleSphericalDefaultVectors where
+
+import qualified Vector3f
+
+heading :: Float
+heading = -pi / 2.0
+
+incline :: Float
+incline = 0
+
+radius :: Float
+radius = 8
+
+target :: Vector3f.T
+target = Vector3f.V3 0 1 4
+
+direction :: Float -&gt; Float -&gt; Vector3f.T
+direction heading incline =
+  let
+    x = (cos heading) * (cos incline)
+    y = sin incline
+    z = -((cos incline) * (sin heading))
+  in
+    Vector3f.V3 x y z
+
+d :: Vector3f.T
+d = direction heading incline
+
+q :: Vector3f.T
+q = Vector3f.scale d radius
+
+p :: Vector3f.T
+p = Vector3f.add3 q target
+
+forward :: Vector3f.T
+forward = Vector3f.normalize (Vector3f.scale d (-1.0))
+
+up :: Vector3f.T
+up =
+  let d = direction heading (incline - (pi / 2.0)) in
+    Vector3f.normalize (Vector3f.scale d (-1.0))
+
+right :: Vector3f.T
+right = Vector3f.cross forward up
+
+project :: Vector3f.T -&gt; Vector3f.T
+project v =
+  let vx = Vector3f.x v
+      vz = Vector3f.z v
+  in Vector3f.normalize (Vector3f.V3 vx 0.0 vz)
+
+forward_on_xz :: Vector3f.T
+forward_on_xz = project forward
+</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg13" href="#st200_p3s3ss3pg13">13</a></div><div class="st200_paragraph">
+      Movement of the target point is achieved identically to the
+      way <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss3pg12">fps-style cameras</a>
+      move, except that the <span class="st200_term term">forward_on_xz</span>
+      vector is used instead of the ordinary
+      <span class="st200_term term">forward</span> vector for forward/backward
+      movement, and the global Y axis is used for
+      up/down movement instead of the camera's
+      <span class="st200_term term">up</span> vector.
+      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss3pg18">View matrix</a>
+      calculating is also identical, using the calculated
+      <span class="st200_term term">forward</span>, <span class="st200_term term">right</span>,
+      and <span class="st200_term term">up</span> vectors, and
+      <span class="st200_term expression">p</span> for the translational components.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg14" href="#st200_p3s3ss3pg14">14</a></div><div class="st200_paragraph">
+      In order to implement <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss2pg12">mouse control</a>
+      over movement of the target point, it's necessary to somehow map
+      two-dimensional mouse cursor movements to three-dimensional camera
+      movements. All windowing systems tend to use system-specific 
+      conventions: Some windowing systems place 
+      <span class="st200_term expression">(0, 0)</span> at the top-left corner of the
+      window, and others place <span class="st200_term expression">(0, 0)</span> at
+      the bottom-left corner. In order to get 
+      <span class="st200_term term">system-independent</span>
+      and <span class="st200_term term">display-density-independent</span> mouse control,
+      the <span class="st200_term package">io7m-jcamera</span> package borrows
+      a concept from OpenGL: <span class="st200_term term">normalized device coordinates</span>
+      (albeit in a two-dimensional form). In <span class="st200_term term">normalized device space</span>,
+      the origin <span class="st200_term expression">(0, 0)</span> is in the center of the screen.
+      The rightmost edge of the screen is <span class="st200_term expression">x = 1</span>, the
+      leftmost edge of the screen is <span class="st200_term expression">x = -1</span>, the topmost
+      edge is <span class="st200_term expression">y = 1</span>, and the bottommost ege is
+      <span class="st200_term expression">y = -1</span>:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo13" href="#st200_p3s3ss3fo13">3.3.3.13. Normalized Device Space</a></div><img class="st200_image" alt="Normalized Device Space" src="images/ndc.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg15" href="#st200_p3s3ss3pg15">15</a></div><div class="st200_paragraph">
+      The translation to normalized device coordinates from screen coordinates
+      is simple, although slightly different equations are needed for systems
+      that use a top-left origin as opposed to a bottom-left origin
+      [<a class="st200_link_external" href="haskell/NormalizedDevice.hs">NormalizedDevice.hs</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo14" href="#st200_p3s3ss3fo14">3.3.3.14. Screen To Normalized Device</a></div><pre class="st200_verbatim">module NormalizedDevice where
+
+import qualified Vector3f
+
+width :: Float
+width = 640.0
+
+height :: Float
+height = 480.0
+
+to_ndc_from_top_left :: (Integer, Integer) -&gt; (Float, Float)
+to_ndc_from_top_left (sx, sy) =
+  let
+    center_x = width / 2.0
+    center_y = height / 2.0
+    rx = ((fromIntegral sx - center_x) / width) * 2.0
+    ry = ((fromIntegral sy - center_y) / height) * 2.0
+  in
+    (rx, ry)
+
+to_ndc_from_bottom_left :: (Integer, Integer) -&gt; (Float, Float)
+to_ndc_from_bottom_left (sx, sy) =
+  let
+    center_x = width / 2.0
+    center_y = height / 2.0
+    rx = ((fromIntegral sx - center_x) / width) * 2.0
+    ry = ((fromIntegral sy - center_y) / height) * 2.0
+  in
+    (rx, -ry)
+
+</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg16" href="#st200_p3s3ss3pg16">16</a></div><div class="st200_paragraph">
+      Given an arbitrary cursor position expressed as normalized device 
+      coordinates, it's then possible to determine if the cursor is at
+      one or more of the screen edges. This is how 
+      <span class="st200_term term">edge scrolling</span> is implemented.
+      For example, if the cursor is at <span class="st200_term expression">(1, 1)</span>,
+      then it means the cursor is at the extreme top-right corner of the screen.
+      The simple fact that a given cursor either is or isn't at a particular edge 
+      can be used as a discrete input. For the spherical camera described here, if the
+      cursor is moved to the top edge of the screen, it is as if the user had
+      pressed whatever key is assigned to <span class="st200_term term">forward</span>.
+      The camera continues moving in that direction until the cursor is moved
+      away from the edge. If the cursor is moved to the right edge of the
+      screen, it is as if the user had pressed whatever key is assigned to
+      <span class="st200_term term">right</span>. If the cursor is at one of the
+      corners, it is as if the user had pressed whatever keys are assigned
+      to the two relevant edges.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg17" href="#st200_p3s3ss3pg17">17</a></div><div class="st200_paragraph">
+      For the other form of mouse control - <span class="st200_term term">dragging</span> -
+      the same system is used to map screen-space mouse coordinates to
+      normalized device coordinates. However, the coordinates of the mouse
+      are only taken into account when the relevant mouse button is being
+      held <span class="st200_footnote_reference"><a id="st200_fn_5_ref" href="#st200_fn_5">[5]</a></span>. The offsets from the center of the screen are accumulated
+      in the same manner as with the
+      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss5pg5">rotation coefficients</a>
+      for fps-style cameras, and are reset to <span class="st200_term expression">(0, 0)</span>
+      periodically in the same manner. Additionally, the offsets are negated
+      when the actual camera movement is applied. For example, if the user
+      has dragged the mouse to the <span class="st200_term term">right</span>,
+      the camera is actually moved <span class="st200_term term">left</span>. An
+      intuitive way to think of this is to imagine that the objects that the
+      camera is observing are on a sheet, and in order to look at a specific
+      object that is laying to the right of the camera, the sheet must be
+      pulled left to move the object into view. This is not actually mandated
+      by the implementation in the
+      <span class="st200_term package">io7m-jcamera</span> package;
+      the programmer is free to pass the non-negated offsets to the camera
+      in order to move it
+      <span class="st200_footnote_reference"><a id="st200_fn_6_ref" href="#st200_fn_6">[6]</a></span>. An illustration of this (with the red frame indicating
+      the camera's view):
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss3fo15" href="#st200_p3s3ss3fo15">3.3.3.15. Dragging</a></div><img class="st200_image" alt="Dragging" src="images/dragging.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss3pg18" href="#st200_p3s3ss3pg18">18</a></div><div class="st200_paragraph">
+      In practical terms, with the default settings, if the user drags the
+      mouse <span class="st200_term term">downward</span>, the camera moves as if 
+      the user had pressed whatever key is assigned to 
+      <span class="st200_term term">forward</span> for the
+      duration of the drag. If the user drags the mouse
+      <span class="st200_term term">right</span>, the camera moves as if the user
+      had pressed <span class="st200_term term">left</span> for the duration of
+      the drag. The camera will correctly move diagonally if the user drags
+      <span class="st200_term term">downward</span> and
+      <span class="st200_term term">right</span>.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss4" href="#st200_p3s3ss4">3.3.4</a></div><div class="st200_subsection_title">Camera Implementation</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss4pg1" href="#st200_p3s3ss4pg1">1</a></div><div class="st200_paragraph">
+      In the <span class="st200_term package">io7m-jcamera</span> package,
+      the interface exposed by a <span class="st200_term term">spherical</span> camera
+      is described by the <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalType.java">JCameraSphericalType</a>
+      type. The actual implementation of the <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss3">camera mathematics</a>
+      is given in the
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSpherical.java">JCameraSpherical</a> type.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss4pg2" href="#st200_p3s3ss4pg2">2</a></div><div class="st200_paragraph">
+      A small point to note about the implementation:
+      The <span class="st200_term expression">forward</span>, <span class="st200_term expression">right</span>, and
+      <span class="st200_term expression">up</span> vectors are calculated lazily whenever the user attempts
+      to perform an operation that involves them. The vectors are derived only from the current camera
+      angles and so are not recomputed if the angles have not been changed since the vectors were
+      last calculated.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss4pg3" href="#st200_p3s3ss4pg3">3</a></div><div class="st200_paragraph">
+      Additionally, the incline angle <span class="st200_term expression">i</span> can be 
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss8pg3">clamped</a> to a 
+      given range (and is clamped by default).
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss5" href="#st200_p3s3ss5">3.3.5</a></div><div class="st200_subsection_title">Input</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss5pg1" href="#st200_p3s3ss5pg1">1</a></div><div class="st200_paragraph">
+      In the <span class="st200_term package">io7m-jcamera</span> package,
+      an <span class="st200_term term">input</span> is a simple abstraction intended
+      to keep <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss6">integrators</a>
+      insulated from the platform-specific details of keyboard and mouse input.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss5pg2" href="#st200_p3s3ss5pg2">2</a></div><div class="st200_paragraph">
+      As described in the section on
+      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss5">fps-style camera input</a>,
+      input can categorized as <span class="st200_term term">discrete</span> or
+      <span class="st200_term term">continuous</span>. The details of input for
+      spherical cameras are slightly more complicated than for fps-style
+      cameras due to the more complex
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss2pg10">control scheme</a>.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss5pg3" href="#st200_p3s3ss5pg3">3</a></div><div class="st200_paragraph">
+      An <span class="st200_term term">input</span> for a spherical camera in the 
+      <span class="st200_term package">io7m-jcamera</span> package is
+      represented by the following data structure
+      [<a class="st200_link_external" href="haskell/InputSpherical.hs">InputSpherical.hs</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss5fo1" href="#st200_p3s3ss5fo1">3.3.5.1. Input (Spherical)</a></div><pre class="st200_verbatim">module InputSpherical (T (..)) where
+
+data T = T {
+
+  is_moving_backward_key    :: Bool,
+  is_moving_backward_cursor :: Bool,
+
+  is_moving_forward_key    :: Bool,
+  is_moving_forward_cursor :: Bool,
+
+  is_moving_left_key     :: Bool,
+  is_moving_left_cursor  :: Bool,
+
+  is_moving_right_key    :: Bool,
+  is_moving_right_cursor :: Bool,
+
+  is_moving_up        :: Bool,
+  is_moving_down      :: Bool,
+
+  moving_forward_continuous :: Float,
+  moving_right_continuous   :: Float,
+
+  is_orbiting_heading_positive :: Bool,
+  is_orbiting_heading_negative :: Bool,
+  is_orbiting_incline_positive :: Bool,
+  is_orbiting_incline_negative :: Bool,
+
+  is_zooming_in  :: Bool,
+  is_zooming_out :: Bool
+  
+} deriving (Eq, Show)
+</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss5pg4" href="#st200_p3s3ss5pg4">4</a></div><div class="st200_paragraph">
+      In a similar manner to the <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss5">fps-style camera input</a>,
+      pressing a key on the keyboard sets the corresponding boolean field
+      in the input to <span class="st200_term expression">true</span>, setting
+      it to <span class="st200_term expression">false</span> when the key is released.
+      In order to account for the fact that some movements can be prompted by
+      both the keyboard and mouse, there are separate fields for keyboard and
+      cursor control. For example, moving a mouse to the right edge of the screen
+      sets the <span class="st200_term expression">is_moving_right_cursor</span> field
+      to <span class="st200_term expression">true</span>. The
+      <span class="st200_term expression">moving_forward_continuous</span> and
+      <span class="st200_term expression">moving_right_continuous</span> fields
+      represent the accumulated 
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss3pg17">dragging</a>
+      for the current time period.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss5pg5" href="#st200_p3s3ss5pg5">5</a></div><div class="st200_paragraph">
+      In the <span class="st200_term package">io7m-jcamera</span> package,
+      spherical camera inputs are represented by the
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalInput.java">JCameraSphericalInput</a>
+      type, and mouse regions are represented by the
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalMouseRegion.java">JCameraSphericalMouseRegion</a>
+      type.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss6" href="#st200_p3s3ss6">3.3.6</a></div><div class="st200_subsection_title">Integrators</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss6pg1" href="#st200_p3s3ss6pg1">1</a></div><div class="st200_paragraph">
+      <span class="st200_term term">Integrators</span> are responsible for
+      updating properties of cameras over time. They are divided into
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss7">linear</a>
+      and
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss8">angular</a> types.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss7" href="#st200_p3s3ss7">3.3.7</a></div><div class="st200_subsection_title">Linear Integrators</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss7pg1" href="#st200_p3s3ss7pg1">1</a></div><div class="st200_paragraph">
+      A <span class="st200_term term">linear integrator</span> updates the position
+      of a camera over time.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss7pg2" href="#st200_p3s3ss7pg2">2</a></div><div class="st200_paragraph">
+      Linear integration of the camera is achieved in an almost identical
+      manner to linear integration of 
+      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss7">fps-style cameras</a>,
+      with the addition of the changes of position caused by the continuous
+      input from <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss3pg17">mouse dragging</a>.
+      Changes in radius (zooming) are also handled by the linear integrator.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss7pg3" href="#st200_p3s3ss7pg3">3</a></div><div class="st200_paragraph">
+      Calculation of the <span class="st200_term term">forward</span> velocity
+      is given by the following equations
+      [<a class="st200_link_external" href="haskell/IntegratorSphericalForward.hs">IntegratorSphericalForward.hs</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss7fo1" href="#st200_p3s3ss7fo1">3.3.7.1. Integrator (forward)</a></div><pre class="st200_verbatim">module IntegratorSphericalForward where
+
+import qualified Clamp
+import qualified Vector3f
+import qualified InputSpherical
+
+forward_speed :: InputSpherical.T -&gt; Float -&gt; Float -&gt; Float -&gt; Float
+forward_speed i sf a delta =
+  if (InputSpherical.is_moving_forward_key i || InputSpherical.is_moving_forward_cursor i)
+  then sf + (a * delta)
+  else sf
+
+backward_speed :: InputSpherical.T -&gt; Float -&gt; Float -&gt; Float -&gt; Float
+backward_speed i sf a delta =
+  if (InputSpherical.is_moving_backward_key i || InputSpherical.is_moving_backward_cursor i)
+  then sf - (a * delta)
+  else sf
+
+drag_forward_speed :: InputSpherical.T -&gt; Float -&gt; Float -&gt; Float
+drag_forward_speed i a delta =
+  (InputSpherical.moving_forward_continuous i) * a * delta
+
+forward :: (Vector3f.T, Vector3f.T, Float, InputSpherical.T, Float, Float, Float) -&gt; Float -&gt; (Vector3f.T, Float)
+forward (p, v_forward_on_xz, sf, i, a, d, ms) delta =
+  let
+    sf0 = backward_speed i (forward_speed i sf a delta) a delta
+    sf1 = Clamp.clamp sf0 (-ms, ms)
+    sd  = drag_forward_speed i a delta
+    sf2 = sf1 + sd
+    pr  = Vector3f.add3 p (Vector3f.scale v_forward_on_xz (sf2 * delta))
+    sfr = sf1 * (d ** delta)
+  in
+    (pr, sfr)
+</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss7pg4" href="#st200_p3s3ss7pg4">4</a></div><div class="st200_paragraph">
+      The first thing to note is the <span class="st200_term function">drag_forward_speed</span>
+      function: This calculates how much the camera should be moving in the forward
+      direction based on the current accumulated continuous input. The forward speed
+      calculated by the function is added to the current total speed
+      <span class="st200_term emphasis">after</span> the total has been
+      <span class="st200_term term">clamped</span> to the speed limits. The reason for this
+      is simply that the speed limits are usually set reasonably low in order to avoid
+      the camera getting up to too high a speed when controlled by the keyboard, but
+      the low speed limits also tend to mean that the user cannot drag the mouse fast enough
+      to get a comfortable movement rate. Exceeding the speed limit temporarily is mildly 
+      distasteful, but relies on the fact that the user is physically limited by their own 
+      ability to fling a piece of plastic across a desktop, and so the speed of the camera 
+      should not become excessively high. An alternate solution would be to have two sets
+      of speed limits, one for keyboard control and another for dragging. This is trivial
+      to implement, but is not implemented here for the sake of keeping the implementation
+      as easy to understand as possible.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss7pg5" href="#st200_p3s3ss7pg5">5</a></div><div class="st200_paragraph">
+      There is also a limitation in the described integrator: The camera feels increasingly
+      sluggish as the camera zooms out. This is purely a perceptual issue: If the camera
+      is a very long way away from an object, then the camera has to move much further
+      for there to be a perceived movement onscreen than it would have to move if it
+      were very close to the object. Essentially, it's desirable for the camera to move
+      faster the further away it is from the target point. The way this is achieved in the
+      <span class="st200_term package">io7m-jcamera</span> package is to associate a
+      pair of functions <span class="st200_term function">scale_linear</span> and
+      <span class="st200_term function">scale_dragging</span> with the integrator that are responsible 
+      for producing scaling factors when given the current <span class="st200_term term">radius</span> 
+      (zoom). The linear speed, acceleration, and maximum speeds are scaled by
+      <span class="st200_term function">scale_linear</span>, and the extra speed produced by
+      <span class="st200_term term">dragging</span> is scaled by <span class="st200_term function">scale_dragging</span>
+      [<a class="st200_link_external" href="haskell/IntegratorSphericalForwardZoomScaled.hs">IntegratorSphericalForwardZoomScaled.hs</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p3s3ss7fo2" href="#st200_p3s3ss7fo2">3.3.7.2. Integrator (forward, zoom-scaled)</a></div><pre class="st200_verbatim">module IntegratorSphericalForwardZoomScaled where
+
+import qualified Clamp
+import qualified Vector3f
+import qualified InputSpherical
+
+type ScaleFunction = Float -&gt; Float
+
+forward_speed :: InputSpherical.T -&gt; Float -&gt; Float -&gt; Float -&gt; Float -&gt; ScaleFunction -&gt; Float
+forward_speed i sf a zoom scale delta =
+  let accel = (scale zoom) * (a * delta) in
+    if (InputSpherical.is_moving_forward_key i || InputSpherical.is_moving_forward_cursor i)
+    then sf + accel
+    else sf
+
+backward_speed :: InputSpherical.T -&gt; Float -&gt; Float -&gt; Float -&gt; Float -&gt; ScaleFunction -&gt; Float
+backward_speed i sf a zoom scale delta =
+  let accel = (scale zoom) * (a * delta) in
+    if (InputSpherical.is_moving_backward_key i || InputSpherical.is_moving_backward_cursor i)
+    then sf - accel
+    else sf
+
+drag_forward_speed :: InputSpherical.T -&gt; Float -&gt; Float -&gt; ScaleFunction -&gt; Float
+drag_forward_speed i a zoom scale delta =
+  (InputSpherical.moving_forward_continuous i) * a * (scale zoom) * delta
+
+forward :: (Vector3f.T, Vector3f.T, Float, InputSpherical.T, Float, Float, Float, Float, (ScaleFunction, ScaleFunction)) -&gt; Float -&gt; (Vector3f.T, Float)
+forward (p, v_forward_on_xz, sf, i, a, d, ms, zoom, (scale_linear, scale_dragging)) delta =
+  let
+    sf0 = backward_speed i (forward_speed i sf a delta) a delta
+    sms = (scale_linear zoom) * ms
+    sf1 = Clamp.clamp sf0 (-sms, sms)
+    
+    sd  = drag_forward_speed i a zoom scale_dragging delta
+    sf2 = sf1 + sd
+
+    pr  = Vector3f.add3 p (Vector3f.scale v_forward_on_xz (sf2 * delta))
+    sfr = sf1 * (d ** delta)
+  in
+    (pr, sfr)
+</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss7pg6" href="#st200_p3s3ss7pg6">6</a></div><div class="st200_paragraph">
+      Experimentation has shown that using the same function for <span class="st200_term function">scale_dragging</span>
+      and <span class="st200_term function">scale_linear</span> tends to give results that are
+      good for one and not the other. The default choice for
+      <span class="st200_term function">scale_dragging</span> is simply the
+      identity function, and the default choice
+      for <span class="st200_term function">scale_linear</span> is the square root
+      function. This effectively scales dragging directly by the current
+      zoom level, and scales linear movement (caused by edge scrolling and the keyboard) 
+      by the square root of the current zoom level. The same scaling is applied
+      equally to forward and rightward movement.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss8" href="#st200_p3s3ss8">3.3.8</a></div><div class="st200_subsection_title">Angular Integrators</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss8pg1" href="#st200_p3s3ss8pg1">1</a></div><div class="st200_paragraph">
+      An <span class="st200_term term">angular integrator</span> updates the orientation
+      of a camera over time.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss8pg2" href="#st200_p3s3ss8pg2">2</a></div><div class="st200_paragraph">
+      Integration of orientation occurs in almost exactly the same manner as
+      integration of <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss7">position</a>;
+      orientation is treated as a pair of scalar rotations around two axes, and the
+      rotation values are increased by speed values calculated from acceleration
+      values for each axis.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss8pg3" href="#st200_p3s3ss8pg3">3</a></div><div class="st200_paragraph">
+      Rotation by the incline angle is identical, except that the actual
+      camera itself may optionally <span class="st200_term term">clamp</span> the 
+      incline angle to work around the documented 
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss3pg11">projection issue</a>.
+    </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss8pg4" href="#st200_p3s3ss8pg4">4</a></div><div class="st200_paragraph">
+      The type of angular integrators in the 
+      <span class="st200_term package">io7m-jcamera</span>
+      is
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalAngularIntegratorType.java">JCameraSphericalAngularIntegratorType</a>,
+      with the default implementation being
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalAngularIntegrator.java">JCameraSphericalAngularIntegrator</a>.
+    </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p3s3ss9" href="#st200_p3s3ss9">3.3.9</a></div><div class="st200_subsection_title">Aggregate Integrators</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p3s3ss9pg1" href="#st200_p3s3ss9pg1">1</a></div><div class="st200_paragraph">
+      Usually, a user will want cameras to both move and rotate, as
+      opposed to just one or the other. The 
+      <span class="st200_term package">io7m-jcamera</span> package
+      provides the
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalIntegratorType.java">JCameraSphericalIntegratorType</a>
+      which aggregates both the
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss7">linear</a> and
+      <a class="st200_link" href="p3s3.xhtml#st200_p3s3ss8">angular</a>
+      integrators, with the default implementation given by
+      <a class="st200_link_external" href="com/io7m/jcamera/JCameraSphericalIntegrator.java">JCameraSphericalIntegrator</a>.
+    </div></div></div></div><div class="st200_footnotes"><hr/><div class="st200_footnote_container"><div class="st200_footnote_number">[<a id="st200_fn_4" href="#st200_fn_4_ref">4</a>]</div><div class="st200_footnote_body">
+        <span class="st200_term term">Myth II</span> allowed the target
+        point to orbit around the camera, as opposed to only allowing
+        the camera to orbit around the target point. This capability
+        is not widely useful and complicates the implementation of
+        the camera significantly, and so is omitted here.
+      </div></div><div class="st200_footnote_container"><div class="st200_footnote_number">[<a id="st200_fn_5" href="#st200_fn_5_ref">5</a>]</div><div class="st200_footnote_body">
+        Starcraft II uses the middle mouse button for dragging. The
+        <span class="st200_term package">io7m-jcamera</span> package
+        leaves it to the programmer to decide.
+      </div></div><div class="st200_footnote_container"><div class="st200_footnote_number">[<a id="st200_fn_6" href="#st200_fn_6_ref">6</a>]</div><div class="st200_footnote_body">
+        The "inverted" behaviour is the default camera behaviour in 
+        Starcraft II, and is therefore used here as the default.
+      </div></div></div><div class="st200_navbar st200_navbar_bottom"><hr class="st200_hr"/><table class="st200_navbar_table" summary="Navigation bar"><tr><td class="st200_navbar_prev_file_cell"><a href="p3s2.xhtml#st200_p3s2">Previous</a></td><td class="st200_navbar_up_file_cell"><a href="p3.xhtml#st200_p3">Up</a></td><td class="st200_navbar_next_file_cell"><a href="p4.xhtml#st200_p4">Next</a></td></tr><tr><td class="st200_navbar_prev_title_cell">3.2. FPS Camera</td><td class="st200_navbar_up_title_cell">3. Design And Implementation</td><td class="st200_navbar_next_title_cell">4. API Reference</td></tr></table></div></div></body></html>

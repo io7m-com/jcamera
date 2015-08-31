@@ -1,0 +1,9 @@
+    /**
+     * $example: Construct a new simulation and produce an initial snapshot of
+     * the camera for later use.
+     */
+
+    final ExampleFPSStyleSimulationType sim =
+      new ExampleFPSStyleSimulation(renderer);
+    final JCameraFPSStyleSnapshot snap = sim.integrate();
+

@@ -1,0 +1,17 @@
+  /**
+   * $example: Construct a new simulation.
+   *
+   * @param in_renderer
+   *          The interface to the renderer
+   */
+
+  public ExampleFPSStyleSimulation(
+    final ExampleRendererControllerType in_renderer)
+  {
+    this.renderer = in_renderer;
+    this.input = JCameraFPSStyleInput.newInput();
+    this.camera = JCameraFPSStyle.newCamera();
+    final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
+    this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
+    this.camera_enabled = new AtomicBoolean(false);
+

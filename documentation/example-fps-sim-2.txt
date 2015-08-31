@@ -1,0 +1,19 @@
+    /**
+     * $example: Configure the integrator. Use a high drag factor to give
+     * quite abrupt stops, and use high rotational acceleration.
+     */
+
+    this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
+    this.integrator.integratorAngularSetDragVertical(0.000000001f);
+
+    this.integrator
+      .integratorAngularSetAccelerationHorizontal((float) ((Math.PI / 12) / this.integrator_time_seconds));
+    this.integrator
+      .integratorAngularSetAccelerationVertical((float) ((Math.PI / 12) / this.integrator_time_seconds));
+
+    this.integrator
+      .integratorLinearSetAcceleration((float) (3.0 / this.integrator_time_seconds));
+    this.integrator.integratorLinearSetMaximumSpeed(3.0f);
+    this.integrator.integratorLinearSetDrag(0.000000001f);
+  }
+

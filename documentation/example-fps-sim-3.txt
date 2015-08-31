@@ -1,0 +1,55 @@
+  /**
+   * $example: Integrate the camera.
+   *
+   * @return A new camera snapshot.
+   */
+
+  @Override public JCameraFPSStyleSnapshot integrate()
+  {
+    /**
+     * If the camera is actually enabled, integrate and produce a snapshot,
+     * and then tell the renderer/window system that it should warp the
+     * pointer back to the center of the screen.
+     */
+
+    if (this.cameraIsEnabled()) {
+      this.integrator.integrate(this.integrator_time_seconds);
+      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
+      this.renderer.sendWantWarpPointer();
+      return snap;
+    }
+
+    return this.fixed_snapshot;
+  }
+
+  @Override public boolean cameraIsEnabled()
+  {
+    return this.camera_enabled.get();
+  }
+
+  @Override public void cameraSetEnabled(
+    final boolean b)
+  {
+    this.camera_enabled.set(b);
+  }
+
+  @Override public float getDeltaTime()
+  {
+    return this.integrator_time_seconds;
+  }
+
+  @Override public JCameraFPSStyleInput getInput()
+  {
+    return this.input;
+  }
+
+  @Override public JCameraFPSStyleIntegratorType getIntegrator()
+  {
+    return this.integrator;
+  }
+
+  @Override public JCameraFPSStyleType getCamera()
+  {
+    return this.camera;
+  }
+}

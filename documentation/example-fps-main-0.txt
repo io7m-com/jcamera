@@ -1,0 +1,6 @@
+    /**
+     * $example: Construct a new renderer.
+     */
+
+    final ExampleRendererType renderer = new ExampleRenderer();
+

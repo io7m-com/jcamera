@@ -1,0 +1,58 @@
+    /**
+     * $example: Initialize JOGL and open a window, construct an animator to
+     * regularly refresh the screen, and assign GL event listener, mouse
+     * listener, and keyboard listener.
+     */
+
+    final GLProfile profile = GLProfile.get(GLProfile.GL3);
+    final GLCapabilities caps = new GLCapabilities(profile);
+    final GLWindow window = GLWindow.create(caps);
+    window.setSize(640, 480);
+    window.setTitle(ExampleFPSStyleMain.class.getCanonicalName());
+
+    final Animator anim = new Animator();
+    anim.add(window);
+
+    window.addGLEventListener(new ExampleFPSStyleGLListener(
+      window,
+      snap,
+      sim,
+      mouse_region,
+      renderer));
+
+    window.addMouseListener(new ExampleFPSStyleMouseAdapter(
+      mouse_region,
+      sim,
+      rotations));
+
+    window.addKeyListener(new ExampleFPSStyleKeyListener(
+      sim,
+      background_workers,
+      renderer,
+      window));
+
+    /**
+     * Close the program when the window closes.
+     */
+
+    window.addWindowListener(new WindowAdapter() {
+      @Override public void windowDestroyed(
+        final @Nullable WindowEvent e)
+      {
+        System.out.println("Stopping animator");
+        anim.stop();
+        System.out.println("Exiting");
+        System.exit(0);
+      }
+    });
+
+    window.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+    window.setVisible(true);
+
+    /**
+     * Start everything running.
+     */
+
+    anim.start();
+  }
+}
