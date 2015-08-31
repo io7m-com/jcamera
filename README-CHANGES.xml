@@ -2,7 +2,7 @@
 <c:changelog xmlns:c="http://schemas.io7m.com/changelog/2.0.0">
   <c:project>io7m-jcamera</c:project>
 
-  <c:release c:ticket-system="com.io7m.fossil.jcamera">
+  <c:release c:ticket-system="com.github.io7m.jcamera">
     <c:date>2014-10-24</c:date>
     <c:version>0.1.0</c:version>
     <c:item>
@@ -12,8 +12,9 @@
     </c:item>
   </c:release>
 
-  <c:ticket-system xml:id="com.io7m.fossil.jcamera">
-    <c:ticket-url>http://fossil.io7m.com/repo.cgi/io7m-jcamera/tktview?name=</c:ticket-url>
+  <c:ticket-system xml:id="com.github.io7m.jcamera">
+    <c:ticket-url>http://github.com/io7m/jcamera/issues/</c:ticket-url>
   </c:ticket-system>
+
 </c:changelog>
 

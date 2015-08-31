@@ -14,6 +14,14 @@
       functions for handling cameras in a rendering system independent
       manner.</p>
     </subsection>
+    <subsection name="Features">
+      <li>Rendering and input system independent camera implementations</li>
+      <li>Smooth first-person camera.</li>
+      <li>Smooth spherical third-person camera.</li>
+      <li>Fully documented with all mathematical derivations given, tutorials, and Javadoc.</li>
+      <li>94.8% automated unit test coverage.</li>
+      <li>ISC license.</li>
+    </subsection>
   </body>
 
 </document>
