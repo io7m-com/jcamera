@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 
 package com.io7m.jcamera.tests;
 
+import com.io7m.jcamera.JCameraSphericalInputType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,12 +44,12 @@ public abstract class JCameraSphericalLinearIntegratorContract
 
   abstract @NonNull JCameraSphericalLinearIntegratorType newIntegrator(
     final @NonNull JCameraSphericalType c,
-    final @NonNull JCameraSphericalInput i);
+    final @NonNull JCameraSphericalInputType i);
 
   @Test public final void testCamera_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
     Assert.assertEquals(c, d.integratorGetCamera());
   }
@@ -56,7 +57,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testInput_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
     Assert.assertEquals(i, d.integratorGetInput());
   }
@@ -64,7 +65,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingBackward_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingBackwardKey(true);
@@ -92,7 +93,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingBackward_1()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingBackwardKey(true);
@@ -119,7 +120,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingDown_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingDown(true);
@@ -146,7 +147,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingDown_1()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingDown(true);
@@ -173,7 +174,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingDrag_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingForwardKey(true);
@@ -218,7 +219,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingForward_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingForwardKey(true);
@@ -245,7 +246,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingForward_1()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingForwardKey(true);
@@ -272,7 +273,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingLeft_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingLeftKey(true);
@@ -299,7 +300,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingLeft_1()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingLeftKey(true);
@@ -326,7 +327,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingRight_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingRightKey(true);
@@ -353,7 +354,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingRight_1()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingRightKey(true);
@@ -380,7 +381,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingUp_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingUp(true);
@@ -407,7 +408,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testMovingUp_1()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setTargetMovingUp(true);
@@ -434,7 +435,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testStatic()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     d.integrate(1.0f);
@@ -457,7 +458,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testZoomingDrag_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setZoomingIn(true);
@@ -502,7 +503,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testZoomingIn_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setZoomingIn(true);
@@ -529,7 +530,7 @@ public abstract class JCameraSphericalLinearIntegratorContract
   @Test public final void testZoomingOut_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setZoomingOut(true);

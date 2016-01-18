@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -20,6 +20,7 @@ import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jcamera.JCameraSpherical;
 import com.io7m.jcamera.JCameraSphericalAngularIntegrator;
 import com.io7m.jcamera.JCameraSphericalInput;
+import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalIntegrator;
 import com.io7m.jcamera.JCameraSphericalIntegratorType;
 import com.io7m.jcamera.JCameraSphericalLinearIntegratorZoomScaled;
@@ -86,7 +87,7 @@ final class CameraSimulationSpherical implements
   private final CameraFloatSlider                            incline_acceleration;
   private final CameraFloatSlider                            incline_drag;
   private final CameraFloatSlider                            incline_maximum;
-  private final JCameraSphericalInput                        input;
+  private final JCameraSphericalInputType                    input;
   private       JCameraSphericalIntegratorType               integrator;
   private final JCameraSphericalIntegratorType               integrator_scaled;
   private final float                                        integrator_time_seconds;
@@ -159,7 +160,7 @@ final class CameraSimulationSpherical implements
           return CameraSimulationSpherical.this.integrator_time_seconds;
         }
 
-        @Override public JCameraSphericalInput getInput()
+        @Override public JCameraSphericalInputType getInput()
         {
           return CameraSimulationSpherical.this.input;
         }

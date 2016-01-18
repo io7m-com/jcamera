@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -18,6 +18,7 @@ package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraFPSStyle;
 import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleIntegrator;
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
@@ -36,7 +37,7 @@ public final class ExampleFPSStyleSimulation implements
   private final JCameraFPSStyleType           camera;
   private final AtomicBoolean                 camera_enabled;
   private final JCameraFPSStyleSnapshot       fixed_snapshot;
-  private final JCameraFPSStyleInput          input;
+  private final JCameraFPSStyleInputType      input;
   private final JCameraFPSStyleIntegratorType integrator;
   private final float                         integrator_time_seconds;
   private final ExampleRendererControllerType renderer;
@@ -134,7 +135,7 @@ public final class ExampleFPSStyleSimulation implements
   }
 
   @Override
-  public JCameraFPSStyleInput getInput()
+  public JCameraFPSStyleInputType getInput()
   {
     return this.input;
   }

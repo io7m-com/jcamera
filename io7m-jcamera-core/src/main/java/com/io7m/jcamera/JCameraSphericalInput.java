@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -24,7 +24,7 @@ import com.io7m.jequality.annotations.EqualityReference;
  */
 
 @EqualityReference
-public final class JCameraSphericalInput
+public final class JCameraSphericalInput implements JCameraSphericalInputType
 {
   private volatile boolean backward_cursor;
   private volatile boolean backward_key;
@@ -46,6 +46,7 @@ public final class JCameraSphericalInput
   private volatile boolean up;
   private volatile boolean zoom_in;
   private volatile boolean zoom_out;
+
   private JCameraSphericalInput()
   {
     this.forward_factor = 1.0f;
@@ -56,442 +57,262 @@ public final class JCameraSphericalInput
    * @return A new input
    */
 
-  public static JCameraSphericalInput newInput()
+  public static JCameraSphericalInputType newInput()
   {
     return new JCameraSphericalInput();
   }
 
-  /**
-   * Add a movement forward to the target position. A negative value decreases
-   * the amount of movement forward and increases the amount of movement
-   * backward.
-   *
-   * @param in_forward The amount to move forward
-   */
-
+  @Override
   public void addTargetMovingContinuousForward(
     final float in_forward)
   {
     this.forward_continuous += in_forward;
   }
 
-  /**
-   * Add a movement right to the target position. A negative value decreases the
-   * amount of movement to the right and increases the amount of movement to the
-   * left.
-   *
-   * @param in_right The amount to move right
-   */
-
+  @Override
   public void addTargetMovingContinuousRight(
     final float in_right)
   {
     this.right_continuous += in_right;
   }
 
-  /**
-   * @return The multiplication factor used for continuous forward/backward
-   * movement.
-   */
-
+  @Override
   public float getForwardFactor()
   {
     return this.forward_factor;
   }
 
-  /**
-   * @return The multiplication factor used for continuous right/left movement.
-   */
-
+  @Override
   public float getRightFactor()
   {
     return this.right_factor;
   }
 
-  /**
-   * @return The current forward movement.
-   */
-
+  @Override
   public float getTargetMovingForwardContinuous()
   {
     return this.forward_continuous * this.forward_factor;
   }
 
-  /**
-   * @return The current rightward movement.
-   */
-
+  @Override
   public float getTargetMovingRight()
   {
     return this.right_continuous * this.right_factor;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to orbit
-   */
-
+  @Override
   public boolean isOrbitingHeadingNegative()
   {
     return this.orbit_heading_negative;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to orbit
-   */
-
+  @Override
   public boolean isOrbitingHeadingPositive()
   {
     return this.orbit_heading_positive;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to orbit
-   */
-
+  @Override
   public boolean isOrbitingInclineNegative()
   {
     return this.orbit_incline_negative;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to orbit
-   */
-
+  @Override
   public boolean isOrbitingInclinePositive()
   {
     return this.orbit_incline_positive;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera target to move
-   * backward
-   */
-
+  @Override
   public boolean isTargetMovingBackward()
   {
     return this.backward_key || this.backward_cursor;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera target to move
-   * down
-   */
-
+  @Override
   public boolean isTargetMovingDown()
   {
     return this.down;
   }
 
-  /**
-   * Tell the camera target to start/stop moving down.
-   *
-   * @param in_down {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingDown(
     final boolean in_down)
   {
     this.down = in_down;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera target to move
-   * forward
-   */
-
+  @Override
   public boolean isTargetMovingForward()
   {
     return this.forward_key || this.forward_cursor;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera target to move
-   * left
-   */
-
+  @Override
   public boolean isTargetMovingLeft()
   {
     return this.left_key || this.left_cursor;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera target to move
-   * right
-   */
-
+  @Override
   public boolean isTargetMovingRight()
   {
     return this.right_key || this.right_cursor;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera target to move
-   * up
-   */
-
+  @Override
   public boolean isTargetMovingUp()
   {
     return this.up;
   }
 
-  /**
-   * Tell the camera target to start/stop moving up.
-   *
-   * @param in_up {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingUp(
     final boolean in_up)
   {
     this.up = in_up;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to zoom in
-   */
-
+  @Override
   public boolean isZoomingIn()
   {
     return this.zoom_in;
   }
 
-  /**
-   * Tell the camera target to start/stop zooming in.
-   *
-   * @param in_zoom_in {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setZoomingIn(
     final boolean in_zoom_in)
   {
     this.zoom_in = in_zoom_in;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to zoom out
-   */
-
+  @Override
   public boolean isZoomingOut()
   {
     return this.zoom_out;
   }
 
-  /**
-   * Tell the camera target to start/stop zooming out.
-   *
-   * @param in_zoom_out {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setZoomingOut(
     final boolean in_zoom_out)
   {
     this.zoom_out = in_zoom_out;
   }
 
-  /**
-   * Set the multiplication factor used for continuous forward/backward
-   * movement.
-   *
-   * @param f The multiplication factor
-   */
-
+  @Override
   public void setContinuousForwardFactor(
     final float f)
   {
     this.forward_factor = f;
   }
 
-  /**
-   * Set the multiplication factor used for continuous left/right movement.
-   *
-   * @param f The multiplication factor
-   */
-
+  @Override
   public void setContinuousRightwardFactor(
     final float f)
   {
     this.right_factor = f;
   }
 
-  /**
-   * Tell the camera to start/stop orbiting (for heading) in a negative
-   * direction.
-   *
-   * @param o {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setOrbitHeadingNegative(
     final boolean o)
   {
     this.orbit_heading_negative = o;
   }
 
-  /**
-   * Tell the camera to start/stop orbiting (for heading) in a positive
-   * direction.
-   *
-   * @param o {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setOrbitHeadingPositive(
     final boolean o)
   {
     this.orbit_heading_positive = o;
   }
 
-  /**
-   * Tell the camera to start/stop orbiting (for incline) in a negative
-   * direction.
-   *
-   * @param o {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setOrbitInclineNegative(
     final boolean o)
   {
     this.orbit_incline_negative = o;
   }
 
-  /**
-   * Tell the camera to start/stop orbiting (for incline) in a positive
-   * direction.
-   *
-   * @param o {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setOrbitInclinePositive(
     final boolean o)
   {
     this.orbit_incline_positive = o;
   }
 
-  /**
-   * Tell the camera target to start/stop moving backward.
-   *
-   * @param in_backward {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingBackwardCursor(
     final boolean in_backward)
   {
     this.backward_cursor = in_backward;
   }
 
-  /**
-   * Tell the camera target to start/stop moving backward.
-   *
-   * @param in_backward {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingBackwardKey(
     final boolean in_backward)
   {
     this.backward_key = in_backward;
   }
 
-  /**
-   * Set the amount of continuous forward movement.
-   *
-   * @param f The forward movement
-   */
-
+  @Override
   public void setTargetMovingContinuousForward(
     final float f)
   {
     this.forward_continuous = f;
   }
 
-  /**
-   * Set the amount of continuous rightward movement.
-   *
-   * @param f The rightward movement
-   */
-
+  @Override
   public void setTargetMovingContinuousRight(
     final float f)
   {
     this.right_continuous = f;
   }
 
-  /**
-   * Tell the camera target to start/stop moving forward.
-   *
-   * @param in_forward {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingForwardCursor(
     final boolean in_forward)
   {
     this.forward_cursor = in_forward;
   }
 
-  /**
-   * Tell the camera target to start/stop moving forward.
-   *
-   * @param in_forward {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingForwardKey(
     final boolean in_forward)
   {
     this.forward_key = in_forward;
   }
 
-  /**
-   * Tell the camera target to start/stop moving left.
-   *
-   * @param in_left {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingLeftCursor(
     final boolean in_left)
   {
     this.left_cursor = in_left;
   }
 
-  /**
-   * Tell the camera target to start/stop moving left.
-   *
-   * @param in_left {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingLeftKey(
     final boolean in_left)
   {
     this.left_key = in_left;
   }
 
-  /**
-   * Tell the camera target to start/stop moving right.
-   *
-   * @param in_right {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingRightCursor(
     final boolean in_right)
   {
     this.right_cursor = in_right;
   }
 
-  /**
-   * Tell the camera target to start/stop moving right.
-   *
-   * @param in_right {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setTargetMovingRightKey(
     final boolean in_right)
   {
     this.right_key = in_right;
   }
 
-  /**
-   * Retrieve {@code r} = {@link #getTargetMovingForwardContinuous()}, set
-   * the current forward movement to 0.0, and return {@code r}.
-   *
-   * @return The amount of forward movement.
-   */
-
+  @Override
   public float takeTargetMovingForward()
   {
     final float r = this.getTargetMovingForwardContinuous();
@@ -499,13 +320,7 @@ public final class JCameraSphericalInput
     return r;
   }
 
-  /**
-   * Retrieve {@code r} = {@link #getTargetMovingRight()}, set the current
-   * rightward movement to 0.0, and return {@code r}.
-   *
-   * @return The amount of rightward movement.
-   */
-
+  @Override
   public float takeTargetMovingRight()
   {
     final float r = this.getTargetMovingRight();

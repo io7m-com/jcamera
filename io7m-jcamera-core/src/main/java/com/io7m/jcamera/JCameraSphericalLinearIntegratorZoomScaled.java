@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,7 +30,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   JCameraSphericalLinearIntegratorType
 {
   private final JCameraSphericalType       camera;
-  private final JCameraSphericalInput      input;
+  private final JCameraSphericalInputType  input;
   private final JCameraScalingFunctionType drag_scale;
   private final JCameraScalingFunctionType linear_scale;
   private       float                      speed_forward;
@@ -43,9 +43,10 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   private       float                      zoom_acceleration;
   private       float                      zoom_drag;
   private       float                      zoom_maximum_speed;
+
   private JCameraSphericalLinearIntegratorZoomScaled(
     final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input,
+    final JCameraSphericalInputType in_input,
     final JCameraScalingFunctionType in_drag_scale,
     final JCameraScalingFunctionType in_linear_scale)
   {
@@ -87,7 +88,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
 
   public static JCameraSphericalLinearIntegratorType newIntegrator(
     final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
+    final JCameraSphericalInputType in_input)
   {
     return new JCameraSphericalLinearIntegratorZoomScaled(
       in_camera,
@@ -264,7 +265,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   }
 
   @Override
-  public JCameraSphericalInput integratorGetInput()
+  public JCameraSphericalInputType integratorGetInput()
   {
     return this.input;
   }

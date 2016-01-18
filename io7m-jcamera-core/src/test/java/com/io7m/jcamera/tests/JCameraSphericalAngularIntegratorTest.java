@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -19,6 +19,7 @@ package com.io7m.jcamera.tests;
 import com.io7m.jcamera.JCameraSphericalAngularIntegrator;
 import com.io7m.jcamera.JCameraSphericalAngularIntegratorType;
 import com.io7m.jcamera.JCameraSphericalInput;
+import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalType;
 import com.io7m.jnull.NonNull;
 
@@ -27,7 +28,7 @@ public final class JCameraSphericalAngularIntegratorTest extends
 {
   @Override @NonNull JCameraSphericalAngularIntegratorType newIntegrator(
     final @NonNull JCameraSphericalType c,
-    final @NonNull JCameraSphericalInput i)
+    final @NonNull JCameraSphericalInputType i)
   {
     return JCameraSphericalAngularIntegrator.newIntegrator(c, i);
   }

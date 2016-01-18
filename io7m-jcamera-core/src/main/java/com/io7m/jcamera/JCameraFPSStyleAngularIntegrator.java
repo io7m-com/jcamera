@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -28,19 +28,20 @@ import com.io7m.jranges.RangeCheck;
 public final class JCameraFPSStyleAngularIntegrator implements
   JCameraFPSStyleAngularIntegratorType
 {
-  private final JCameraFPSStyleType  camera;
-  private final JCameraFPSStyleInput input;
-  private       float                acceleration_horizontal;
-  private       float                acceleration_vertical;
-  private       float                drag_horizontal;
-  private       float                drag_vertical;
-  private       float                maximum_speed_horizontal;
-  private       float                maximum_speed_vertical;
-  private       float                speed_horizontal;
-  private       float                speed_vertical;
+  private final JCameraFPSStyleType      camera;
+  private final JCameraFPSStyleInputType input;
+  private       float                    acceleration_horizontal;
+  private       float                    acceleration_vertical;
+  private       float                    drag_horizontal;
+  private       float                    drag_vertical;
+  private       float                    maximum_speed_horizontal;
+  private       float                    maximum_speed_vertical;
+  private       float                    speed_horizontal;
+  private       float                    speed_vertical;
+
   private JCameraFPSStyleAngularIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraFPSStyleInput in_input)
+    final JCameraFPSStyleInputType in_input)
   {
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
@@ -72,7 +73,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   public static JCameraFPSStyleAngularIntegratorType newIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraFPSStyleInput in_input)
+    final JCameraFPSStyleInputType in_input)
   {
     return new JCameraFPSStyleAngularIntegrator(in_camera, in_input);
   }
@@ -214,7 +215,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
   }
 
   @Override
-  public JCameraFPSStyleInput integratorGetInput()
+  public JCameraFPSStyleInputType integratorGetInput()
   {
     return this.input;
   }

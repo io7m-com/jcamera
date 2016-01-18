@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 
 package com.io7m.jcamera.tests;
 
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import org.junit.Test;
 
 import com.io7m.jcamera.JCameraFPSStyle;
@@ -32,7 +33,7 @@ import com.io7m.jcamera.JCameraFPSStyleType;
 {
   @Override JCameraFPSStyleLinearIntegratorType newIntegrator(
     final JCameraFPSStyleType c,
-    final JCameraFPSStyleInput i)
+    final JCameraFPSStyleInputType i)
   {
     return JCameraFPSStyleIntegrator.newIntegrator(c, i);
   }
@@ -44,7 +45,7 @@ import com.io7m.jcamera.JCameraFPSStyleType;
     final JCameraFPSStyleType c0 = JCameraFPSStyle.newCamera();
     final JCameraFPSStyleType c1 = JCameraFPSStyle.newCamera();
 
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleAngularIntegratorType ai =
       JCameraFPSStyleAngularIntegrator.newIntegrator(c0, i);
     final JCameraFPSStyleLinearIntegratorType li =
@@ -59,8 +60,8 @@ import com.io7m.jcamera.JCameraFPSStyleType;
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
 
-    final JCameraFPSStyleInput i0 = JCameraFPSStyleInput.newInput();
-    final JCameraFPSStyleInput i1 = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i0 = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i1 = JCameraFPSStyleInput.newInput();
 
     final JCameraFPSStyleAngularIntegratorType ai =
       JCameraFPSStyleAngularIntegrator.newIntegrator(c, i0);

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 
 package com.io7m.jcamera.tests;
 
+import com.io7m.jcamera.JCameraSphericalInputType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,12 +44,12 @@ public abstract class JCameraSphericalAngularIntegratorContract
 
   abstract @NonNull JCameraSphericalAngularIntegratorType newIntegrator(
     final @NonNull JCameraSphericalType c,
-    final @NonNull JCameraSphericalInput i);
+    final @NonNull JCameraSphericalInputType i);
 
   @Test public final void testCamera_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
     Assert.assertEquals(c, d.integratorGetCamera());
   }
@@ -56,7 +57,7 @@ public abstract class JCameraSphericalAngularIntegratorContract
   @Test public final void testInput_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
     Assert.assertEquals(i, d.integratorGetInput());
   }
@@ -64,7 +65,7 @@ public abstract class JCameraSphericalAngularIntegratorContract
   @Test public final void testOrbitHeadingNegative_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
 
     i.setOrbitHeadingNegative(true);
@@ -134,7 +135,7 @@ public abstract class JCameraSphericalAngularIntegratorContract
   @Test public final void testOrbitHeadingPositive_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
 
     i.setOrbitHeadingPositive(true);
@@ -204,7 +205,7 @@ public abstract class JCameraSphericalAngularIntegratorContract
   @Test public final void testOrbitInclineNegative_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
 
     c.cameraClampInclineDisable();
@@ -276,7 +277,7 @@ public abstract class JCameraSphericalAngularIntegratorContract
   @Test public final void testOrbitInclinePositive_0()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
 
     i.setOrbitInclinePositive(true);
@@ -348,7 +349,7 @@ public abstract class JCameraSphericalAngularIntegratorContract
   @Test public final void testStatic()
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType d = this.newIntegrator(c, i);
 
     d.integrate(1.0f);

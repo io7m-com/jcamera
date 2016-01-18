@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -29,20 +29,20 @@ import com.io7m.jranges.RangeCheck;
 public final class JCameraSphericalAngularIntegrator implements
   JCameraSphericalAngularIntegratorType
 {
-  private final JCameraSphericalType  camera;
-  private final JCameraSphericalInput input;
-  private       float                 acceleration_heading;
-  private       float                 acceleration_incline;
-  private       float                 drag_heading;
-  private       float                 drag_incline;
-  private       float                 maximum_speed_heading;
-  private       float                 maximum_speed_incline;
-  private       float                 speed_heading;
-  private       float                 speed_incline;
+  private final JCameraSphericalType      camera;
+  private final JCameraSphericalInputType input;
+  private       float                     acceleration_heading;
+  private       float                     acceleration_incline;
+  private       float                     drag_heading;
+  private       float                     drag_incline;
+  private       float                     maximum_speed_heading;
+  private       float                     maximum_speed_incline;
+  private       float                     speed_heading;
+  private       float                     speed_incline;
 
   private JCameraSphericalAngularIntegrator(
     final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
+    final JCameraSphericalInputType in_input)
   {
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
@@ -76,7 +76,7 @@ public final class JCameraSphericalAngularIntegrator implements
 
   public static JCameraSphericalAngularIntegratorType newIntegrator(
     final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
+    final JCameraSphericalInputType in_input)
   {
     return new JCameraSphericalAngularIntegrator(in_camera, in_input);
   }
@@ -229,7 +229,7 @@ public final class JCameraSphericalAngularIntegrator implements
   }
 
   @Override
-  public JCameraSphericalInput integratorGetInput()
+  public JCameraSphericalInputType integratorGetInput()
   {
     return this.input;
   }

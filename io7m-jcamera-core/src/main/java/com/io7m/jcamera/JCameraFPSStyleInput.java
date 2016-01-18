@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -26,7 +26,7 @@ import com.io7m.jranges.RangeCheck;
  */
 
 @EqualityReference
-public final class JCameraFPSStyleInput
+public final class JCameraFPSStyleInput implements JCameraFPSStyleInputType
 {
   private volatile boolean backward;
   private volatile boolean down;
@@ -51,210 +51,130 @@ public final class JCameraFPSStyleInput
    * @return A new input
    */
 
-  public static JCameraFPSStyleInput newInput()
+  public static JCameraFPSStyleInputType newInput()
   {
     return new JCameraFPSStyleInput();
   }
 
-  /**
-   * Add a rotation around the horizontal axis.
-   *
-   * @param r The rotation amount
-   */
-
+  @Override
   public void addRotationAroundHorizontal(
     final float r)
   {
     this.rotate_horizontal += r;
   }
 
-  /**
-   * Add a rotation around the vertical axis.
-   *
-   * @param r The rotation amount
-   */
-
+  @Override
   public void addRotationAroundVertical(
     final float r)
   {
     this.rotate_vertical += r;
   }
 
-  /**
-   * @return The current horizontal rotation coefficient.
-   */
-
+  @Override
   public float getRotationHorizontal()
   {
     return this.rotate_horizontal * this.rotate_horizontal_factor;
   }
 
-  /**
-   * Set the horizontal rotation.
-   *
-   * @param r The rotation
-   */
-
+  @Override
   public void setRotationHorizontal(
     final float r)
   {
     this.rotate_horizontal = r;
   }
 
-  /**
-   * @return The current vertical rotation coefficient.
-   */
-
+  @Override
   public float getRotationVertical()
   {
     return this.rotate_vertical * this.rotate_vertical_factor;
   }
 
-  /**
-   * Set the vertical rotation.
-   *
-   * @param r The rotation
-   */
-
+  @Override
   public void setRotationVertical(
     final float r)
   {
     this.rotate_vertical = r;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to move
-   * backward
-   */
-
+  @Override
   public boolean isMovingBackward()
   {
     return this.backward;
   }
 
-  /**
-   * Tell the camera to start/stop moving backward.
-   *
-   * @param in_backward {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setMovingBackward(
     final boolean in_backward)
   {
     this.backward = in_backward;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to move down
-   */
-
+  @Override
   public boolean isMovingDown()
   {
     return this.down;
   }
 
-  /**
-   * Tell the camera to start/stop moving down.
-   *
-   * @param in_down {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setMovingDown(
     final boolean in_down)
   {
     this.down = in_down;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to move forward
-   */
-
+  @Override
   public boolean isMovingForward()
   {
     return this.forward;
   }
 
-  /**
-   * Tell the camera to start/stop moving forward.
-   *
-   * @param in_forward {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setMovingForward(
     final boolean in_forward)
   {
     this.forward = in_forward;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to move left
-   */
-
+  @Override
   public boolean isMovingLeft()
   {
     return this.left;
   }
 
-  /**
-   * Tell the camera to start/stop moving left.
-   *
-   * @param in_left {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setMovingLeft(
     final boolean in_left)
   {
     this.left = in_left;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to move right
-   */
-
+  @Override
   public boolean isMovingRight()
   {
     return this.right;
   }
 
-  /**
-   * Tell the camera to start/stop moving right.
-   *
-   * @param in_right {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setMovingRight(
     final boolean in_right)
   {
     this.right = in_right;
   }
 
-  /**
-   * @return {@code true} if the user is telling the camera to move up
-   */
-
+  @Override
   public boolean isMovingUp()
   {
     return this.up;
   }
 
-  /**
-   * Tell the camera to start/stop moving up.
-   *
-   * @param in_up {@code true} if the camera should be moving
-   */
-
+  @Override
   public void setMovingUp(
     final boolean in_up)
   {
     this.up = in_up;
   }
 
-  /**
-   * Set the horizontal rotation factor.
-   *
-   * @param f The rotation factor
-   */
-
+  @Override
   public void setRotationHorizontalFactor(
     final float f)
   {
@@ -266,12 +186,7 @@ public final class JCameraFPSStyleInput
         "Minimum factor");
   }
 
-  /**
-   * Set the vertical rotation factor.
-   *
-   * @param f The rotation factor
-   */
-
+  @Override
   public void setRotationVerticalFactor(
     final float f)
   {
@@ -283,12 +198,7 @@ public final class JCameraFPSStyleInput
         "Minimum factor");
   }
 
-  /**
-   * Return {@link #getRotationHorizontal()}, setting the rotation to 0.0.
-   *
-   * @return The current horizontal rotation coefficient.
-   */
-
+  @Override
   public float takeRotationHorizontal()
   {
     final float r = this.getRotationHorizontal();
@@ -296,12 +206,7 @@ public final class JCameraFPSStyleInput
     return r;
   }
 
-  /**
-   * Return {@link #getRotationVertical()}, setting the rotation to 0.0.
-   *
-   * @return The current vertical rotation coefficient.
-   */
-
+  @Override
   public float takeRotationVertical()
   {
     final float r = this.getRotationVertical();

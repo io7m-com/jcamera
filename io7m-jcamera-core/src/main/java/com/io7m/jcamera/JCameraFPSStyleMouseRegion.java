@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -33,6 +33,7 @@ public final class JCameraFPSStyleMouseRegion
   private final float               height;
   private final JCameraScreenOrigin origin;
   private final float               width;
+
   private JCameraFPSStyleMouseRegion(
     final JCameraScreenOrigin in_origin,
     final float in_width,
@@ -94,8 +95,8 @@ public final class JCameraFPSStyleMouseRegion
   }
 
   /**
-   * Return the region-space coefficients for the screen-space position
-   * {@code (x, y)}.
+   * Return the region-space coefficients for the screen-space position {@code
+   * (x, y)}.
    *
    * @param x   The x coordinate
    * @param y   The y coordinate

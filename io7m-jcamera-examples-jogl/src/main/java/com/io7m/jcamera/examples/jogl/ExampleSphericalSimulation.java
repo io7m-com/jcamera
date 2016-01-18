@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,16 +16,17 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.io7m.jcamera.JCameraSpherical;
 import com.io7m.jcamera.JCameraSphericalAngularIntegrator;
 import com.io7m.jcamera.JCameraSphericalInput;
+import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalIntegrator;
 import com.io7m.jcamera.JCameraSphericalIntegratorType;
 import com.io7m.jcamera.JCameraSphericalLinearIntegratorZoomScaled;
 import com.io7m.jcamera.JCameraSphericalSnapshot;
 import com.io7m.jcamera.JCameraSphericalType;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The example physical simulation containing just the fps-style camera,
@@ -38,7 +39,7 @@ public final class ExampleSphericalSimulation implements
   private final JCameraSphericalType           camera;
   private final AtomicBoolean                  camera_enabled;
   private final JCameraSphericalSnapshot       fixed_snapshot;
-  private final JCameraSphericalInput          input;
+  private final JCameraSphericalInputType      input;
   private final JCameraSphericalIntegratorType integrator;
   private final float                          integrator_time_seconds;
 
@@ -87,20 +88,18 @@ public final class ExampleSphericalSimulation implements
     this.integrator.integratorAngularOrbitHeadingSetDrag(0.000000001f);
     this.integrator.integratorAngularOrbitInclineSetDrag(0.000000001f);
 
-    this.integrator
-      .integratorAngularOrbitHeadingSetAcceleration(1.0f / this.integrator_time_seconds);
-    this.integrator
-      .integratorAngularOrbitInclineSetAcceleration(1.0f / this.integrator_time_seconds);
+    this.integrator.integratorAngularOrbitHeadingSetAcceleration(
+      1.0f / this.integrator_time_seconds);
+    this.integrator.integratorAngularOrbitInclineSetAcceleration(
+      1.0f / this.integrator_time_seconds);
 
-    this.integrator
-      .integratorLinearTargetSetAcceleration((float) (3.0 / (double) this
-        .integrator_time_seconds));
+    this.integrator.integratorLinearTargetSetAcceleration(
+      (float) (3.0 / (double) this.integrator_time_seconds));
     this.integrator.integratorLinearTargetSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearTargetSetDrag(0.000000001f);
 
-    this.integrator
-      .integratorLinearZoomSetAcceleration((float) (3.0 / (double) this
-        .integrator_time_seconds));
+    this.integrator.integratorLinearZoomSetAcceleration(
+      (float) (3.0 / (double) this.integrator_time_seconds));
     this.integrator.integratorLinearZoomSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearZoomSetDrag(0.000000001f);
   }
@@ -147,7 +146,7 @@ public final class ExampleSphericalSimulation implements
     return this.integrator_time_seconds;
   }
 
-  @Override public JCameraSphericalInput getInput()
+  @Override public JCameraSphericalInputType getInput()
   {
     return this.input;
   }
