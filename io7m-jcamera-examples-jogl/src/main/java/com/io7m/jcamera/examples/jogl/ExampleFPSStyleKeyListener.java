@@ -16,14 +16,14 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ExecutorService;
-
 import com.io7m.jcamera.JCameraFPSStyleInput;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.opengl.GLWindow;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * The key listener used to handle keyboard events.

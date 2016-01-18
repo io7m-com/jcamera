@@ -20,8 +20,9 @@ import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.jranges.RangeCheck;
 
 /**
- * <p> An input for an fps-style camera. </p> <p> It is safe to access values of
- * this type from multiple threads. </p>
+ * <p>An input for an fps-style camera.</p>
+ *
+ * <p>It is safe to access values of this type from multiple threads.</p>
  */
 
 @EqualityReference
@@ -37,6 +38,7 @@ public final class JCameraFPSStyleInput
   private volatile float   rotate_vertical;
   private volatile float   rotate_vertical_factor;
   private volatile boolean up;
+
   private JCameraFPSStyleInput()
   {
     this.rotate_horizontal = 0.0f;
