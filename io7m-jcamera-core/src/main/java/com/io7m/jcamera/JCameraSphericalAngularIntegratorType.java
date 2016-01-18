@@ -25,7 +25,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   JCameraIntegratorType
 {
   /**
-   * Set the acceleration for heading orbiting to <code>a</code>.
+   * Set the acceleration for heading orbiting to {@code a}.
    *
    * @param a The acceleration value.
    */
@@ -34,7 +34,7 @@ public interface JCameraSphericalAngularIntegratorType extends
     final float a);
 
   /**
-   * Set the drag for heading orbiting to <code>a</code>.
+   * Set the drag for heading orbiting to {@code a}.
    *
    * @param d The drag value.
    */
@@ -43,7 +43,7 @@ public interface JCameraSphericalAngularIntegratorType extends
     final float d);
 
   /**
-   * Set the maximum rotation speed for heading orbiting to <code>s</code> .
+   * Set the maximum rotation speed for heading orbiting to {@code s} .
    *
    * @param s The maximum rotation speed.
    */
@@ -52,7 +52,7 @@ public interface JCameraSphericalAngularIntegratorType extends
     final float s);
 
   /**
-   * Set the acceleration for incline orbiting to <code>a</code>.
+   * Set the acceleration for incline orbiting to {@code a}.
    *
    * @param a The acceleration value.
    */
@@ -61,7 +61,7 @@ public interface JCameraSphericalAngularIntegratorType extends
     final float a);
 
   /**
-   * Set the drag for incline orbiting to <code>a</code>.
+   * Set the drag for incline orbiting to {@code a}.
    *
    * @param d The drag value.
    */
@@ -70,7 +70,7 @@ public interface JCameraSphericalAngularIntegratorType extends
     final float d);
 
   /**
-   * Set the maximum rotation speed for incline orbiting to <code>s</code>.
+   * Set the maximum rotation speed for incline orbiting to {@code s}.
    *
    * @param s The maximum rotation speed.
    */

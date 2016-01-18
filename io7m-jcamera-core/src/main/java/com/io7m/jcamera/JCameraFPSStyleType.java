@@ -52,8 +52,8 @@ public interface JCameraFPSStyleType extends
     final float max);
 
   /**
-   * <p> Move the camera <i>forward</i> <code>u</code> units iff <code>u</code>
-   * is positive, or <i>backward</i> <code>u</code> units iff <code>u</code> is
+   * <p> Move the camera <i>forward</i> {@code u} units iff {@code u}
+   * is positive, or <i>backward</i> {@code u} units iff {@code u} is
    * negative. </p> <p> The <i>forward</i> direction, in this case, means the
    * current view direction. </p>
    *
@@ -64,10 +64,10 @@ public interface JCameraFPSStyleType extends
     float u);
 
   /**
-   * <p> Move the camera <i>right</i> <code>u</code> units iff <code>u</code> is
-   * positive, or <i>left</i> <code>u</code> units iff <code>u</code> is
+   * <p> Move the camera <i>right</i> {@code u} units iff {@code u} is
+   * positive, or <i>left</i> {@code u} units iff {@code u} is
    * negative. </p> <p> The <i>right</i> direction, in this case, means the
-   * direction perpendicular to the current view direction, <code>-π / 2</code>
+   * direction perpendicular to the current view direction, {@code -π / 2}
    * radians around the global Y axis. </p>
    *
    * @param u The units to move
@@ -77,8 +77,8 @@ public interface JCameraFPSStyleType extends
     float u);
 
   /**
-   * <p> Move the camera <i>up</i> <code>u</code> units iff <code>u</code> is
-   * positive, or <i>down</i> <code>u</code> units iff <code>u</code> is
+   * <p> Move the camera <i>up</i> {@code u} units iff {@code u} is
+   * positive, or <i>down</i> {@code u} units iff {@code u} is
    * negative. </p> <p> The <i>up</i> direction, in this case, means the
    * direction towards positive infinity on the global Y axis. </p>
    *
@@ -89,7 +89,7 @@ public interface JCameraFPSStyleType extends
     float u);
 
   /**
-   * <p> Rotate by <code>r</code> radians around the local X axis. </p> <p> Note
+   * <p> Rotate by {@code r} radians around the local X axis. </p> <p> Note
    * that by convention, when looking towards negative infinity on an axis, a
    * positive rotation value results in a counter-clockwise rotation on the
    * axis. </p> <p> A human analogy would be that a positive value passed to
@@ -99,7 +99,7 @@ public interface JCameraFPSStyleType extends
    *
    * @param r The radians to rotate
    *
-   * @return <code>true</code> if the rotation has been clamped
+   * @return {@code true} if the rotation has been clamped
    *
    * @see #cameraClampHorizontalEnable(float, float)
    */
@@ -108,7 +108,7 @@ public interface JCameraFPSStyleType extends
     float r);
 
   /**
-   * <p> Rotate by <code>r</code> radians around the global Y axis. </p> <p>
+   * <p> Rotate by {@code r} radians around the global Y axis. </p> <p>
    * Note that by convention, when looking towards negative infinity on an axis,
    * a positive rotation value results in a counter-clockwise rotation on the
    * axis. </p> <p> A human analogy would be that a positive value passed to
@@ -122,7 +122,7 @@ public interface JCameraFPSStyleType extends
     float r);
 
   /**
-   * Set the angle around the horizontal axis to <code>h</code>.
+   * Set the angle around the horizontal axis to {@code h}.
    *
    * @param h The angle.
    */
@@ -131,7 +131,7 @@ public interface JCameraFPSStyleType extends
     final float h);
 
   /**
-   * Set the angle around the vertical axis to <code>v</code>.
+   * Set the angle around the vertical axis to {@code v}.
    *
    * @param v The angle.
    */

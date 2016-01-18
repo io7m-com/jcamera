@@ -37,7 +37,7 @@ public interface JCameraSphericalLinearIntegratorType extends
   JCameraSphericalInput integratorGetInput();
 
   /**
-   * Set the linear acceleration (of the camera target) to <code>a</code>.
+   * Set the linear acceleration (of the camera target) to {@code a}.
    *
    * @param a The linear acceleration.
    */
@@ -46,7 +46,7 @@ public interface JCameraSphericalLinearIntegratorType extends
     final float a);
 
   /**
-   * Set the linear drag factor (of the camera target) to <code>f</code>.
+   * Set the linear drag factor (of the camera target) to {@code f}.
    *
    * @param f The linear drag factor.
    */
@@ -56,7 +56,7 @@ public interface JCameraSphericalLinearIntegratorType extends
 
   /**
    * Set the maximum linear movement speed (of the camera target) to
-   * <code>s</code>.
+   * {@code s}.
    *
    * @param s The maximum linear speed.
    */
@@ -65,7 +65,7 @@ public interface JCameraSphericalLinearIntegratorType extends
     final float s);
 
   /**
-   * Set the linear acceleration (of the camera zoom) to <code>a</code>.
+   * Set the linear acceleration (of the camera zoom) to {@code a}.
    *
    * @param a The linear acceleration.
    */
@@ -74,7 +74,7 @@ public interface JCameraSphericalLinearIntegratorType extends
     final float a);
 
   /**
-   * Set the linear drag factor (of the camera zoom) to <code>f</code>.
+   * Set the linear drag factor (of the camera zoom) to {@code f}.
    *
    * @param f The linear drag factor.
    */
@@ -84,7 +84,7 @@ public interface JCameraSphericalLinearIntegratorType extends
 
   /**
    * Set the maximum linear movement speed (of the camera zoom) to
-   * <code>s</code>.
+   * {@code s}.
    *
    * @param s The maximum linear speed.
    */

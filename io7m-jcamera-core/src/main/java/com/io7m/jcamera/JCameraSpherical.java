@@ -63,7 +63,7 @@ public final class JCameraSpherical implements
   {
     this.input_target_position = new VectorM3F();
     this.input_incline = 0.0f;
-    this.input_heading = (float) -(Math.PI / 2.0f);
+    this.input_heading = (float) -(Math.PI / 2.0);
     this.input_radius = 8.0f;
 
     this.derived_current = false;
@@ -124,7 +124,9 @@ public final class JCameraSpherical implements
     final float min,
     final float max)
   {
-    RangeCheck.checkGreaterDouble(max, "Maximum clamp", min, "Minimum clamp");
+    RangeCheck.checkGreaterDouble(
+      (double) max, "Maximum clamp",
+      (double) min, "Minimum clamp");
     this.clamp_incline = true;
     this.clamp_incline_max = max;
     this.clamp_incline_min = min;
@@ -143,9 +145,11 @@ public final class JCameraSpherical implements
     final float min,
     final float max)
   {
-    RangeCheck.checkGreaterDouble(max, "Maximum clamp", min, "Minimum clamp");
     RangeCheck.checkGreaterDouble(
-      min,
+      (double) max, "Maximum clamp",
+      (double) min, "Minimum clamp");
+    RangeCheck.checkGreaterDouble(
+      (double) min,
       "Minimum clamp",
       0.0,
       "Minimum clamp range");
@@ -268,7 +272,7 @@ public final class JCameraSpherical implements
     VectorM3F.addScaledInPlace(
       this.input_target_position,
       this.derived_forward_on_xz,
-      u);
+      (double) u);
     this.derived_current = false;
   }
 
@@ -280,7 +284,7 @@ public final class JCameraSpherical implements
     VectorM3F.addScaledInPlace(
       this.input_target_position,
       this.derived_right,
-      u);
+      (double) u);
     this.derived_current = false;
   }
 
@@ -291,7 +295,7 @@ public final class JCameraSpherical implements
     VectorM3F.addScaledInPlace(
       this.input_target_position,
       JCameraSpherical.AXIS_Y,
-      u);
+      (double) u);
     this.derived_current = false;
   }
 
@@ -403,7 +407,7 @@ public final class JCameraSpherical implements
 
   private void deriveVectors()
   {
-    if (this.derived_current == false) {
+    if (!this.derived_current) {
       final float i = this.input_incline;
       final float a = this.input_heading;
 
@@ -412,12 +416,12 @@ public final class JCameraSpherical implements
        */
 
       {
-        final float x = (float) (Math.cos(a) * Math.cos(i));
-        final float y = (float) Math.sin(i);
-        final float z = (float) -(Math.cos(i) * Math.sin(a));
+        final float x = (float) (Math.cos((double) a) * Math.cos((double) i));
+        final float y = (float) Math.sin((double) i);
+        final float z = (float) -(Math.cos((double) i) * Math.sin((double) a));
 
         this.temporary.set3F(x, y, z);
-        VectorM3F.scaleInPlace(this.temporary, this.input_radius);
+        VectorM3F.scaleInPlace(this.temporary, (double) this.input_radius);
         VectorM3F.add(
           this.input_target_position,
           this.temporary,
@@ -443,11 +447,11 @@ public final class JCameraSpherical implements
        */
 
       {
-        final float im = (float) (i - Math.toRadians(90.0f));
+        final float im = (float) ((double) i - Math.toRadians(90.0));
 
-        final float x = (float) (Math.cos(a) * Math.cos(im));
-        final float y = (float) Math.sin(im);
-        final float z = (float) -(Math.cos(im) * Math.sin(a));
+        final float x = (float) (Math.cos((double) a) * Math.cos((double) im));
+        final float y = (float) Math.sin((double) im);
+        final float z = (float) -(Math.cos((double) im) * Math.sin((double) a));
 
         this.derived_up.set3F(x, y, z);
         VectorM3F.scaleInPlace(this.derived_up, -1.0);

@@ -23,7 +23,7 @@ final class CameraFloatField extends JTextField
   private static final long serialVersionUID = -2563049281161431288L;
   private float             value;
 
-  public CameraFloatField()
+  CameraFloatField()
   {
     this.setEditable(false);
     this.setValue(0.0f);

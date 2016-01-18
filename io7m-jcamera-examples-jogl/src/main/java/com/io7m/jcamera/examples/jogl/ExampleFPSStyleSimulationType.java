@@ -28,7 +28,7 @@ import com.io7m.jcamera.JCameraFPSStyleType;
 public interface ExampleFPSStyleSimulationType
 {
   /**
-   * @return <code>true</code> if the camera is enabled.
+   * @return {@code true} if the camera is enabled.
    */
 
   boolean cameraIsEnabled();
@@ -37,7 +37,7 @@ public interface ExampleFPSStyleSimulationType
    * Enable/disable the camera.
    *
    * @param b
-   *          <code>true</code> if the camera should be enabled.
+   *          {@code true} if the camera should be enabled.
    */
 
   void cameraSetEnabled(

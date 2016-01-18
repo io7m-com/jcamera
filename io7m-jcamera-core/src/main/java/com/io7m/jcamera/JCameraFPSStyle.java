@@ -46,6 +46,7 @@ public final class JCameraFPSStyle implements
   private       boolean                derived_current;
   private       float                  input_angle_around_horizontal;
   private       float                  input_angle_around_vertical;
+
   private JCameraFPSStyle()
   {
     this.input_position = new VectorM3F();
@@ -59,7 +60,7 @@ public final class JCameraFPSStyle implements
     this.temporary = new VectorM3F();
 
     this.clamp_horizontal = true;
-    this.clamp_horizontal_max = (float) (Math.PI / 64.0f) * 31.0f;
+    this.clamp_horizontal_max = (float) (Math.PI / 64.0) * 31.0f;
     this.clamp_horizontal_min = -this.clamp_horizontal_max;
 
     this.clamp = new JCameraSignallingClamp();
@@ -103,7 +104,9 @@ public final class JCameraFPSStyle implements
     final float min,
     final float max)
   {
-    RangeCheck.checkGreaterDouble(max, "Maximum clamp", min, "Minimum clamp");
+    RangeCheck.checkGreaterDouble(
+      (double) max, "Maximum clamp",
+      (double) min, "Minimum clamp");
     this.clamp_horizontal = true;
     this.clamp_horizontal_max = max;
     this.clamp_horizontal_min = min;
@@ -196,7 +199,7 @@ public final class JCameraFPSStyle implements
     final float u)
   {
     this.deriveVectors();
-    VectorM3F.scale(this.derived_forward, u, this.temporary);
+    VectorM3F.scale(this.derived_forward, (double) u, this.temporary);
     VectorM3F.addInPlace(this.input_position, this.temporary);
   }
 
@@ -205,7 +208,7 @@ public final class JCameraFPSStyle implements
     final float u)
   {
     this.deriveVectors();
-    VectorM3F.scale(this.derived_right, u, this.temporary);
+    VectorM3F.scale(this.derived_right, (double) u, this.temporary);
     VectorM3F.addInPlace(this.input_position, this.temporary);
   }
 
@@ -214,7 +217,7 @@ public final class JCameraFPSStyle implements
     final float u)
   {
     this.deriveVectors();
-    VectorM3F.scale(this.derived_up, u, this.temporary);
+    VectorM3F.scale(this.derived_up, (double) u, this.temporary);
     VectorM3F.addInPlace(this.input_position, this.temporary);
   }
 
@@ -302,24 +305,24 @@ public final class JCameraFPSStyle implements
 
   private void deriveVectors()
   {
-    if (this.derived_current == false) {
+    if (!this.derived_current) {
       final float v = this.input_angle_around_vertical;
       final float h = this.input_angle_around_horizontal;
 
       {
-        final float x = (float) (Math.cos(h) * Math.cos(v));
-        final float y = (float) Math.sin(h);
-        final float z = (float) (Math.cos(h) * Math.sin(v));
+        final float x = (float) (Math.cos((double) h) * Math.cos((double) v));
+        final float y = (float) Math.sin((double) h);
+        final float z = (float) (Math.cos((double) h) * Math.sin((double) v));
         this.derived_forward.set3F(x, y, -z);
         VectorM3F.normalizeInPlace(this.derived_forward);
       }
 
       {
-        final double po2 = Math.PI / 2.0f;
-        final double vr = v - po2;
-        final float x = (float) (Math.cos(h) * Math.cos(vr));
+        final double po2 = Math.PI / 2.0;
+        final double vr = (double) v - po2;
+        final float x = (float) (Math.cos((double) h) * Math.cos(vr));
         final float y = 0.0f;
-        final float z = (float) (Math.cos(h) * Math.sin(vr));
+        final float z = (float) (Math.cos((double) h) * Math.sin(vr));
         this.derived_right.set3F(x, y, -z);
         VectorM3F.normalizeInPlace(this.derived_right);
       }

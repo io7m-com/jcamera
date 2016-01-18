@@ -81,11 +81,11 @@ public final class ExampleSphericalMain
      */
 
     final AtomicReference<JCameraSphericalMouseRegion> mouse_region =
-      new AtomicReference<JCameraSphericalMouseRegion>(
+      new AtomicReference<>(
         JCameraSphericalMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640,
-          480));
+          640.0F,
+          480.0F));
 
     /**
      * $example: Initialize JOGL and open a window.

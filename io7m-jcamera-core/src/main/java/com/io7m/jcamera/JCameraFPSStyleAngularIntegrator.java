@@ -45,8 +45,8 @@ public final class JCameraFPSStyleAngularIntegrator implements
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
 
-    this.maximum_speed_horizontal = (float) (2 * Math.PI);
-    this.maximum_speed_vertical = (float) (2 * Math.PI);
+    this.maximum_speed_horizontal = (float) (2.0 * Math.PI);
+    this.maximum_speed_vertical = (float) (2.0 * Math.PI);
     this.acceleration_horizontal = this.maximum_speed_horizontal / 2.0f;
     this.acceleration_vertical = this.maximum_speed_vertical / 2.0f;
     this.drag_horizontal = 0.05f;
@@ -58,7 +58,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
     final float drag,
     final float time)
   {
-    return (float) (f * Math.pow(drag, time));
+    return (float) ((double) f * Math.pow((double) drag, (double) time));
   }
 
   /**
@@ -139,7 +139,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
   {
     this.acceleration_horizontal =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -151,7 +151,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
   {
     this.acceleration_vertical =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -164,7 +164,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
     this.drag_horizontal =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(d, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) d, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -177,7 +177,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
     this.drag_vertical =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(d, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) d, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -189,7 +189,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
   {
     this.maximum_speed_horizontal =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");
@@ -201,7 +201,7 @@ public final class JCameraFPSStyleAngularIntegrator implements
   {
     this.maximum_speed_vertical =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");

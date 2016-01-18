@@ -53,15 +53,10 @@ public final class JCameraRotationCoefficients
     }
     final JCameraRotationCoefficients other =
       (JCameraRotationCoefficients) obj;
-    if (Float.floatToIntBits(this.horizontal) != Float
-      .floatToIntBits(other.horizontal)) {
-      return false;
-    }
-    if (Float.floatToIntBits(this.vertical) != Float
-      .floatToIntBits(other.vertical)) {
-      return false;
-    }
-    return true;
+
+    return
+      Float.floatToIntBits(this.horizontal) == Float.floatToIntBits(other.horizontal)
+      && Float.floatToIntBits(this.vertical) == Float.floatToIntBits(other.vertical);
   }
 
   /**

@@ -59,7 +59,7 @@ public final class ExampleTimer
       {
         while (true) {
           try {
-            Thread.sleep(Integer.MAX_VALUE);
+            Thread.sleep((long) Integer.MAX_VALUE);
           } catch (final InterruptedException ex) {
             // Nothing
           }

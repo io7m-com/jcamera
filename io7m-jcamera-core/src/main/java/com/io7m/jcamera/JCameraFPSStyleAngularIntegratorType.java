@@ -25,7 +25,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
   JCameraIntegratorType
 {
   /**
-   * Set the acceleration around the horizontal axis to <code>a</code>.
+   * Set the acceleration around the horizontal axis to {@code a}.
    *
    * @param a The acceleration value.
    */
@@ -34,7 +34,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
     final float a);
 
   /**
-   * Set the acceleration around the vertical axis to <code>a</code>.
+   * Set the acceleration around the vertical axis to {@code a}.
    *
    * @param a The acceleration value.
    */
@@ -43,7 +43,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
     final float a);
 
   /**
-   * Set the drag around the horizontal axis to <code>a</code>.
+   * Set the drag around the horizontal axis to {@code a}.
    *
    * @param d The drag value.
    */
@@ -52,7 +52,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
     final float d);
 
   /**
-   * Set the drag around the vertical axis to <code>a</code>.
+   * Set the drag around the vertical axis to {@code a}.
    *
    * @param d The drag value.
    */
@@ -62,7 +62,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
 
   /**
    * Set the maximum rotation speed around the horizontal axis to
-   * <code>s</code>.
+   * {@code s}.
    *
    * @param s The maximum rotation speed.
    */
@@ -71,7 +71,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
     final float s);
 
   /**
-   * Set the maximum rotation speed around the vertical axis to <code>s</code>
+   * Set the maximum rotation speed around the vertical axis to {@code s}
    * .
    *
    * @param s The maximum rotation speed.

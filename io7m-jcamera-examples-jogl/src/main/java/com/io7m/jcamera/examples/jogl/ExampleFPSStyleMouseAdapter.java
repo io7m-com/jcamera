@@ -61,8 +61,8 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 
     if (this.sim.cameraIsEnabled()) {
       this.mouse_region.get().getCoefficients(
-        e.getX(),
-        e.getY(),
+        (float) e.getX(),
+        (float) e.getY(),
         this.rotations);
       this.input.addRotationAroundHorizontal(this.rotations.getHorizontal());
       this.input.addRotationAroundVertical(this.rotations.getVertical());

@@ -36,6 +36,7 @@ public final class JCameraFPSStyleLinearIntegrator implements
   private       float                speed_forward;
   private       float                speed_right;
   private       float                speed_up;
+
   private JCameraFPSStyleLinearIntegrator(
     final JCameraFPSStyleType in_camera,
     final JCameraFPSStyleInput in_input)
@@ -70,7 +71,7 @@ public final class JCameraFPSStyleLinearIntegrator implements
     final float f,
     final float time)
   {
-    return (float) (f * Math.pow(this.drag, time));
+    return (float) ((double) f * Math.pow((double) this.drag, (double) time));
   }
 
   @Override
@@ -157,7 +158,7 @@ public final class JCameraFPSStyleLinearIntegrator implements
   {
     this.acceleration =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -170,7 +171,7 @@ public final class JCameraFPSStyleLinearIntegrator implements
     this.drag =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(f, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) f, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -182,7 +183,7 @@ public final class JCameraFPSStyleLinearIntegrator implements
   {
     this.maximum_speed =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");

@@ -100,15 +100,15 @@ public final class ExampleSphericalGLListener implements GLEventListener
 
     final long time_now = System.nanoTime();
     final long time_diff = time_now - this.time_then;
-    final double time_diff_s = time_diff / 1000000000.0;
+    final double time_diff_s = (double) time_diff / 1000000000.0;
     this.time_accum = this.time_accum + time_diff_s;
     this.time_then = time_now;
 
     final float sim_delta = this.sim.getDeltaTime();
-    while (this.time_accum >= sim_delta) {
+    while (this.time_accum >= (double) sim_delta) {
       this.snap_prev = this.snap_curr;
       this.snap_curr = this.sim.integrate();
-      this.time_accum -= sim_delta;
+      this.time_accum -= (double) sim_delta;
     }
 
     /**
@@ -117,7 +117,7 @@ public final class ExampleSphericalGLListener implements GLEventListener
      * states.
      */
 
-    final float alpha = (float) (this.time_accum / sim_delta);
+    final float alpha = (float) (this.time_accum / (double) sim_delta);
     final JCameraSphericalSnapshot snap_interpolated =
       JCameraSphericalSnapshot.interpolate(
         this.snap_prev,
@@ -146,8 +146,8 @@ public final class ExampleSphericalGLListener implements GLEventListener
   {
     this.mouse_region.set(JCameraSphericalMouseRegion.newRegion(
       JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-      width,
-      height));
+      (float) width,
+      (float) height));
     this.renderer.reshape(width, height);
   }
 }

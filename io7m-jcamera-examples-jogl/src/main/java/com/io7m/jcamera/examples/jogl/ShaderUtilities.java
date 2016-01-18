@@ -31,7 +31,7 @@ final class ShaderUtilities
   /**
    * @param lines The list of lines.
    *
-   * @return <code>true</code> iff any of the following hold: <ul> <li>The list
+   * @return {@code true} iff any of the following hold: <ul> <li>The list
    * of lines is empty.</li> <li>There are no lines that contain anything other
    * than whitespace.</li> </ul>
    */
@@ -52,7 +52,7 @@ final class ShaderUtilities
   }
 
   /**
-   * <p> Read lines of input from <code>stream</code> until there is nothing
+   * <p> Read lines of input from {@code stream} until there is nothing
    * left to read, and return a list of all the lines returned. Each line will
    * be terminated with (at least) an LF character. </p>
    *
@@ -71,7 +71,7 @@ final class ShaderUtilities
 
     final BufferedReader reader =
       new BufferedReader(new InputStreamReader(stream));
-    final List<String> lines = new ArrayList<String>();
+    final List<String> lines = new ArrayList<>();
     while (true) {
       final String line = reader.readLine();
       if (line == null) {

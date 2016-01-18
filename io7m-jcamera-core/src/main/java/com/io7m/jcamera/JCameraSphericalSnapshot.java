@@ -74,7 +74,7 @@ public final class JCameraSphericalSnapshot implements
    * @param y The second snapshot
    * @param a The interpolation value
    *
-   * @return A value between <code>x</code> and <code>y</code>
+   * @return A value between {@code x} and {@code y}
    */
 
   public static JCameraSphericalSnapshot interpolate(

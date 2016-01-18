@@ -24,7 +24,7 @@ public interface JCameraIntegratorType
 {
   /**
    * Integrate the positions/velocities of the current camera over
-   * <code>d</code>.
+   * {@code d}.
    *
    * @param d The delta time
    */

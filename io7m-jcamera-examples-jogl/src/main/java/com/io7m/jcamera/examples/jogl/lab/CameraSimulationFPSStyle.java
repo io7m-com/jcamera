@@ -73,11 +73,11 @@ final class CameraSimulationFPSStyle implements
     this.sim = NullCheck.notNull(in_sim);
 
     this.mouse_region =
-      new AtomicReference<JCameraFPSStyleMouseRegion>(
+      new AtomicReference<>(
         JCameraFPSStyleMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          in_window.getWidth(),
-          in_window.getHeight()));
+          (float) in_window.getWidth(),
+          (float) in_window.getHeight()));
 
     this.key_listener =
       new ExampleFPSStyleKeyListener(

@@ -288,7 +288,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g
       .glBufferData(
         GL.GL_ELEMENT_ARRAY_BUFFER,
-        6 * 4,
+        (long) (6 * 4),
         data,
         GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -355,7 +355,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
+      (long) ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -426,7 +426,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
+      (long) ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -435,7 +435,7 @@ public final class ExampleRenderer implements ExampleRendererType
 
   /**
    * A "repeatable random" function. Will always return the same pseudo-random
-   * value for a given <code>x</code> value.
+   * value for a given {@code x} value.
    */
 
   private static float noise(
@@ -445,7 +445,7 @@ public final class ExampleRenderer implements ExampleRendererType
     final int q = (z << 13) ^ z;
     final int s =
       ((q * ((q * q * 15731) + 789221)) + 1376312589) & 0x7fffffff;
-    final float r = 1.0f - (s / 1073741824.0f);
+    final float r = 1.0f - ((float) s / 1073741824.0f);
     return Math.abs(r);
   }
 
@@ -459,7 +459,7 @@ public final class ExampleRenderer implements ExampleRendererType
     if (g != null) {
       s.cameraMakeViewPMatrix(this.ctx, this.view);
 
-      g.glClearDepth(1.0f);
+      g.glClearDepth(1.0);
       g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
       g.glClear(GL.GL_COLOR_BUFFER_BIT
                   | GL.GL_DEPTH_BUFFER_BIT
@@ -531,7 +531,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_POSITION_OFFSET);
+        (long) ExampleRenderer.VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -545,7 +545,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_COLOR_OFFSET);
+        (long) ExampleRenderer.VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -565,9 +565,9 @@ public final class ExampleRenderer implements ExampleRendererType
       assert uid != -1;
 
       for (int index = 0; index < 100; ++index) {
-        final float x = 10.0f - (ExampleRenderer.noise(index * 10) * 20.0f);
+        final float x = 10.0f - (ExampleRenderer.noise((float) (index * 10)) * 20.0f);
         final float y = 0.0f;
-        final float z = 10.0f - (ExampleRenderer.noise(index * 100) * 20.0f);
+        final float z = 10.0f - (ExampleRenderer.noise((float) (index * 100)) * 20.0f);
         this.drawQuad(g, uid, x, y, z);
       }
 
@@ -602,7 +602,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_POSITION_OFFSET);
+        (long) ExampleRenderer.VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -616,7 +616,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_UV_OFFSET);
+        (long) ExampleRenderer.VERTEX_UV_OFFSET);
     }
 
     {
@@ -692,7 +692,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        0);
+        0L);
     }
 
     {
@@ -706,7 +706,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_COLOR_OFFSET);
+        (long) ExampleRenderer.VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -756,14 +756,14 @@ public final class ExampleRenderer implements ExampleRendererType
     final int width,
     final int height)
   {
-    final float fw = width;
-    final float fh = height;
+    final float fw = (float) width;
+    final float fh = (float) height;
     ProjectionMatrix.makePerspectiveProjection(
       this.projection,
-      0.01f,
-      100.0f,
-      fw / fh,
-      Math.toRadians(90.0f));
+      0.01,
+      100.0,
+      (double) (fw / fh),
+      Math.toRadians(90.0));
   }
 
   @Override

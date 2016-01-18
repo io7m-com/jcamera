@@ -46,7 +46,7 @@ public final class JCameraScalingFunctions
       public float evaluate(
         final float x)
       {
-        return (float) Math.sqrt(x);
+        return (float) Math.sqrt((double) x);
       }
     };
   }

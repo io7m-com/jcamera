@@ -69,11 +69,11 @@ public final class JCameraFPSStyleIntegrator
   {
     if (ai.integratorGetCamera() != li.integratorGetCamera()) {
       throw new IllegalArgumentException(
-        "Angular integrator camera does not match the linear integrator camera");
+        "Angular integrator camera does not match linear integrator camera");
     }
     if (ai.integratorGetInput() != li.integratorGetInput()) {
       throw new IllegalArgumentException(
-        "Angular integrator input does not match the linear integrator input");
+        "Angular integrator input does not match linear integrator input");
     }
 
     return new JCameraFPSStyleIntegratorType()

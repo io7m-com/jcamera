@@ -29,13 +29,13 @@ public final class ProjectionMatrix
 {
   /**
    * <p> Calculate a matrix that produces a perspective projection. The
-   * <code>(x_min, y_min, z_near)</code> and <code>(x_max, y_max, z_near)</code>
+   * {@code (x_min, y_min, z_near)} and {@code (x_max, y_max, z_near)}
    * parameters specify the points on the near clipping plane that are mapped to
    * the lower-left and upper-right corners of the window, respectively,
-   * assuming that the eye is located at <code>(0, 0, 0)</code>. The
-   * <code>z_far</code> parameter specifies the location of the far clipping
-   * plane. </p> <p> Note that iff <code>z_far &gt;= Double
-   * .POSITIVE_INFINITY</code>, the function produces an "infinite projection
+   * assuming that the eye is located at {@code (0, 0, 0)}. The
+   * {@code z_far} parameter specifies the location of the far clipping
+   * plane. </p> <p> Note that iff {@code z_far &gt;= Double
+   * .POSITIVE_INFINITY}, the function produces an "infinite projection
    * matrix", suitable for use in code that deals with shadow volumes. </p> <p>
    * See
    * <a href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
@@ -67,9 +67,9 @@ public final class ProjectionMatrix
       "Minimum Z distance");
     RangeCheck.checkLessDouble(z_near, "Near Z", z_far, "Far Z");
 
-    final double r0c0 = (2 * z_near) / (x_max - x_min);
+    final double r0c0 = (2.0 * z_near) / (x_max - x_min);
     final double r0c2 = (x_max + x_min) / (x_max - x_min);
-    final double r1c1 = (2 * z_near) / (y_max - y_min);
+    final double r1c1 = (2.0 * z_near) / (y_max - y_min);
     final double r1c2 = (y_max + y_min) / (y_max - y_min);
 
     final double r2c2;
@@ -80,7 +80,7 @@ public final class ProjectionMatrix
       r2c3 = -2.0 * z_near;
     } else {
       r2c2 = -((z_far + z_near) / (z_far - z_near));
-      r2c3 = -((2 * z_far * z_near) / (z_far - z_near));
+      r2c3 = -((2.0 * z_far * z_near) / (z_far - z_near));
     }
 
     matrix.setR0C0F((float) r0c0);
@@ -135,11 +135,11 @@ public final class ProjectionMatrix
     final double fmn = z_far - z_near;
     final double fpn = z_far + z_near;
 
-    final float r0c0 = (float) (2 / rml);
+    final float r0c0 = (float) (2.0 / rml);
     final float r0c3 = (float) -(rpl / rml);
-    final float r1c1 = (float) (2 / tmb);
+    final float r1c1 = (float) (2.0 / tmb);
     final float r1c3 = (float) -(tpb / tmb);
-    final float r2c2 = (float) (-2 / fmn);
+    final float r2c2 = (float) (-2.0 / fmn);
     final float r2c3 = (float) -(fpn / fmn);
 
     matrix.setR0C0F(r0c0);
@@ -167,10 +167,10 @@ public final class ProjectionMatrix
    * <p> Calculate a matrix that will produce a perspective projection based on
    * the given view frustum parameters, the aspect ratio of the viewport and a
    * given horizontal field of view in radians. Note that
-   * <code>fov_radians</code> represents the full horizontal field of view: the
+   * {@code fov_radians} represents the full horizontal field of view: the
    * angle at the base of the triangle formed by the frustum on the
-   * <code>x/z</code> plane. </p> <p> Note that iff <code>z_far &gt;=
-   * Double.POSITIVE_INFINITY</code>, the function produces an "infinite
+   * {@code x/z} plane. </p> <p> Note that iff {@code z_far &gt;=
+   * Double.POSITIVE_INFINITY}, the function produces an "infinite
    * projection matrix", suitable for use in code that deals with shadow
    * volumes. </p> <p> See
    * <a href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU

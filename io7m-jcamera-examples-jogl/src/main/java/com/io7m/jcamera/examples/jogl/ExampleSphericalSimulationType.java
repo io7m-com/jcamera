@@ -45,7 +45,7 @@ public interface ExampleSphericalSimulationType
   JCameraSphericalSnapshot integrate();
 
   /**
-   * @return <code>true</code> if the camera is enabled.
+   * @return {@code true} if the camera is enabled.
    */
 
   boolean cameraIsEnabled();
@@ -54,7 +54,7 @@ public interface ExampleSphericalSimulationType
    * Enable/disable the camera.
    *
    * @param b
-   *          <code>true</code> if the camera should be enabled.
+   *          {@code true} if the camera should be enabled.
    */
 
   void cameraSetEnabled(

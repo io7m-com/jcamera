@@ -53,14 +53,14 @@ import java.util.concurrent.atomic.AtomicReference;
 final class CameraSimulationSpherical implements
   CameraSimulationType
 {
-  private static enum IntegratorSelection
+  private enum IntegratorSelection
   {
     INTEGRATOR_SCALED("Zoom-scaled"),
     INTEGRATOR_UNSCALED("Unscaled");
 
     private final String name;
 
-    private IntegratorSelection(
+    IntegratorSelection(
       final String in_name)
     {
       this.name = in_name;
@@ -87,9 +87,9 @@ final class CameraSimulationSpherical implements
   private final CameraFloatSlider                            incline_drag;
   private final CameraFloatSlider                            incline_maximum;
   private final JCameraSphericalInput                        input;
-  private JCameraSphericalIntegratorType                     integrator;
+  private       JCameraSphericalIntegratorType               integrator;
   private final JCameraSphericalIntegratorType               integrator_scaled;
-  private float                                              integrator_time_seconds;
+  private final float                                        integrator_time_seconds;
   private final JCameraSphericalIntegratorType               integrator_unscaled;
   private final ExampleSphericalKeyListener                  key_listener;
   private final ExampleSphericalMouseListener                mouse_listener;
@@ -97,14 +97,14 @@ final class CameraSimulationSpherical implements
   private final JComboBox<IntegratorSelection>               selected_integrator;
   private final ExampleSphericalSimulationType               sim;
   private final CameraFloatSlider                            target_acceleration;
-  private final CameraFloatSlider                            target_drag;
-  private final CameraFloatSlider                            target_maximum;
-  private final CameraVector3Field                           target_pos;
-  private final CameraFloatField                             zoom;
-  private final CameraFloatSlider                            zoom_acceleration;
-  private final CameraFloatSlider                            zoom_drag;
-  private final CameraFloatSlider                            zoom_maximum;
-  private CameraFloatSlider                                  drag_sensitivity;
+  private final CameraFloatSlider  target_drag;
+  private final CameraFloatSlider  target_maximum;
+  private final CameraVector3Field target_pos;
+  private final CameraFloatField   zoom;
+  private final CameraFloatSlider  zoom_acceleration;
+  private final CameraFloatSlider  zoom_drag;
+  private final CameraFloatSlider  zoom_maximum;
+  private final CameraFloatSlider  drag_sensitivity;
 
   CameraSimulationSpherical(
     final GLWindow in_window,
@@ -180,11 +180,11 @@ final class CameraSimulationSpherical implements
     this.sim = in_sim;
 
     this.mouse_region =
-      new AtomicReference<JCameraSphericalMouseRegion>(
+      new AtomicReference<>(
         JCameraSphericalMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          in_window.getWidth(),
-          in_window.getHeight()));
+          (float) in_window.getWidth(),
+          (float) in_window.getHeight()));
 
     this.key_listener =
       new ExampleSphericalKeyListener(
@@ -382,7 +382,7 @@ final class CameraSimulationSpherical implements
 
     this.group = new RowGroup();
 
-    this.selected_integrator = new JComboBox<IntegratorSelection>();
+    this.selected_integrator = new JComboBox<>();
     for (final IntegratorSelection v : IntegratorSelection.values()) {
       this.selected_integrator.addItem(v);
     }

@@ -73,7 +73,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
     final float drag,
     final float time)
   {
-    return (float) (f * Math.pow(drag, time));
+    return (float) ((double) f * Math.pow((double) drag, (double) time));
   }
 
   /**
@@ -275,7 +275,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   {
     this.target_acceleration =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -288,7 +288,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
     this.target_drag =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(f, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) f, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -300,7 +300,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   {
     this.target_maximum_speed =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");
@@ -312,7 +312,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   {
     this.zoom_acceleration =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -325,7 +325,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
     this.zoom_drag =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(f, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) f, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -337,7 +337,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
   {
     this.zoom_maximum_speed =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");

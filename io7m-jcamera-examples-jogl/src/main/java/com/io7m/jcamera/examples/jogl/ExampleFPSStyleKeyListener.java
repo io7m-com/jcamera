@@ -217,8 +217,8 @@ import com.jogamp.newt.opengl.GLWindow;
       System.out.println("Enabling camera");
       this.window.confinePointer(true);
       this.renderer.sendWantWarpPointer();
-      this.input.setRotationHorizontal(0);
-      this.input.setRotationVertical(0);
+      this.input.setRotationHorizontal(0.0F);
+      this.input.setRotationVertical(0.0F);
     }
 
     this.sim.cameraSetEnabled(!enabled);

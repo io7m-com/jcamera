@@ -84,11 +84,11 @@ public final class ExampleFPSStyleMain
     final JCameraRotationCoefficients rotations =
       new JCameraRotationCoefficients();
     final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region =
-      new AtomicReference<JCameraFPSStyleMouseRegion>(
+      new AtomicReference<>(
         JCameraFPSStyleMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640,
-          480));
+          640.0F,
+          480.0F));
 
     /**
      * $example: Initialize JOGL and open a window, construct an animator to

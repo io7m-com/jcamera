@@ -121,7 +121,7 @@ public final class JCameraFPSStyleInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move
+   * @return {@code true} if the user is telling the camera to move
    * backward
    */
 
@@ -133,7 +133,7 @@ public final class JCameraFPSStyleInput
   /**
    * Tell the camera to start/stop moving backward.
    *
-   * @param in_backward <code>true</code> if the camera should be moving
+   * @param in_backward {@code true} if the camera should be moving
    */
 
   public void setMovingBackward(
@@ -143,7 +143,7 @@ public final class JCameraFPSStyleInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move down
+   * @return {@code true} if the user is telling the camera to move down
    */
 
   public boolean isMovingDown()
@@ -154,7 +154,7 @@ public final class JCameraFPSStyleInput
   /**
    * Tell the camera to start/stop moving down.
    *
-   * @param in_down <code>true</code> if the camera should be moving
+   * @param in_down {@code true} if the camera should be moving
    */
 
   public void setMovingDown(
@@ -164,7 +164,7 @@ public final class JCameraFPSStyleInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move forward
+   * @return {@code true} if the user is telling the camera to move forward
    */
 
   public boolean isMovingForward()
@@ -175,7 +175,7 @@ public final class JCameraFPSStyleInput
   /**
    * Tell the camera to start/stop moving forward.
    *
-   * @param in_forward <code>true</code> if the camera should be moving
+   * @param in_forward {@code true} if the camera should be moving
    */
 
   public void setMovingForward(
@@ -185,7 +185,7 @@ public final class JCameraFPSStyleInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move left
+   * @return {@code true} if the user is telling the camera to move left
    */
 
   public boolean isMovingLeft()
@@ -196,7 +196,7 @@ public final class JCameraFPSStyleInput
   /**
    * Tell the camera to start/stop moving left.
    *
-   * @param in_left <code>true</code> if the camera should be moving
+   * @param in_left {@code true} if the camera should be moving
    */
 
   public void setMovingLeft(
@@ -206,7 +206,7 @@ public final class JCameraFPSStyleInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move right
+   * @return {@code true} if the user is telling the camera to move right
    */
 
   public boolean isMovingRight()
@@ -217,7 +217,7 @@ public final class JCameraFPSStyleInput
   /**
    * Tell the camera to start/stop moving right.
    *
-   * @param in_right <code>true</code> if the camera should be moving
+   * @param in_right {@code true} if the camera should be moving
    */
 
   public void setMovingRight(
@@ -227,7 +227,7 @@ public final class JCameraFPSStyleInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move up
+   * @return {@code true} if the user is telling the camera to move up
    */
 
   public boolean isMovingUp()
@@ -238,7 +238,7 @@ public final class JCameraFPSStyleInput
   /**
    * Tell the camera to start/stop moving up.
    *
-   * @param in_up <code>true</code> if the camera should be moving
+   * @param in_up {@code true} if the camera should be moving
    */
 
   public void setMovingUp(
@@ -258,9 +258,9 @@ public final class JCameraFPSStyleInput
   {
     this.rotate_horizontal_factor =
       (float) RangeCheck.checkGreaterDouble(
-        f,
+        (double) f,
         "Factor",
-        0.0f,
+        0.0,
         "Minimum factor");
   }
 
@@ -275,9 +275,9 @@ public final class JCameraFPSStyleInput
   {
     this.rotate_vertical_factor =
       (float) RangeCheck.checkGreaterDouble(
-        f,
+        (double) f,
         "Factor",
-        0.0f,
+        0.0,
         "Minimum factor");
   }
 

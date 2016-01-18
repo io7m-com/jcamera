@@ -25,11 +25,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Program to split examples.
+ */
+
 public final class ExampleSplit
 {
+  private ExampleSplit()
+  {
+
+  }
+
+  /**
+   * Main program.
+   *
+   * @param args Command line arguments
+   *
+   * @throws Exception On errors
+   */
+
   public static void main(
     final String[] args)
-    throws Throwable
+    throws Exception
   {
     if (args.length < 2) {
       throw new IllegalArgumentException(
@@ -42,18 +59,18 @@ public final class ExampleSplit
     final String basename = args[2];
     assert basename != null;
 
-    if (output.isDirectory() == false) {
+    if (!output.isDirectory()) {
       throw new IOException("Not a directory - " + output);
     }
 
     final BufferedReader br =
       new BufferedReader(new FileReader(new File(source)));
 
-    final List<String> lines = new ArrayList<String>();
+    final List<String> lines = new ArrayList<>();
 
     {
       String previous = null;
-      for (;;) {
+      while (true) {
         final String line = br.readLine();
         if (line == null) {
           throw new IllegalStateException("No $example annotation in file");
@@ -68,7 +85,7 @@ public final class ExampleSplit
     }
 
     int count = 0;
-    for (;;) {
+    while (true) {
       final String line = br.readLine();
       if (line == null) {
         count = ExampleSplit.writeExample(count, output, basename, lines);
@@ -90,7 +107,8 @@ public final class ExampleSplit
     final List<String> lines)
     throws IOException
   {
-    final String name = String.format("%s%d.txt", basename, count);
+    final String name = String.format(
+      "%s%d.txt", basename, Integer.valueOf(count));
     final File out = new File(output_directory, name);
 
     final BufferedWriter w = new BufferedWriter(new FileWriter(out));

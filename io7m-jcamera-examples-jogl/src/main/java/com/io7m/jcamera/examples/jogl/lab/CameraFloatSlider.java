@@ -37,7 +37,7 @@ import javax.swing.event.ChangeListener;
     final float min,
     final float max)
   {
-    final float factor = x / 100.0f;
+    final float factor = (float) x / 100.0f;
     return (factor * (max - min)) + min;
   }
 
@@ -46,7 +46,7 @@ import javax.swing.event.ChangeListener;
     final float min,
     final float max)
   {
-    return (int) (((f - min) / (max - min)) * 100);
+    return (int) (((f - min) / (max - min)) * 100.0F);
   }
 
   private float                          current;

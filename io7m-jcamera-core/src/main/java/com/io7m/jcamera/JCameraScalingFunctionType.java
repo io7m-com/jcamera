@@ -23,11 +23,11 @@ package com.io7m.jcamera;
 public interface JCameraScalingFunctionType
 {
   /**
-   * Evaluate the function for <code>x</code>.
+   * Evaluate the function for {@code x}.
    *
    * @param x The argument
    *
-   * @return A value of type <code>float</code>
+   * @return A value of type {@code float}
    */
 
   float evaluate(

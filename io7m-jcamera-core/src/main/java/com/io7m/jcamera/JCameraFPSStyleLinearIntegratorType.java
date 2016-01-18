@@ -37,7 +37,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
   JCameraFPSStyleInput integratorGetInput();
 
   /**
-   * Set the linear acceleration to <code>a</code>.
+   * Set the linear acceleration to {@code a}.
    *
    * @param a The linear acceleration.
    */
@@ -46,7 +46,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
     final float a);
 
   /**
-   * Set the linear drag factor to <code>f</code>.
+   * Set the linear drag factor to {@code f}.
    *
    * @param f The linear drag factor.
    */
@@ -55,7 +55,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
     final float f);
 
   /**
-   * Set the maximum linear movement speed to <code>s</code>.
+   * Set the maximum linear movement speed to {@code s}.
    *
    * @param s The maximum linear speed.
    */

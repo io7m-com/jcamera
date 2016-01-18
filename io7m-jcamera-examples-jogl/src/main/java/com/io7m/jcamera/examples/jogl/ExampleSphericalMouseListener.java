@@ -61,8 +61,8 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
   {
     assert e != null;
     this.mouse_region.get().getPosition(
-      e.getX(),
-      e.getY(),
+      (float) e.getX(),
+      (float) e.getY(),
       this.position_normalized);
 
     if (this.position_normalized.getXF() <= -0.98f) {
@@ -115,8 +115,8 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
     assert e != null;
     if (e.isButtonDown(2)) {
       this.mouse_region.get().getPosition(
-        e.getX(),
-        e.getY(),
+        (float) e.getX(),
+        (float) e.getY(),
         this.position_normalized);
       final float px = -this.position_normalized.getXF();
       final float py = -this.position_normalized.getYF();

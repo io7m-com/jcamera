@@ -20,8 +20,8 @@ import com.io7m.jtensors.VectorReadable3FType;
 
 /**
  * <p> The type of <i>spherical</i> style flying cameras that point towards a
- * given point <code>p</code> and allow for: </p> <ul> <li>Orbiting horizontally
- * around <code>p</code></li> <li>Orbiting vertically around <code>p</code></li>
+ * given point {@code p} and allow for: </p> <ul> <li>Orbiting horizontally
+ * around {@code p}</li> <li>Orbiting vertically around {@code p}</li>
  * </ul>
  */
 
@@ -69,9 +69,9 @@ public interface JCameraSphericalType extends
     final float max);
 
   /**
-   * <p> Move the target point of the camera <i>forward</i> <code>u</code> units
-   * iff <code>u</code> is positive, or <i>backward</i> <code>u</code> units iff
-   * <code>u</code> is negative. </p> <p> The <i>forward</i> direction, in this
+   * <p> Move the target point of the camera <i>forward</i> {@code u} units
+   * iff {@code u} is positive, or <i>backward</i> {@code u} units iff
+   * {@code u} is negative. </p> <p> The <i>forward</i> direction, in this
    * case, means the current view direction projected onto the X/Z plane. This
    * means that the camera will not move along the Y axis. </p>
    *
@@ -82,11 +82,11 @@ public interface JCameraSphericalType extends
     float u);
 
   /**
-   * <p> Move the target point of the camera <i>right</i> <code>u</code> units
-   * iff <code>u</code> is positive, or <i>left</i> <code>u</code> units iff
-   * <code>u</code> is negative. </p> <p> The <i>right</i> direction, in this
+   * <p> Move the target point of the camera <i>right</i> {@code u} units
+   * iff {@code u} is positive, or <i>left</i> {@code u} units iff
+   * {@code u} is negative. </p> <p> The <i>right</i> direction, in this
    * case, means the direction perpendicular to the current view direction,
-   * <code>-π / 2</code> radians around the global Y axis. </p>
+   * {@code -π / 2} radians around the global Y axis. </p>
    *
    * @param u The units to move
    */
@@ -95,9 +95,9 @@ public interface JCameraSphericalType extends
     float u);
 
   /**
-   * <p> Move the target point of the camera <i>up</i> <code>u</code> units iff
-   * <code>u</code> is positive, or <i>down</i> <code>u</code> units iff
-   * <code>u</code> is negative. </p> <p> The <i>up</i> direction, in this case,
+   * <p> Move the target point of the camera <i>up</i> {@code u} units iff
+   * {@code u} is positive, or <i>down</i> {@code u} units iff
+   * {@code u} is negative. </p> <p> The <i>up</i> direction, in this case,
    * means the direction towards positive infinity on the global Y axis. </p>
    *
    * @param u The units to move
@@ -116,7 +116,7 @@ public interface JCameraSphericalType extends
   /**
    * @param r The radians to orbit
    *
-   * @return <code>true</code> if the rotation has been clamped
+   * @return {@code true} if the rotation has been clamped
    *
    * @see #cameraClampInclineEnable(float, float)
    */
@@ -125,7 +125,7 @@ public interface JCameraSphericalType extends
     float r);
 
   /**
-   * Set the heading angle to <code>a</code>.
+   * Set the heading angle to {@code a}.
    *
    * @param a The angle.
    */
@@ -134,7 +134,7 @@ public interface JCameraSphericalType extends
     final float a);
 
   /**
-   * Set the incline angle to <code>a</code>.
+   * Set the incline angle to {@code a}.
    *
    * @param a The angle.
    */
@@ -165,7 +165,7 @@ public interface JCameraSphericalType extends
     final float z);
 
   /**
-   * Set the zoom (or <i>radius</i>) of the camera to <code>r</code>.
+   * Set the zoom (or <i>radius</i>) of the camera to {@code r}.
    *
    * @param r The camera radius.
    */
@@ -178,7 +178,7 @@ public interface JCameraSphericalType extends
    *
    * @param r The amount by which to reduce the radius
    *
-   * @return <code>true</code> if the radius has been clamped
+   * @return {@code true} if the radius has been clamped
    *
    * @see #cameraClampRadiusEnable(float, float)
    */
@@ -191,7 +191,7 @@ public interface JCameraSphericalType extends
    *
    * @param r The amount by which to increase the radius
    *
-   * @return <code>true</code> if the radius has been clamped
+   * @return {@code true} if the radius has been clamped
    *
    * @see #cameraClampRadiusEnable(float, float)
    */

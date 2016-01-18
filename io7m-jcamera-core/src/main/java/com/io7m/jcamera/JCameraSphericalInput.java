@@ -127,7 +127,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to orbit
+   * @return {@code true} if the user is telling the camera to orbit
    */
 
   public boolean isOrbitingHeadingNegative()
@@ -136,7 +136,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to orbit
+   * @return {@code true} if the user is telling the camera to orbit
    */
 
   public boolean isOrbitingHeadingPositive()
@@ -145,7 +145,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to orbit
+   * @return {@code true} if the user is telling the camera to orbit
    */
 
   public boolean isOrbitingInclineNegative()
@@ -154,7 +154,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to orbit
+   * @return {@code true} if the user is telling the camera to orbit
    */
 
   public boolean isOrbitingInclinePositive()
@@ -163,7 +163,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to move
+   * @return {@code true} if the user is telling the camera target to move
    * backward
    */
 
@@ -173,7 +173,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to move
+   * @return {@code true} if the user is telling the camera target to move
    * down
    */
 
@@ -185,7 +185,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving down.
    *
-   * @param in_down <code>true</code> if the camera should be moving
+   * @param in_down {@code true} if the camera should be moving
    */
 
   public void setTargetMovingDown(
@@ -195,7 +195,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to move
+   * @return {@code true} if the user is telling the camera target to move
    * forward
    */
 
@@ -205,7 +205,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to move
+   * @return {@code true} if the user is telling the camera target to move
    * left
    */
 
@@ -215,7 +215,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to move
+   * @return {@code true} if the user is telling the camera target to move
    * right
    */
 
@@ -225,7 +225,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to move
+   * @return {@code true} if the user is telling the camera target to move
    * up
    */
 
@@ -237,7 +237,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving up.
    *
-   * @param in_up <code>true</code> if the camera should be moving
+   * @param in_up {@code true} if the camera should be moving
    */
 
   public void setTargetMovingUp(
@@ -247,7 +247,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to zoom in
+   * @return {@code true} if the user is telling the camera to zoom in
    */
 
   public boolean isZoomingIn()
@@ -258,7 +258,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop zooming in.
    *
-   * @param in_zoom_in <code>true</code> if the camera should be moving
+   * @param in_zoom_in {@code true} if the camera should be moving
    */
 
   public void setZoomingIn(
@@ -268,7 +268,7 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to zoom out
+   * @return {@code true} if the user is telling the camera to zoom out
    */
 
   public boolean isZoomingOut()
@@ -279,7 +279,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop zooming out.
    *
-   * @param in_zoom_out <code>true</code> if the camera should be moving
+   * @param in_zoom_out {@code true} if the camera should be moving
    */
 
   public void setZoomingOut(
@@ -317,7 +317,7 @@ public final class JCameraSphericalInput
    * Tell the camera to start/stop orbiting (for heading) in a negative
    * direction.
    *
-   * @param o <code>true</code> if the camera should be moving
+   * @param o {@code true} if the camera should be moving
    */
 
   public void setOrbitHeadingNegative(
@@ -330,7 +330,7 @@ public final class JCameraSphericalInput
    * Tell the camera to start/stop orbiting (for heading) in a positive
    * direction.
    *
-   * @param o <code>true</code> if the camera should be moving
+   * @param o {@code true} if the camera should be moving
    */
 
   public void setOrbitHeadingPositive(
@@ -343,7 +343,7 @@ public final class JCameraSphericalInput
    * Tell the camera to start/stop orbiting (for incline) in a negative
    * direction.
    *
-   * @param o <code>true</code> if the camera should be moving
+   * @param o {@code true} if the camera should be moving
    */
 
   public void setOrbitInclineNegative(
@@ -356,7 +356,7 @@ public final class JCameraSphericalInput
    * Tell the camera to start/stop orbiting (for incline) in a positive
    * direction.
    *
-   * @param o <code>true</code> if the camera should be moving
+   * @param o {@code true} if the camera should be moving
    */
 
   public void setOrbitInclinePositive(
@@ -368,7 +368,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving backward.
    *
-   * @param in_backward <code>true</code> if the camera should be moving
+   * @param in_backward {@code true} if the camera should be moving
    */
 
   public void setTargetMovingBackwardCursor(
@@ -380,7 +380,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving backward.
    *
-   * @param in_backward <code>true</code> if the camera should be moving
+   * @param in_backward {@code true} if the camera should be moving
    */
 
   public void setTargetMovingBackwardKey(
@@ -416,7 +416,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving forward.
    *
-   * @param in_forward <code>true</code> if the camera should be moving
+   * @param in_forward {@code true} if the camera should be moving
    */
 
   public void setTargetMovingForwardCursor(
@@ -428,7 +428,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving forward.
    *
-   * @param in_forward <code>true</code> if the camera should be moving
+   * @param in_forward {@code true} if the camera should be moving
    */
 
   public void setTargetMovingForwardKey(
@@ -440,7 +440,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving left.
    *
-   * @param in_left <code>true</code> if the camera should be moving
+   * @param in_left {@code true} if the camera should be moving
    */
 
   public void setTargetMovingLeftCursor(
@@ -452,7 +452,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving left.
    *
-   * @param in_left <code>true</code> if the camera should be moving
+   * @param in_left {@code true} if the camera should be moving
    */
 
   public void setTargetMovingLeftKey(
@@ -464,7 +464,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving right.
    *
-   * @param in_right <code>true</code> if the camera should be moving
+   * @param in_right {@code true} if the camera should be moving
    */
 
   public void setTargetMovingRightCursor(
@@ -476,7 +476,7 @@ public final class JCameraSphericalInput
   /**
    * Tell the camera target to start/stop moving right.
    *
-   * @param in_right <code>true</code> if the camera should be moving
+   * @param in_right {@code true} if the camera should be moving
    */
 
   public void setTargetMovingRightKey(
@@ -486,8 +486,8 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * Retrieve <code>r</code> = {@link #getTargetMovingForwardContinuous()}, set
-   * the current forward movement to 0.0, and return <code>r</code>.
+   * Retrieve {@code r} = {@link #getTargetMovingForwardContinuous()}, set
+   * the current forward movement to 0.0, and return {@code r}.
    *
    * @return The amount of forward movement.
    */
@@ -500,8 +500,8 @@ public final class JCameraSphericalInput
   }
 
   /**
-   * Retrieve <code>r</code> = {@link #getTargetMovingRight()}, set the current
-   * rightward movement to 0.0, and return <code>r</code>.
+   * Retrieve {@code r} = {@link #getTargetMovingRight()}, set the current
+   * rightward movement to 0.0, and return {@code r}.
    *
    * @return The amount of rightward movement.
    */

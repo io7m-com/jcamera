@@ -42,17 +42,17 @@ public final class JCameraFPSStyleMouseRegion
 
     this.height =
       (float) RangeCheck.checkGreaterEqualDouble(
-        in_height,
+        (double) in_height,
         "Height",
-        2.0f,
+        2.0,
         "Minimum height");
     this.center_y = this.height / 2.0f;
 
     this.width =
       (float) RangeCheck.checkGreaterEqualDouble(
-        in_width,
+        (double) in_width,
         "Width",
-        2.0f,
+        2.0,
         "Minimum width");
     this.center_x = this.width / 2.0f;
   }
@@ -95,7 +95,7 @@ public final class JCameraFPSStyleMouseRegion
 
   /**
    * Return the region-space coefficients for the screen-space position
-   * <code>(x, y)</code>.
+   * {@code (x, y)}.
    *
    * @param x   The x coordinate
    * @param y   The y coordinate

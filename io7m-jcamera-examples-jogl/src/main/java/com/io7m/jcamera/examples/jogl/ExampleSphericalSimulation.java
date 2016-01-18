@@ -93,12 +93,14 @@ public final class ExampleSphericalSimulation implements
       .integratorAngularOrbitInclineSetAcceleration(1.0f / this.integrator_time_seconds);
 
     this.integrator
-      .integratorLinearTargetSetAcceleration((float) (3.0 / this.integrator_time_seconds));
+      .integratorLinearTargetSetAcceleration((float) (3.0 / (double) this
+        .integrator_time_seconds));
     this.integrator.integratorLinearTargetSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearTargetSetDrag(0.000000001f);
 
     this.integrator
-      .integratorLinearZoomSetAcceleration((float) (3.0 / this.integrator_time_seconds));
+      .integratorLinearZoomSetAcceleration((float) (3.0 / (double) this
+        .integrator_time_seconds));
     this.integrator.integratorLinearZoomSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearZoomSetDrag(0.000000001f);
   }
