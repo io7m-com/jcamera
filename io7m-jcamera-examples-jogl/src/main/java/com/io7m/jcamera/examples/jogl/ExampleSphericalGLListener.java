@@ -16,15 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.opengl.DebugGL3;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-
 import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
 import com.io7m.jcamera.JCameraSphericalSnapshot;
@@ -32,6 +23,14 @@ import com.io7m.jfunctional.Option;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.DebugGL3;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The GL event listener used to handle rendering and driving of the

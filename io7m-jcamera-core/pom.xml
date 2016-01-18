@@ -29,39 +29,32 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-      <version>4.11</version>
     </dependency>
     <dependency>
       <groupId>org.reflections</groupId>
       <artifactId>reflections</artifactId>
-      <version>0.9.9-RC1</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>com.io7m.jnull</groupId>
       <artifactId>io7m-jnull-core</artifactId>
-      <version>[1.0.0, 2.0.0)</version>
     </dependency>
     <dependency>
       <groupId>com.io7m.jequality</groupId>
       <artifactId>io7m-jequality-core</artifactId>
-      <version>[1.0.0, 2.0.0)</version>
     </dependency>
     <dependency>
       <groupId>com.io7m.jtensors</groupId>
       <artifactId>io7m-jtensors-core</artifactId>
-      <version>[7.0.0-b2, 7.0.0)</version>
     </dependency>
     <dependency>
       <groupId>com.io7m.jranges</groupId>
       <artifactId>io7m-jranges-core</artifactId>
-      <version>[1.0.0, 2.0.0)</version>
     </dependency>
     <dependency>
       <groupId>com.io7m.jinterp</groupId>
       <artifactId>io7m-jinterp-core</artifactId>
-      <version>[1.0.0, 2.0.0)</version>
     </dependency>
   </dependencies>
 

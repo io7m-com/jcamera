@@ -16,15 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.opengl.DebugGL3;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraScreenOrigin;
@@ -33,6 +24,14 @@ import com.io7m.jfunctional.OptionType;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.DebugGL3;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The GL event listener used to handle rendering and driving of the
@@ -47,10 +46,10 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   private final ExampleFPSStyleSimulationType               sim;
   private final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region;
   private final ExampleRendererType                         renderer;
-  private long                                              time_then;
-  private double                                            time_accum;
-  private JCameraFPSStyleSnapshot                           snap_curr;
-  private JCameraFPSStyleSnapshot                           snap_prev;
+  private       long                                        time_then;
+  private       double                                      time_accum;
+  private       JCameraFPSStyleSnapshot                     snap_curr;
+  private       JCameraFPSStyleSnapshot                     snap_prev;
 
   public ExampleFPSStyleGLListener(
     final GLWindow in_window,
@@ -70,11 +69,11 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   /**
    * Initialize the simulation.
    *
-   * @param drawable
-   *          The OpenGL drawable
+   * @param drawable The OpenGL drawable
    */
 
-  @Override public void init(
+  @Override
+  public void init(
     final @Nullable GLAutoDrawable drawable)
   {
     try {
@@ -91,13 +90,15 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     }
   }
 
-  @Override public void dispose(
+  @Override
+  public void dispose(
     final @Nullable GLAutoDrawable drawable)
   {
     // Nothing.
   }
 
-  @Override public void display(
+  @Override
+  public void display(
     final @Nullable GLAutoDrawable drawable)
   {
     assert drawable != null;
@@ -145,7 +146,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     this.renderer.draw(snap_interpolated, none);
   }
 
-  @Override public void reshape(
+  @Override
+  public void reshape(
     final @Nullable GLAutoDrawable drawable,
     final int x,
     final int y,

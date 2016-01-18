@@ -29,20 +29,39 @@
       <artifactId>io7m-jcamera-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.io7m.jnull</groupId>
+      <artifactId>io7m-jnull-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.junreachable</groupId>
+      <artifactId>io7m-junreachable-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.jfunctional</groupId>
+      <artifactId>io7m-jfunctional-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.jranges</groupId>
+      <artifactId>io7m-jranges-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.jtensors</groupId>
+      <artifactId>io7m-jtensors-core</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.jogamp.jogl</groupId>
       <artifactId>jogl-all-main</artifactId>
-      <version>2.2.4</version>
     </dependency>
     <dependency>
       <groupId>org.jogamp.gluegen</groupId>
       <artifactId>gluegen-rt-main</artifactId>
-      <version>2.2.4</version>
     </dependency>
     <dependency>
       <groupId>net.java.dev.designgridlayout</groupId>
       <artifactId>designgridlayout</artifactId>
-      <version>1.11</version>
     </dependency>
   </dependencies>
 

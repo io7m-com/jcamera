@@ -16,14 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraRotationCoefficients;
@@ -31,10 +23,17 @@ import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
 import com.io7m.junreachable.UnreachableCodeException;
+import com.jogamp.nativewindow.WindowClosingProtocol;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Trivial camera example.
@@ -139,7 +138,8 @@ public final class ExampleFPSStyleMain
       }
     });
 
-    window.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+    window.setDefaultCloseOperation(
+      WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
     /**

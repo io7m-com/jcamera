@@ -16,19 +16,18 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
+import com.io7m.jfunctional.ProcedureType;
+import com.io7m.jnull.NullCheck;
+import com.io7m.jnull.Nullable;
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.RowGroup;
+
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.RowGroup;
-
-import com.io7m.jfunctional.ProcedureType;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 
 @SuppressWarnings({ "boxing", "synthetic-access" }) final class CameraFloatSlider implements
   CameraUIControlsType
@@ -65,7 +64,7 @@ import com.io7m.jnull.Nullable;
     this.on_change = NullCheck.notNull(p, "Procedure");
   }
 
-  public CameraFloatSlider(
+  CameraFloatSlider(
     final String in_label,
     final float in_minimum,
     final float in_maximum)

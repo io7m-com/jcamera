@@ -16,9 +16,6 @@
 
 package com.io7m.jcamera.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.io7m.jcamera.JCameraContext;
 import com.io7m.jcamera.JCameraSpherical;
 import com.io7m.jcamera.JCameraSphericalReadableType;
@@ -27,12 +24,16 @@ import com.io7m.jcamera.JCameraSphericalType;
 import com.io7m.jequality.AlmostEqualFloat;
 import com.io7m.jequality.AlmostEqualFloat.ContextRelative;
 import com.io7m.jnull.NonNull;
+import com.io7m.jtensors.Matrix4x4FType;
+import com.io7m.jtensors.MatrixHeapArrayM4x4F;
 import com.io7m.jtensors.MatrixI4x4F;
-import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
+import com.io7m.jtensors.parameterized.PMatrixHeapArrayM4x4F;
 import com.io7m.jtensors.parameterized.PMatrixI4x4F;
-import com.io7m.jtensors.parameterized.PMatrixM4x4F;
+import org.junit.Assert;
+import org.junit.Test;
 
 @SuppressWarnings("static-method") public final class JCameraSphericalTest
 {
@@ -80,12 +81,14 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.compareVector(snap.cameraGetUp(), c.cameraGetUp());
     this.compareVector(snap.cameraGetPosition(), c.cameraGetPosition());
 
-    final MatrixM4x4F m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final MatrixM4x4F snap_m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> snap_pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
+    final Matrix4x4FType m =
+      MatrixHeapArrayM4x4F.newMatrix();
+    final PMatrix4x4FType<WorldSpace, ViewSpace> pm =
+      PMatrixHeapArrayM4x4F.newMatrix();
+    final Matrix4x4FType snap_m =
+      MatrixHeapArrayM4x4F.newMatrix();
+    final PMatrix4x4FType<WorldSpace, ViewSpace> snap_pm =
+      PMatrixHeapArrayM4x4F.newMatrix();
     final JCameraContext ctx = new JCameraContext();
 
     c.cameraMakeViewMatrix(ctx, m);

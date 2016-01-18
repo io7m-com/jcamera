@@ -16,19 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.opengl.GLEventListener;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.RowGroup;
-
 import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jcamera.JCameraSpherical;
 import com.io7m.jcamera.JCameraSphericalAngularIntegrator;
@@ -49,10 +36,21 @@ import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLEventListener;
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.RowGroup;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 // CHECKSTYLE:OFF
 
-@SuppressWarnings({ "boxing", "synthetic-access" }) final class CameraSimulationSpherical implements
+final class CameraSimulationSpherical implements
   CameraSimulationType
 {
   private static enum IntegratorSelection
@@ -224,8 +222,8 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        CameraSimulationSpherical.this.input.setContinuousForwardFactor(x);
-        CameraSimulationSpherical.this.input.setContinuousRightwardFactor(x);
+        CameraSimulationSpherical.this.input.setContinuousForwardFactor(x.floatValue());
+        CameraSimulationSpherical.this.input.setContinuousRightwardFactor(x.floatValue());
       }
     });
     this.drag_sensitivity.setCurrent(1.0f);
@@ -237,7 +235,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorAngularOrbitHeadingSetDrag(x);
+          .integratorAngularOrbitHeadingSetDrag(x.floatValue());
       }
     });
     this.heading_drag.setCurrent(this.heading_drag.getMinimum());
@@ -249,7 +247,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorAngularOrbitHeadingSetAcceleration(x
+          .integratorAngularOrbitHeadingSetAcceleration(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -262,7 +260,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorAngularOrbitHeadingSetMaximumSpeed(x
+          .integratorAngularOrbitHeadingSetMaximumSpeed(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -275,7 +273,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorAngularOrbitInclineSetDrag(x);
+          .integratorAngularOrbitInclineSetDrag(x.floatValue());
       }
     });
     this.incline_drag.setCurrent(this.incline_drag.getMinimum());
@@ -287,7 +285,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorAngularOrbitInclineSetAcceleration(x
+          .integratorAngularOrbitInclineSetAcceleration(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -301,7 +299,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorAngularOrbitInclineSetMaximumSpeed(x
+          .integratorAngularOrbitInclineSetMaximumSpeed(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -313,7 +311,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorLinearZoomSetDrag(x);
+          .integratorLinearZoomSetDrag(x.floatValue());
       }
     });
     this.zoom_drag.setCurrent(this.zoom_drag.getMinimum());
@@ -325,7 +323,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorLinearZoomSetAcceleration(x
+          .integratorLinearZoomSetAcceleration(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -338,7 +336,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorLinearZoomSetMaximumSpeed(x
+          .integratorLinearZoomSetMaximumSpeed(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -350,7 +348,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorLinearTargetSetDrag(x);
+          .integratorLinearTargetSetDrag(x.floatValue());
       }
     });
     this.target_drag.setCurrent(this.target_drag.getMinimum());
@@ -362,7 +360,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorLinearTargetSetAcceleration(x
+          .integratorLinearTargetSetAcceleration(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });
@@ -376,7 +374,7 @@ import com.jogamp.newt.opengl.GLWindow;
         final Float x)
       {
         CameraSimulationSpherical.this.integrator
-          .integratorLinearTargetSetMaximumSpeed(x
+          .integratorLinearTargetSetMaximumSpeed(x.floatValue()
             / CameraSimulationSpherical.this.integrator_time_seconds);
       }
     });

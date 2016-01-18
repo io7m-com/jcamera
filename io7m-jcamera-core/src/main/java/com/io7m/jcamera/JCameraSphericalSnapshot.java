@@ -20,10 +20,10 @@ import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jinterp.InterpolationF;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.MatrixM4x4F;
+import com.io7m.jtensors.Matrix4x4FType;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.jtensors.parameterized.PMatrixM4x4F;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
 
 /**
  * An immutable snapshot of a {@link JCameraSphericalType}.
@@ -166,7 +166,7 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
 
   @Override public void cameraMakeViewMatrix(
     final JCameraContext ctx,
-    final MatrixM4x4F m)
+    final Matrix4x4FType m)
   {
     JCameraViewMatrix.makeViewMatrix(
       ctx,
@@ -179,7 +179,7 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
 
   @Override public <T0, T1> void cameraMakeViewPMatrix(
     final JCameraContext ctx,
-    final PMatrixM4x4F<T0, T1> m)
+    final PMatrix4x4FType<T0, T1> m)
   {
     JCameraViewMatrix.makeViewPMatrix(
       ctx,
