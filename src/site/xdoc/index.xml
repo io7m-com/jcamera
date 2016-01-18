@@ -13,12 +13,15 @@
       <p>The <var>jcamera</var> package implements a set of types and
       functions for handling cameras in a rendering system independent
       manner.</p>
+      <p><img src="cameralab.png" alt="Camera Lab"/></p>
     </subsection>
     <subsection name="Features">
       <li>Rendering and input system independent camera implementations</li>
       <li>Smooth first-person camera.</li>
       <li>Smooth spherical third-person camera.</li>
       <li>Fully documented with all mathematical derivations given, tutorials, and Javadoc.</li>
+      <li>Implemented in pure Java 7 with no dependencies on any particular rendering system.</li>
+      <li>Example renderer using JOGL and Swing (as pictured above).</li>
       <li>94.8% automated unit test coverage.</li>
       <li>ISC license.</li>
     </subsection>
