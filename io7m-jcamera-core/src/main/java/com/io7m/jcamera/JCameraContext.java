@@ -30,7 +30,8 @@ import com.io7m.jtensors.parameterized.PVectorM3F;
  * Preallocated storage.
  */
 
-@EqualityReference public final class JCameraContext
+@EqualityReference
+public final class JCameraContext
 {
   private final Matrix4x4FType        derived_matrix_r;
   private final Matrix4x4FType        derived_matrix_t;

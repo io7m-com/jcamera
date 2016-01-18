@@ -34,6 +34,37 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
 public final class JCameraFPSStyle implements
   JCameraFPSStyleType
 {
+  private final JCameraSignallingClamp clamp;
+  private final VectorM3F              derived_forward;
+  private final VectorM3F              derived_right;
+  private final VectorM3F              derived_up;
+  private final VectorM3F              input_position;
+  private final VectorM3F              temporary;
+  private       boolean                clamp_horizontal;
+  private       float                  clamp_horizontal_max;
+  private       float                  clamp_horizontal_min;
+  private       boolean                derived_current;
+  private       float                  input_angle_around_horizontal;
+  private       float                  input_angle_around_vertical;
+  private JCameraFPSStyle()
+  {
+    this.input_position = new VectorM3F();
+    this.input_angle_around_horizontal = 0.0f;
+    this.input_angle_around_vertical = (float) Math.PI / 2.0f;
+
+    this.derived_current = false;
+    this.derived_up = new VectorM3F();
+    this.derived_right = new VectorM3F();
+    this.derived_forward = new VectorM3F();
+    this.temporary = new VectorM3F();
+
+    this.clamp_horizontal = true;
+    this.clamp_horizontal_max = (float) (Math.PI / 64.0f) * 31.0f;
+    this.clamp_horizontal_min = -this.clamp_horizontal_max;
+
+    this.clamp = new JCameraSignallingClamp();
+  }
+
   /**
    * @return A new FPS camera
    */
@@ -57,38 +88,6 @@ public final class JCameraFPSStyle implements
     r.cameraSetAngleAroundVertical(c.cameraGetAngleAroundVertical());
     r.cameraSetPosition(c.cameraGetPosition());
     return r;
-  }
-
-  private final JCameraSignallingClamp clamp;
-  private       boolean                clamp_horizontal;
-  private       float                  clamp_horizontal_max;
-  private       float                  clamp_horizontal_min;
-  private       boolean                derived_current;
-  private final VectorM3F              derived_forward;
-  private final VectorM3F              derived_right;
-  private final VectorM3F              derived_up;
-  private       float                  input_angle_around_horizontal;
-  private       float                  input_angle_around_vertical;
-  private final VectorM3F              input_position;
-  private final VectorM3F              temporary;
-
-  private JCameraFPSStyle()
-  {
-    this.input_position = new VectorM3F();
-    this.input_angle_around_horizontal = 0.0f;
-    this.input_angle_around_vertical = (float) Math.PI / 2.0f;
-
-    this.derived_current = false;
-    this.derived_up = new VectorM3F();
-    this.derived_right = new VectorM3F();
-    this.derived_forward = new VectorM3F();
-    this.temporary = new VectorM3F();
-
-    this.clamp_horizontal = true;
-    this.clamp_horizontal_max = (float) (Math.PI / 64.0f) * 31.0f;
-    this.clamp_horizontal_min = -this.clamp_horizontal_max;
-
-    this.clamp = new JCameraSignallingClamp();
   }
 
   @Override

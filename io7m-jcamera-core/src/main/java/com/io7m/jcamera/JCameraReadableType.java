@@ -29,10 +29,8 @@ public interface JCameraReadableType
    * Construct a view matrix for the camera, using preallocated storage in
    * <code>ctx</code> and writing the result to <code>m</code>.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
+   * @param ctx Preallocated storage
+   * @param m   The output matrix
    */
 
   void cameraMakeViewMatrix(
@@ -43,14 +41,10 @@ public interface JCameraReadableType
    * Construct a view matrix for the camera, using preallocated storage in
    * <code>ctx</code> and writing the result to <code>m</code>.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
-   * @param <T0>
-   *          The source coordinate system
-   * @param <T1>
-   *          The target coordiante system
+   * @param ctx  Preallocated storage
+   * @param m    The output matrix
+   * @param <T0> The source coordinate system
+   * @param <T1> The target coordiante system
    */
 
   <T0, T1> void cameraMakeViewPMatrix(

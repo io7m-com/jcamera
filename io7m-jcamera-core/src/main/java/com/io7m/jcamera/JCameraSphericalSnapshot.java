@@ -29,19 +29,51 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
  * An immutable snapshot of a {@link JCameraSphericalType}.
  */
 
-@EqualityStructural public final class JCameraSphericalSnapshot implements
+@EqualityStructural
+public final class JCameraSphericalSnapshot implements
   JCameraSphericalReadableType,
   JCameraReadableSnapshotType
 {
+  private final float     angle_heading;
+  private final float     angle_incline;
+  private final VectorI3F forward;
+  private final VectorI3F forward_on_xz;
+  private final VectorI3F position;
+  private final float     radius;
+  private final VectorI3F right;
+  private final VectorI3F target_position;
+  private final VectorI3F up;
+  JCameraSphericalSnapshot(
+    final VectorI3F in_forward,
+    final VectorI3F in_right,
+    final VectorI3F in_up,
+    final float in_angle_incline,
+    final float in_angle_heading,
+    final VectorI3F in_position,
+    final float in_radius,
+    final VectorI3F in_target_position,
+    final VectorI3F in_forward_on_xz)
+  {
+    this.forward = NullCheck.notNull(in_forward, "Forward");
+    this.right = NullCheck.notNull(in_right, "Right");
+    this.up = NullCheck.notNull(in_up, "Up");
+    this.angle_incline = in_angle_incline;
+    this.angle_heading = in_angle_heading;
+    this.position = NullCheck.notNull(in_position, "Position");
+    this.radius = in_radius;
+    this.target_position =
+      NullCheck.notNull(in_target_position, "Target position");
+    this.forward_on_xz =
+      NullCheck.notNull(in_forward_on_xz, "Forward on X/Z");
+  }
+
   /**
    * Linearly interpolate between two camera snapshots.
    *
-   * @param x
-   *          The first snapshot
-   * @param y
-   *          The second snapshot
-   * @param a
-   *          The interpolation value
+   * @param x The first snapshot
+   * @param y The second snapshot
+   * @param a The interpolation value
+   *
    * @return A value between <code>x</code> and <code>y</code>
    */
 
@@ -80,91 +112,68 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
       in_forward_on_xz);
   }
 
-  private final float     angle_heading;
-  private final float     angle_incline;
-  private final VectorI3F forward;
-  private final VectorI3F forward_on_xz;
-  private final VectorI3F position;
-  private final float     radius;
-  private final VectorI3F right;
-  private final VectorI3F target_position;
-  private final VectorI3F up;
-
-  JCameraSphericalSnapshot(
-    final VectorI3F in_forward,
-    final VectorI3F in_right,
-    final VectorI3F in_up,
-    final float in_angle_incline,
-    final float in_angle_heading,
-    final VectorI3F in_position,
-    final float in_radius,
-    final VectorI3F in_target_position,
-    final VectorI3F in_forward_on_xz)
-  {
-    this.forward = NullCheck.notNull(in_forward, "Forward");
-    this.right = NullCheck.notNull(in_right, "Right");
-    this.up = NullCheck.notNull(in_up, "Up");
-    this.angle_incline = in_angle_incline;
-    this.angle_heading = in_angle_heading;
-    this.position = NullCheck.notNull(in_position, "Position");
-    this.radius = in_radius;
-    this.target_position =
-      NullCheck.notNull(in_target_position, "Target position");
-    this.forward_on_xz =
-      NullCheck.notNull(in_forward_on_xz, "Forward on X/Z");
-  }
-
-  @Override public float cameraGetAngleHeading()
+  @Override
+  public float cameraGetAngleHeading()
   {
     return this.angle_heading;
   }
 
-  @Override public float cameraGetAngleIncline()
+  @Override
+  public float cameraGetAngleIncline()
   {
     return this.angle_incline;
   }
 
-  @Override public VectorReadable3FType cameraGetForward()
+  @Override
+  public VectorReadable3FType cameraGetForward()
   {
     return this.forward;
   }
 
-  @Override public VectorReadable3FType cameraGetForwardProjectedOnXZ()
+  @Override
+  public VectorReadable3FType cameraGetForwardProjectedOnXZ()
   {
     return this.forward_on_xz;
   }
 
-  @Override public VectorReadable3FType cameraGetPosition()
+  @Override
+  public VectorReadable3FType cameraGetPosition()
   {
     return this.position;
   }
 
-  @Override public VectorReadable3FType cameraGetRight()
+  @Override
+  public VectorReadable3FType cameraGetRight()
   {
     return this.right;
   }
 
-  @Override public VectorReadable3FType cameraGetTargetPosition()
+  @Override
+  public VectorReadable3FType cameraGetTargetPosition()
   {
     return this.target_position;
   }
 
-  @Override public VectorReadable3FType cameraGetUp()
+  @Override
+  public VectorReadable3FType cameraGetUp()
   {
     return this.up;
   }
 
-  @Override public float cameraGetZoom()
+  @Override
+  public float cameraGetZoom()
   {
     return this.radius;
   }
 
-  @Override public JCameraSphericalSnapshot cameraMakeSnapshot()
+  @Override
+  public JCameraSphericalSnapshot cameraMakeSnapshot()
   {
     return this;
   }
 
-  @Override public void cameraMakeViewMatrix(
+  @Override
+  public void cameraMakeViewMatrix(
     final JCameraContext ctx,
     final Matrix4x4FType m)
   {
@@ -177,7 +186,8 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
       this.cameraGetForward());
   }
 
-  @Override public <T0, T1> void cameraMakeViewPMatrix(
+  @Override
+  public <T0, T1> void cameraMakeViewPMatrix(
     final JCameraContext ctx,
     final PMatrix4x4FType<T0, T1> m)
   {
@@ -190,7 +200,8 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
       this.cameraGetForward());
   }
 
-  @Override public boolean equals(
+  @Override
+  public boolean equals(
     final @Nullable Object obj)
   {
     if (this == obj) {
@@ -206,9 +217,9 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
     return (Float.floatToIntBits(this.angle_heading) == Float
       .floatToIntBits(other.angle_heading))
       && (Float.floatToIntBits(this.angle_incline) == Float
-        .floatToIntBits(other.angle_incline))
+      .floatToIntBits(other.angle_incline))
       && (Float.floatToIntBits(this.radius) == Float
-        .floatToIntBits(other.radius))
+      .floatToIntBits(other.radius))
       && (this.forward.equals(other.forward))
       && (this.forward_on_xz.equals(other.forward_on_xz))
       && (this.target_position.equals(other.target_position))
@@ -217,7 +228,8 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
       && (this.up.equals(other.up));
   }
 
-  @Override public int hashCode()
+  @Override
+  public int hashCode()
   {
     final int prime = 31;
     int result = 1;
@@ -233,7 +245,8 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
     return result;
   }
 
-  @Override public String toString()
+  @Override
+  public String toString()
   {
     final StringBuilder b = new StringBuilder();
     b.append("[JCameraSphericalSnapshot forward=");

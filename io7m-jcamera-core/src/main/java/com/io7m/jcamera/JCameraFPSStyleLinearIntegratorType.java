@@ -17,8 +17,8 @@
 package com.io7m.jcamera;
 
 /**
- * The type of integrators that integrate linear movement for
- * {@link JCameraFPSStyleType} cameras.
+ * The type of integrators that integrate linear movement for {@link
+ * JCameraFPSStyleType} cameras.
  */
 
 public interface JCameraFPSStyleLinearIntegratorType extends
@@ -39,8 +39,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
   /**
    * Set the linear acceleration to <code>a</code>.
    *
-   * @param a
-   *          The linear acceleration.
+   * @param a The linear acceleration.
    */
 
   void integratorLinearSetAcceleration(
@@ -49,8 +48,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
   /**
    * Set the linear drag factor to <code>f</code>.
    *
-   * @param f
-   *          The linear drag factor.
+   * @param f The linear drag factor.
    */
 
   void integratorLinearSetDrag(
@@ -59,8 +57,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
   /**
    * Set the maximum linear movement speed to <code>s</code>.
    *
-   * @param s
-   *          The maximum linear speed.
+   * @param s The maximum linear speed.
    */
 
   void integratorLinearSetMaximumSpeed(

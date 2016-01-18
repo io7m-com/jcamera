@@ -19,12 +19,13 @@ package com.io7m.jcamera;
 import com.io7m.jequality.annotations.EqualityReference;
 
 /**
- * A "signalling" clamp operation. That is, a function that can clamp a value
- * to a given inclusive range and sets a flag to indicate whether or not the
+ * A "signalling" clamp operation. That is, a function that can clamp a value to
+ * a given inclusive range and sets a flag to indicate whether or not the
  * original value was actually outside of the range.
  */
 
-@EqualityReference public final class JCameraSignallingClamp
+@EqualityReference
+public final class JCameraSignallingClamp
 {
   private boolean clamped;
   private float   value;
@@ -39,15 +40,12 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * Clamp the value <code>x</code> to the given inclusive range
-   * <code>[min, max]</code>.
+   * Clamp the value <code>x</code> to the given inclusive range <code>[min,
+   * max]</code>.
    *
-   * @param x
-   *          The value
-   * @param min
-   *          The minimum value
-   * @param max
-   *          The maximum value
+   * @param x   The value
+   * @param min The minimum value
+   * @param max The maximum value
    */
 
   public void clamp(
@@ -79,7 +77,7 @@ import com.io7m.jequality.annotations.EqualityReference;
 
   /**
    * @return <code>true</code> if the value passed to the most recent clamp
-   *         operation was not in the inclusive range.
+   * operation was not in the inclusive range.
    */
 
   public boolean isClamped()

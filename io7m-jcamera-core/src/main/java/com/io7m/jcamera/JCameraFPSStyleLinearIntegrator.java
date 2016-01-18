@@ -24,35 +24,18 @@ import com.io7m.jranges.RangeCheck;
  * The default implementation of {@link JCameraFPSStyleLinearIntegratorType}.
  */
 
-@EqualityReference public final class JCameraFPSStyleLinearIntegrator implements
+@EqualityReference
+public final class JCameraFPSStyleLinearIntegrator implements
   JCameraFPSStyleLinearIntegratorType
 {
-  /**
-   * Construct a new integrator.
-   *
-   * @param in_camera
-   *          The camera to be integrated.
-   * @param in_input
-   *          The input to be sampled.
-   * @return A new integrator
-   */
-
-  public static JCameraFPSStyleLinearIntegratorType newIntegrator(
-    final JCameraFPSStyleType in_camera,
-    final JCameraFPSStyleInput in_input)
-  {
-    return new JCameraFPSStyleLinearIntegrator(in_camera, in_input);
-  }
-
-  private float                      acceleration;
   private final JCameraFPSStyleType  camera;
-  private float                      drag;
   private final JCameraFPSStyleInput input;
-  private float                      maximum_speed;
-  private float                      speed_forward;
-  private float                      speed_right;
-  private float                      speed_up;
-
+  private       float                acceleration;
+  private       float                drag;
+  private       float                maximum_speed;
+  private       float                speed_forward;
+  private       float                speed_right;
+  private       float                speed_up;
   private JCameraFPSStyleLinearIntegrator(
     final JCameraFPSStyleType in_camera,
     final JCameraFPSStyleInput in_input)
@@ -67,6 +50,22 @@ import com.io7m.jranges.RangeCheck;
     this.acceleration = 30.0f;
   }
 
+  /**
+   * Construct a new integrator.
+   *
+   * @param in_camera The camera to be integrated.
+   * @param in_input  The input to be sampled.
+   *
+   * @return A new integrator
+   */
+
+  public static JCameraFPSStyleLinearIntegratorType newIntegrator(
+    final JCameraFPSStyleType in_camera,
+    final JCameraFPSStyleInput in_input)
+  {
+    return new JCameraFPSStyleLinearIntegrator(in_camera, in_input);
+  }
+
   private float applyDrag(
     final float f,
     final float time)
@@ -74,7 +73,8 @@ import com.io7m.jranges.RangeCheck;
     return (float) (f * Math.pow(this.drag, time));
   }
 
-  @Override public void integrate(
+  @Override
+  public void integrate(
     final float t)
   {
     this.speed_forward = this.integrateForward(t);
@@ -139,17 +139,20 @@ import com.io7m.jranges.RangeCheck;
     return this.applyDrag(s, time);
   }
 
-  @Override public JCameraFPSStyleReadableType integratorGetCamera()
+  @Override
+  public JCameraFPSStyleReadableType integratorGetCamera()
   {
     return this.camera;
   }
 
-  @Override public JCameraFPSStyleInput integratorGetInput()
+  @Override
+  public JCameraFPSStyleInput integratorGetInput()
   {
     return this.input;
   }
 
-  @Override public void integratorLinearSetAcceleration(
+  @Override
+  public void integratorLinearSetAcceleration(
     final float a)
   {
     this.acceleration =
@@ -160,7 +163,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum acceleration");
   }
 
-  @Override public void integratorLinearSetDrag(
+  @Override
+  public void integratorLinearSetDrag(
     final float f)
   {
     this.drag =
@@ -172,7 +176,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum drag");
   }
 
-  @Override public void integratorLinearSetMaximumSpeed(
+  @Override
+  public void integratorLinearSetMaximumSpeed(
     final float s)
   {
     this.maximum_speed =

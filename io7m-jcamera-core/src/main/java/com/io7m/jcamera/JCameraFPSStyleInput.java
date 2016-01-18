@@ -20,25 +20,13 @@ import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.jranges.RangeCheck;
 
 /**
- * <p>
- * An input for an fps-style camera.
- * </p>
- * <p>
- * It is safe to access values of this type from multiple threads.
- * </p>
+ * <p> An input for an fps-style camera. </p> <p> It is safe to access values of
+ * this type from multiple threads. </p>
  */
 
-@EqualityReference public final class JCameraFPSStyleInput
+@EqualityReference
+public final class JCameraFPSStyleInput
 {
-  /**
-   * @return A new input
-   */
-
-  public static JCameraFPSStyleInput newInput()
-  {
-    return new JCameraFPSStyleInput();
-  }
-
   private volatile boolean backward;
   private volatile boolean down;
   private volatile boolean forward;
@@ -49,7 +37,6 @@ import com.io7m.jranges.RangeCheck;
   private volatile float   rotate_vertical;
   private volatile float   rotate_vertical_factor;
   private volatile boolean up;
-
   private JCameraFPSStyleInput()
   {
     this.rotate_horizontal = 0.0f;
@@ -59,10 +46,18 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
+   * @return A new input
+   */
+
+  public static JCameraFPSStyleInput newInput()
+  {
+    return new JCameraFPSStyleInput();
+  }
+
+  /**
    * Add a rotation around the horizontal axis.
    *
-   * @param r
-   *          The rotation amount
+   * @param r The rotation amount
    */
 
   public void addRotationAroundHorizontal(
@@ -74,8 +69,7 @@ import com.io7m.jranges.RangeCheck;
   /**
    * Add a rotation around the vertical axis.
    *
-   * @param r
-   *          The rotation amount
+   * @param r The rotation amount
    */
 
   public void addRotationAroundVertical(
@@ -94,6 +88,18 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
+   * Set the horizontal rotation.
+   *
+   * @param r The rotation
+   */
+
+  public void setRotationHorizontal(
+    final float r)
+  {
+    this.rotate_horizontal = r;
+  }
+
+  /**
    * @return The current vertical rotation coefficient.
    */
 
@@ -103,13 +109,37 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
+   * Set the vertical rotation.
+   *
+   * @param r The rotation
+   */
+
+  public void setRotationVertical(
+    final float r)
+  {
+    this.rotate_vertical = r;
+  }
+
+  /**
    * @return <code>true</code> if the user is telling the camera to move
-   *         backward
+   * backward
    */
 
   public boolean isMovingBackward()
   {
     return this.backward;
+  }
+
+  /**
+   * Tell the camera to start/stop moving backward.
+   *
+   * @param in_backward <code>true</code> if the camera should be moving
+   */
+
+  public void setMovingBackward(
+    final boolean in_backward)
+  {
+    this.backward = in_backward;
   }
 
   /**
@@ -122,13 +152,36 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera to move
-   *         forward
+   * Tell the camera to start/stop moving down.
+   *
+   * @param in_down <code>true</code> if the camera should be moving
+   */
+
+  public void setMovingDown(
+    final boolean in_down)
+  {
+    this.down = in_down;
+  }
+
+  /**
+   * @return <code>true</code> if the user is telling the camera to move forward
    */
 
   public boolean isMovingForward()
   {
     return this.forward;
+  }
+
+  /**
+   * Tell the camera to start/stop moving forward.
+   *
+   * @param in_forward <code>true</code> if the camera should be moving
+   */
+
+  public void setMovingForward(
+    final boolean in_forward)
+  {
+    this.forward = in_forward;
   }
 
   /**
@@ -141,12 +194,36 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
+   * Tell the camera to start/stop moving left.
+   *
+   * @param in_left <code>true</code> if the camera should be moving
+   */
+
+  public void setMovingLeft(
+    final boolean in_left)
+  {
+    this.left = in_left;
+  }
+
+  /**
    * @return <code>true</code> if the user is telling the camera to move right
    */
 
   public boolean isMovingRight()
   {
     return this.right;
+  }
+
+  /**
+   * Tell the camera to start/stop moving right.
+   *
+   * @param in_right <code>true</code> if the camera should be moving
+   */
+
+  public void setMovingRight(
+    final boolean in_right)
+  {
+    this.right = in_right;
   }
 
   /**
@@ -159,75 +236,9 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
-   * Tell the camera to start/stop moving backward.
-   *
-   * @param in_backward
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setMovingBackward(
-    final boolean in_backward)
-  {
-    this.backward = in_backward;
-  }
-
-  /**
-   * Tell the camera to start/stop moving down.
-   *
-   * @param in_down
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setMovingDown(
-    final boolean in_down)
-  {
-    this.down = in_down;
-  }
-
-  /**
-   * Tell the camera to start/stop moving forward.
-   *
-   * @param in_forward
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setMovingForward(
-    final boolean in_forward)
-  {
-    this.forward = in_forward;
-  }
-
-  /**
-   * Tell the camera to start/stop moving left.
-   *
-   * @param in_left
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setMovingLeft(
-    final boolean in_left)
-  {
-    this.left = in_left;
-  }
-
-  /**
-   * Tell the camera to start/stop moving right.
-   *
-   * @param in_right
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setMovingRight(
-    final boolean in_right)
-  {
-    this.right = in_right;
-  }
-
-  /**
    * Tell the camera to start/stop moving up.
    *
-   * @param in_up
-   *          <code>true</code> if the camera should be moving
+   * @param in_up <code>true</code> if the camera should be moving
    */
 
   public void setMovingUp(
@@ -237,23 +248,9 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
-   * Set the horizontal rotation.
-   *
-   * @param r
-   *          The rotation
-   */
-
-  public void setRotationHorizontal(
-    final float r)
-  {
-    this.rotate_horizontal = r;
-  }
-
-  /**
    * Set the horizontal rotation factor.
    *
-   * @param f
-   *          The rotation factor
+   * @param f The rotation factor
    */
 
   public void setRotationHorizontalFactor(
@@ -268,23 +265,9 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
-   * Set the vertical rotation.
-   *
-   * @param r
-   *          The rotation
-   */
-
-  public void setRotationVertical(
-    final float r)
-  {
-    this.rotate_vertical = r;
-  }
-
-  /**
    * Set the vertical rotation factor.
    *
-   * @param f
-   *          The rotation factor
+   * @param f The rotation factor
    */
 
   public void setRotationVerticalFactor(
@@ -324,7 +307,8 @@ import com.io7m.jranges.RangeCheck;
     return r;
   }
 
-  @Override public String toString()
+  @Override
+  public String toString()
   {
     final StringBuilder b = new StringBuilder();
     b.append("[JCameraFPSStyleInput backward=");

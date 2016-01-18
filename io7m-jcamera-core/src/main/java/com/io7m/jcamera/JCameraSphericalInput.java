@@ -19,25 +19,13 @@ package com.io7m.jcamera;
 import com.io7m.jequality.annotations.EqualityReference;
 
 /**
- * <p>
- * An input for a spherical camera.
- * </p>
- * <p>
- * It is safe to access values of this type from multiple threads.
- * </p>
+ * <p> An input for a spherical camera. </p> <p> It is safe to access values of
+ * this type from multiple threads. </p>
  */
 
-@EqualityReference public final class JCameraSphericalInput
+@EqualityReference
+public final class JCameraSphericalInput
 {
-  /**
-   * @return A new input
-   */
-
-  public static JCameraSphericalInput newInput()
-  {
-    return new JCameraSphericalInput();
-  }
-
   private volatile boolean backward_cursor;
   private volatile boolean backward_key;
   private volatile boolean down;
@@ -58,7 +46,6 @@ import com.io7m.jequality.annotations.EqualityReference;
   private volatile boolean up;
   private volatile boolean zoom_in;
   private volatile boolean zoom_out;
-
   private JCameraSphericalInput()
   {
     this.forward_factor = 1.0f;
@@ -66,12 +53,20 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
+   * @return A new input
+   */
+
+  public static JCameraSphericalInput newInput()
+  {
+    return new JCameraSphericalInput();
+  }
+
+  /**
    * Add a movement forward to the target position. A negative value decreases
    * the amount of movement forward and increases the amount of movement
    * backward.
    *
-   * @param in_forward
-   *          The amount to move forward
+   * @param in_forward The amount to move forward
    */
 
   public void addTargetMovingContinuousForward(
@@ -81,12 +76,11 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * Add a movement right to the target position. A negative value decreases
-   * the amount of movement to the right and increases the amount of movement
-   * to the left.
+   * Add a movement right to the target position. A negative value decreases the
+   * amount of movement to the right and increases the amount of movement to the
+   * left.
    *
-   * @param in_right
-   *          The amount to move right
+   * @param in_right The amount to move right
    */
 
   public void addTargetMovingContinuousRight(
@@ -97,7 +91,7 @@ import com.io7m.jequality.annotations.EqualityReference;
 
   /**
    * @return The multiplication factor used for continuous forward/backward
-   *         movement.
+   * movement.
    */
 
   public float getForwardFactor()
@@ -106,8 +100,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return The multiplication factor used for continuous right/left
-   *         movement.
+   * @return The multiplication factor used for continuous right/left movement.
    */
 
   public float getRightFactor()
@@ -170,8 +163,8 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to
-   *         move backward
+   * @return <code>true</code> if the user is telling the camera target to move
+   * backward
    */
 
   public boolean isTargetMovingBackward()
@@ -180,8 +173,8 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to
-   *         move down
+   * @return <code>true</code> if the user is telling the camera target to move
+   * down
    */
 
   public boolean isTargetMovingDown()
@@ -190,8 +183,20 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to
-   *         move forward
+   * Tell the camera target to start/stop moving down.
+   *
+   * @param in_down <code>true</code> if the camera should be moving
+   */
+
+  public void setTargetMovingDown(
+    final boolean in_down)
+  {
+    this.down = in_down;
+  }
+
+  /**
+   * @return <code>true</code> if the user is telling the camera target to move
+   * forward
    */
 
   public boolean isTargetMovingForward()
@@ -200,8 +205,8 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to
-   *         move left
+   * @return <code>true</code> if the user is telling the camera target to move
+   * left
    */
 
   public boolean isTargetMovingLeft()
@@ -210,8 +215,8 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to
-   *         move right
+   * @return <code>true</code> if the user is telling the camera target to move
+   * right
    */
 
   public boolean isTargetMovingRight()
@@ -220,13 +225,25 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * @return <code>true</code> if the user is telling the camera target to
-   *         move up
+   * @return <code>true</code> if the user is telling the camera target to move
+   * up
    */
 
   public boolean isTargetMovingUp()
   {
     return this.up;
+  }
+
+  /**
+   * Tell the camera target to start/stop moving up.
+   *
+   * @param in_up <code>true</code> if the camera should be moving
+   */
+
+  public void setTargetMovingUp(
+    final boolean in_up)
+  {
+    this.up = in_up;
   }
 
   /**
@@ -239,6 +256,18 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
+   * Tell the camera target to start/stop zooming in.
+   *
+   * @param in_zoom_in <code>true</code> if the camera should be moving
+   */
+
+  public void setZoomingIn(
+    final boolean in_zoom_in)
+  {
+    this.zoom_in = in_zoom_in;
+  }
+
+  /**
    * @return <code>true</code> if the user is telling the camera to zoom out
    */
 
@@ -248,11 +277,22 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
+   * Tell the camera target to start/stop zooming out.
+   *
+   * @param in_zoom_out <code>true</code> if the camera should be moving
+   */
+
+  public void setZoomingOut(
+    final boolean in_zoom_out)
+  {
+    this.zoom_out = in_zoom_out;
+  }
+
+  /**
    * Set the multiplication factor used for continuous forward/backward
    * movement.
    *
-   * @param f
-   *          The multiplication factor
+   * @param f The multiplication factor
    */
 
   public void setContinuousForwardFactor(
@@ -264,8 +304,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Set the multiplication factor used for continuous left/right movement.
    *
-   * @param f
-   *          The multiplication factor
+   * @param f The multiplication factor
    */
 
   public void setContinuousRightwardFactor(
@@ -278,8 +317,7 @@ import com.io7m.jequality.annotations.EqualityReference;
    * Tell the camera to start/stop orbiting (for heading) in a negative
    * direction.
    *
-   * @param o
-   *          <code>true</code> if the camera should be moving
+   * @param o <code>true</code> if the camera should be moving
    */
 
   public void setOrbitHeadingNegative(
@@ -292,8 +330,7 @@ import com.io7m.jequality.annotations.EqualityReference;
    * Tell the camera to start/stop orbiting (for heading) in a positive
    * direction.
    *
-   * @param o
-   *          <code>true</code> if the camera should be moving
+   * @param o <code>true</code> if the camera should be moving
    */
 
   public void setOrbitHeadingPositive(
@@ -306,8 +343,7 @@ import com.io7m.jequality.annotations.EqualityReference;
    * Tell the camera to start/stop orbiting (for incline) in a negative
    * direction.
    *
-   * @param o
-   *          <code>true</code> if the camera should be moving
+   * @param o <code>true</code> if the camera should be moving
    */
 
   public void setOrbitInclineNegative(
@@ -320,8 +356,7 @@ import com.io7m.jequality.annotations.EqualityReference;
    * Tell the camera to start/stop orbiting (for incline) in a positive
    * direction.
    *
-   * @param o
-   *          <code>true</code> if the camera should be moving
+   * @param o <code>true</code> if the camera should be moving
    */
 
   public void setOrbitInclinePositive(
@@ -333,8 +368,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving backward.
    *
-   * @param in_backward
-   *          <code>true</code> if the camera should be moving
+   * @param in_backward <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingBackwardCursor(
@@ -346,8 +380,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving backward.
    *
-   * @param in_backward
-   *          <code>true</code> if the camera should be moving
+   * @param in_backward <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingBackwardKey(
@@ -359,8 +392,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Set the amount of continuous forward movement.
    *
-   * @param f
-   *          The forward movement
+   * @param f The forward movement
    */
 
   public void setTargetMovingContinuousForward(
@@ -372,8 +404,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Set the amount of continuous rightward movement.
    *
-   * @param f
-   *          The rightward movement
+   * @param f The rightward movement
    */
 
   public void setTargetMovingContinuousRight(
@@ -383,23 +414,9 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * Tell the camera target to start/stop moving down.
-   *
-   * @param in_down
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setTargetMovingDown(
-    final boolean in_down)
-  {
-    this.down = in_down;
-  }
-
-  /**
    * Tell the camera target to start/stop moving forward.
    *
-   * @param in_forward
-   *          <code>true</code> if the camera should be moving
+   * @param in_forward <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingForwardCursor(
@@ -411,8 +428,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving forward.
    *
-   * @param in_forward
-   *          <code>true</code> if the camera should be moving
+   * @param in_forward <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingForwardKey(
@@ -424,8 +440,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving left.
    *
-   * @param in_left
-   *          <code>true</code> if the camera should be moving
+   * @param in_left <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingLeftCursor(
@@ -437,8 +452,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving left.
    *
-   * @param in_left
-   *          <code>true</code> if the camera should be moving
+   * @param in_left <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingLeftKey(
@@ -450,8 +464,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving right.
    *
-   * @param in_right
-   *          <code>true</code> if the camera should be moving
+   * @param in_right <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingRightCursor(
@@ -463,8 +476,7 @@ import com.io7m.jequality.annotations.EqualityReference;
   /**
    * Tell the camera target to start/stop moving right.
    *
-   * @param in_right
-   *          <code>true</code> if the camera should be moving
+   * @param in_right <code>true</code> if the camera should be moving
    */
 
   public void setTargetMovingRightKey(
@@ -474,47 +486,8 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * Tell the camera target to start/stop moving up.
-   *
-   * @param in_up
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setTargetMovingUp(
-    final boolean in_up)
-  {
-    this.up = in_up;
-  }
-
-  /**
-   * Tell the camera target to start/stop zooming in.
-   *
-   * @param in_zoom_in
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setZoomingIn(
-    final boolean in_zoom_in)
-  {
-    this.zoom_in = in_zoom_in;
-  }
-
-  /**
-   * Tell the camera target to start/stop zooming out.
-   *
-   * @param in_zoom_out
-   *          <code>true</code> if the camera should be moving
-   */
-
-  public void setZoomingOut(
-    final boolean in_zoom_out)
-  {
-    this.zoom_out = in_zoom_out;
-  }
-
-  /**
-   * Retrieve <code>r</code> = {@link #getTargetMovingForwardContinuous()},
-   * set the current forward movement to 0.0, and return <code>r</code>.
+   * Retrieve <code>r</code> = {@link #getTargetMovingForwardContinuous()}, set
+   * the current forward movement to 0.0, and return <code>r</code>.
    *
    * @return The amount of forward movement.
    */
@@ -527,8 +500,8 @@ import com.io7m.jequality.annotations.EqualityReference;
   }
 
   /**
-   * Retrieve <code>r</code> = {@link #getTargetMovingRight()}, set the
-   * current rightward movement to 0.0, and return <code>r</code>.
+   * Retrieve <code>r</code> = {@link #getTargetMovingRight()}, set the current
+   * rightward movement to 0.0, and return <code>r</code>.
    *
    * @return The amount of rightward movement.
    */

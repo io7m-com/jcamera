@@ -157,6 +157,11 @@
       </dependency>
 
       <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.10</version>
+      </dependency>
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.12</version>
@@ -220,6 +225,11 @@
           <configuration>
             <redirectTestOutputToFile>true</redirectTestOutputToFile>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.4.0</version>
         </plugin>
 
         <!-- Submodule checkstyle configuration. -->

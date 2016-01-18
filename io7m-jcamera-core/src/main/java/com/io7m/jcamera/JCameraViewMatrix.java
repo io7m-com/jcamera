@@ -30,24 +30,24 @@ import com.io7m.junreachable.UnreachableCodeException;
  * Functions to produce view matrices.
  */
 
-@EqualityReference public final class JCameraViewMatrix
+@EqualityReference
+public final class JCameraViewMatrix
 {
+  private JCameraViewMatrix()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
    * Construct a view matrix from the given position, forward, up, and, right
    * vectors.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
-   * @param position
-   *          The position
-   * @param right
-   *          The right vector
-   * @param up
-   *          The up vector
-   * @param forward
-   *          The forward vector
+   * @param ctx      Preallocated storage
+   * @param m        The output matrix
+   * @param position The position
+   * @param right    The right vector
+   * @param up       The up vector
+   * @param forward  The forward vector
    */
 
   public static void makeViewMatrix(
@@ -105,25 +105,18 @@ import com.io7m.junreachable.UnreachableCodeException;
    * Construct a view matrix from the given position, forward, up, and, right
    * vectors.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
-   * @param position
-   *          The position
-   * @param right
-   *          The right vector
-   * @param up
-   *          The up vector
-   * @param forward
-   *          The forward vector
-   * @param <T0>
-   *          The source coordinate space
-   * @param <T1>
-   *          The target coordinate space
+   * @param ctx      Preallocated storage
+   * @param m        The output matrix
+   * @param position The position
+   * @param right    The right vector
+   * @param up       The up vector
+   * @param forward  The forward vector
+   * @param <T0>     The source coordinate space
+   * @param <T1>     The target coordinate space
    */
 
-  @SuppressWarnings("unchecked") public static <T0, T1> void makeViewPMatrix(
+  @SuppressWarnings("unchecked")
+  public static <T0, T1> void makeViewPMatrix(
     final JCameraContext ctx,
     final PMatrix4x4FType<T0, T1> m,
     final VectorReadable3FType position,
@@ -177,10 +170,5 @@ import com.io7m.junreachable.UnreachableCodeException;
       (PMatrix4x4FType<Object, T1>) r,
       (PMatrix4x4FType<T0, Object>) t,
       m);
-  }
-
-  private JCameraViewMatrix()
-  {
-    throw new UnreachableCodeException();
   }
 }

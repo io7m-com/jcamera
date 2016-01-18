@@ -43,8 +43,7 @@ public interface JCameraSphericalReadableType extends JCameraReadableType
   VectorReadable3FType cameraGetForward();
 
   /**
-   * @return The forward direction for the camera, projected onto the X/Z
-   *         plane.
+   * @return The forward direction for the camera, projected onto the X/Z plane.
    */
 
   VectorReadable3FType cameraGetForwardProjectedOnXZ();
