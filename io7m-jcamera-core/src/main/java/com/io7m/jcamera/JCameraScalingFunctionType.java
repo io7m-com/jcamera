@@ -25,8 +25,8 @@ public interface JCameraScalingFunctionType
   /**
    * Evaluate the function for <code>x</code>.
    *
-   * @param x
-   *          The argument
+   * @param x The argument
+   *
    * @return A value of type <code>float</code>
    */
 

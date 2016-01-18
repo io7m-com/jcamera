@@ -25,44 +25,20 @@ import com.io7m.jranges.RangeCheck;
  * .
  */
 
-@EqualityReference public final class JCameraSphericalAngularIntegrator implements
+@EqualityReference
+public final class JCameraSphericalAngularIntegrator implements
   JCameraSphericalAngularIntegratorType
 {
-  private static float applyDrag(
-    final float f,
-    final float drag,
-    final float time)
-  {
-    return (float) (f * Math.pow(drag, time));
-  }
-
-  /**
-   * Construct a new integrator.
-   *
-   * @param in_camera
-   *          The camera to be integrated.
-   * @param in_input
-   *          The input to be sampled.
-   * @return A new integrator
-   */
-
-  public static JCameraSphericalAngularIntegratorType newIntegrator(
-    final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
-  {
-    return new JCameraSphericalAngularIntegrator(in_camera, in_input);
-  }
-
-  private float                       acceleration_heading;
-  private float                       acceleration_incline;
   private final JCameraSphericalType  camera;
-  private float                       drag_heading;
-  private float                       drag_incline;
   private final JCameraSphericalInput input;
-  private float                       maximum_speed_heading;
-  private float                       maximum_speed_incline;
-  private float                       speed_heading;
-  private float                       speed_incline;
+  private       float                 acceleration_heading;
+  private       float                 acceleration_incline;
+  private       float                 drag_heading;
+  private       float                 drag_incline;
+  private       float                 maximum_speed_heading;
+  private       float                 maximum_speed_incline;
+  private       float                 speed_heading;
+  private       float                 speed_incline;
 
   private JCameraSphericalAngularIntegrator(
     final JCameraSphericalType in_camera,
@@ -81,7 +57,32 @@ import com.io7m.jranges.RangeCheck;
     this.speed_incline = 0.0f;
   }
 
-  @Override public void integrate(
+  private static float applyDrag(
+    final float f,
+    final float drag,
+    final float time)
+  {
+    return (float) (f * Math.pow(drag, time));
+  }
+
+  /**
+   * Construct a new integrator.
+   *
+   * @param in_camera The camera to be integrated.
+   * @param in_input  The input to be sampled.
+   *
+   * @return A new integrator
+   */
+
+  public static JCameraSphericalAngularIntegratorType newIntegrator(
+    final JCameraSphericalType in_camera,
+    final JCameraSphericalInput in_input)
+  {
+    return new JCameraSphericalAngularIntegrator(in_camera, in_input);
+  }
+
+  @Override
+  public void integrate(
     final float time)
   {
     this.speed_heading = this.integrateHeading(time);
@@ -147,7 +148,8 @@ import com.io7m.jranges.RangeCheck;
       time);
   }
 
-  @Override public void integratorAngularOrbitHeadingSetAcceleration(
+  @Override
+  public void integratorAngularOrbitHeadingSetAcceleration(
     final float a)
   {
     this.acceleration_heading =
@@ -158,7 +160,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum acceleration");
   }
 
-  @Override public void integratorAngularOrbitHeadingSetDrag(
+  @Override
+  public void integratorAngularOrbitHeadingSetDrag(
     final float d)
   {
     this.drag_heading =
@@ -170,7 +173,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum drag");
   }
 
-  @Override public void integratorAngularOrbitHeadingSetMaximumSpeed(
+  @Override
+  public void integratorAngularOrbitHeadingSetMaximumSpeed(
     final float s)
   {
     this.maximum_speed_heading =
@@ -181,7 +185,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum limit");
   }
 
-  @Override public void integratorAngularOrbitInclineSetAcceleration(
+  @Override
+  public void integratorAngularOrbitInclineSetAcceleration(
     final float a)
   {
     this.acceleration_incline =
@@ -192,7 +197,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum acceleration");
   }
 
-  @Override public void integratorAngularOrbitInclineSetDrag(
+  @Override
+  public void integratorAngularOrbitInclineSetDrag(
     final float d)
   {
     this.drag_incline =
@@ -204,7 +210,8 @@ import com.io7m.jranges.RangeCheck;
         "Minimum drag");
   }
 
-  @Override public void integratorAngularOrbitInclineSetMaximumSpeed(
+  @Override
+  public void integratorAngularOrbitInclineSetMaximumSpeed(
     final float s)
   {
     this.maximum_speed_incline =
@@ -215,12 +222,14 @@ import com.io7m.jranges.RangeCheck;
         "Minimum limit");
   }
 
-  @Override public JCameraSphericalReadableType integratorGetCamera()
+  @Override
+  public JCameraSphericalReadableType integratorGetCamera()
   {
     return this.camera;
   }
 
-  @Override public JCameraSphericalInput integratorGetInput()
+  @Override
+  public JCameraSphericalInput integratorGetInput()
   {
     return this.input;
   }

@@ -17,8 +17,8 @@
 package com.io7m.jcamera;
 
 /**
- * The type of integrators that integrate angular movement for
- * {@link JCameraSphericalType} cameras.
+ * The type of integrators that integrate angular movement for {@link
+ * JCameraSphericalType} cameras.
  */
 
 public interface JCameraSphericalAngularIntegratorType extends
@@ -27,8 +27,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   /**
    * Set the acceleration for heading orbiting to <code>a</code>.
    *
-   * @param a
-   *          The acceleration value.
+   * @param a The acceleration value.
    */
 
   void integratorAngularOrbitHeadingSetAcceleration(
@@ -37,8 +36,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   /**
    * Set the drag for heading orbiting to <code>a</code>.
    *
-   * @param d
-   *          The drag value.
+   * @param d The drag value.
    */
 
   void integratorAngularOrbitHeadingSetDrag(
@@ -47,8 +45,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   /**
    * Set the maximum rotation speed for heading orbiting to <code>s</code> .
    *
-   * @param s
-   *          The maximum rotation speed.
+   * @param s The maximum rotation speed.
    */
 
   void integratorAngularOrbitHeadingSetMaximumSpeed(
@@ -57,8 +54,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   /**
    * Set the acceleration for incline orbiting to <code>a</code>.
    *
-   * @param a
-   *          The acceleration value.
+   * @param a The acceleration value.
    */
 
   void integratorAngularOrbitInclineSetAcceleration(
@@ -67,8 +63,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   /**
    * Set the drag for incline orbiting to <code>a</code>.
    *
-   * @param d
-   *          The drag value.
+   * @param d The drag value.
    */
 
   void integratorAngularOrbitInclineSetDrag(
@@ -77,8 +72,7 @@ public interface JCameraSphericalAngularIntegratorType extends
   /**
    * Set the maximum rotation speed for incline orbiting to <code>s</code>.
    *
-   * @param s
-   *          The maximum rotation speed.
+   * @param s The maximum rotation speed.
    */
 
   void integratorAngularOrbitInclineSetMaximumSpeed(

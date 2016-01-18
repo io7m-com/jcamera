@@ -20,17 +20,18 @@ import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
 import com.io7m.jranges.RangeCheck;
-import com.io7m.jtensors.MatrixM4x4F;
+import com.io7m.jtensors.Matrix4x4FType;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM3F;
 import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.jtensors.parameterized.PMatrixM4x4F;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
 
 /**
  * The default implementation of {@link JCameraSphericalType}.
  */
 
-@EqualityStructural public final class JCameraSpherical implements
+@EqualityStructural
+public final class JCameraSpherical implements
   JCameraSphericalType
 {
   private static final VectorReadable3FType AXIS_Y;
@@ -39,50 +40,24 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     AXIS_Y = new VectorI3F(0.0f, 1.0f, 0.0f);
   }
 
-  /**
-   * @return A new spherical camera.
-   */
-
-  public static JCameraSphericalType newCamera()
-  {
-    return new JCameraSpherical();
-  }
-
-  /**
-   * @return A new camera based on the given camera.
-   * @param c
-   *          An existing camera
-   */
-
-  public static JCameraSphericalType newCameraFrom(
-    final JCameraSphericalReadableType c)
-  {
-    final JCameraSphericalType r = new JCameraSpherical();
-    r.cameraSetAngleHeading(c.cameraGetAngleHeading());
-    r.cameraSetAngleIncline(c.cameraGetAngleIncline());
-    r.cameraSetTargetPosition(c.cameraGetTargetPosition());
-    r.cameraSetZoom(c.cameraGetZoom());
-    return r;
-  }
-
   private final JCameraSignallingClamp clamp;
-  private boolean                      clamp_incline;
-  private float                        clamp_incline_max;
-  private float                        clamp_incline_min;
-  private boolean                      clamp_radius;
-  private float                        clamp_radius_max;
-  private float                        clamp_radius_min;
-  private boolean                      derived_current;
   private final VectorM3F              derived_forward;
   private final VectorM3F              derived_forward_on_xz;
   private final VectorM3F              derived_position;
   private final VectorM3F              derived_right;
   private final VectorM3F              derived_up;
-  private float                        input_heading;
-  private float                        input_incline;
-  private float                        input_radius;
   private final VectorM3F              input_target_position;
   private final VectorM3F              temporary;
+  private       boolean                clamp_incline;
+  private       float                  clamp_incline_max;
+  private       float                  clamp_incline_min;
+  private       boolean                clamp_radius;
+  private       float                  clamp_radius_max;
+  private       float                  clamp_radius_min;
+  private       boolean                derived_current;
+  private       float                  input_heading;
+  private       float                  input_incline;
+  private       float                  input_radius;
 
   private JCameraSpherical()
   {
@@ -110,14 +85,42 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.clamp = new JCameraSignallingClamp();
   }
 
-  @Override public void cameraClampInclineDisable()
+  /**
+   * @return A new spherical camera.
+   */
+
+  public static JCameraSphericalType newCamera()
+  {
+    return new JCameraSpherical();
+  }
+
+  /**
+   * @param c An existing camera
+   *
+   * @return A new camera based on the given camera.
+   */
+
+  public static JCameraSphericalType newCameraFrom(
+    final JCameraSphericalReadableType c)
+  {
+    final JCameraSphericalType r = new JCameraSpherical();
+    r.cameraSetAngleHeading(c.cameraGetAngleHeading());
+    r.cameraSetAngleIncline(c.cameraGetAngleIncline());
+    r.cameraSetTargetPosition(c.cameraGetTargetPosition());
+    r.cameraSetZoom(c.cameraGetZoom());
+    return r;
+  }
+
+  @Override
+  public void cameraClampInclineDisable()
   {
     this.clamp_incline = false;
     this.clamp_incline_max = Float.MAX_VALUE;
     this.clamp_incline_min = -Float.MAX_VALUE;
   }
 
-  @Override public void cameraClampInclineEnable(
+  @Override
+  public void cameraClampInclineEnable(
     final float min,
     final float max)
   {
@@ -127,14 +130,16 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.clamp_incline_min = min;
   }
 
-  @Override public void cameraClampRadiusDisable()
+  @Override
+  public void cameraClampRadiusDisable()
   {
     this.clamp_incline = false;
     this.clamp_incline_max = Float.MAX_VALUE;
     this.clamp_incline_min = 0.0f;
   }
 
-  @Override public void cameraClampRadiusEnable(
+  @Override
+  public void cameraClampRadiusEnable(
     final float min,
     final float max)
   {
@@ -150,57 +155,67 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.clamp_radius_min = min;
   }
 
-  @Override public float cameraGetAngleHeading()
+  @Override
+  public float cameraGetAngleHeading()
   {
     return this.input_heading;
   }
 
-  @Override public float cameraGetAngleIncline()
+  @Override
+  public float cameraGetAngleIncline()
   {
     return this.input_incline;
   }
 
-  @Override public VectorReadable3FType cameraGetForward()
+  @Override
+  public VectorReadable3FType cameraGetForward()
   {
     this.deriveVectors();
     return this.derived_forward;
   }
 
-  @Override public VectorReadable3FType cameraGetForwardProjectedOnXZ()
+  @Override
+  public VectorReadable3FType cameraGetForwardProjectedOnXZ()
   {
     this.deriveVectors();
     return this.derived_forward_on_xz;
   }
 
-  @Override public VectorReadable3FType cameraGetPosition()
+  @Override
+  public VectorReadable3FType cameraGetPosition()
   {
     this.deriveVectors();
     return this.derived_position;
   }
 
-  @Override public VectorReadable3FType cameraGetRight()
+  @Override
+  public VectorReadable3FType cameraGetRight()
   {
     this.deriveVectors();
     return this.derived_right;
   }
 
-  @Override public VectorReadable3FType cameraGetTargetPosition()
+  @Override
+  public VectorReadable3FType cameraGetTargetPosition()
   {
     return this.input_target_position;
   }
 
-  @Override public VectorReadable3FType cameraGetUp()
+  @Override
+  public VectorReadable3FType cameraGetUp()
   {
     this.deriveVectors();
     return this.derived_up;
   }
 
-  @Override public float cameraGetZoom()
+  @Override
+  public float cameraGetZoom()
   {
     return this.input_radius;
   }
 
-  @Override public JCameraSphericalSnapshot cameraMakeSnapshot()
+  @Override
+  public JCameraSphericalSnapshot cameraMakeSnapshot()
   {
     this.deriveVectors();
     return new JCameraSphericalSnapshot(
@@ -215,9 +230,10 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       new VectorI3F(this.derived_forward_on_xz));
   }
 
-  @Override public void cameraMakeViewMatrix(
+  @Override
+  public void cameraMakeViewMatrix(
     final JCameraContext ctx,
-    final MatrixM4x4F m)
+    final Matrix4x4FType m)
   {
     this.deriveVectors();
     JCameraViewMatrix.makeViewMatrix(
@@ -229,9 +245,10 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       this.cameraGetForward());
   }
 
-  @Override public <T0, T1> void cameraMakeViewPMatrix(
+  @Override
+  public <T0, T1> void cameraMakeViewPMatrix(
     final JCameraContext ctx,
-    final PMatrixM4x4F<T0, T1> m)
+    final PMatrix4x4FType<T0, T1> m)
   {
     this.deriveVectors();
     JCameraViewMatrix.makeViewPMatrix(
@@ -243,7 +260,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
       this.cameraGetForward());
   }
 
-  @Override public void cameraMoveTargetForwardOnXZ(
+  @Override
+  public void cameraMoveTargetForwardOnXZ(
     final float u)
   {
     this.deriveVectors();
@@ -254,7 +272,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.derived_current = false;
   }
 
-  @Override public void cameraMoveTargetRight(
+  @Override
+  public void cameraMoveTargetRight(
     final float u)
   {
     this.deriveVectors();
@@ -265,7 +284,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.derived_current = false;
   }
 
-  @Override public void cameraMoveTargetUp(
+  @Override
+  public void cameraMoveTargetUp(
     final float u)
   {
     VectorM3F.addScaledInPlace(
@@ -275,14 +295,16 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.derived_current = false;
   }
 
-  @Override public void cameraOrbitHeading(
+  @Override
+  public void cameraOrbitHeading(
     final float r)
   {
     this.derived_current = false;
     this.input_heading += r;
   }
 
-  @Override public boolean cameraOrbitIncline(
+  @Override
+  public boolean cameraOrbitIncline(
     final float r)
   {
     this.derived_current = false;
@@ -290,14 +312,16 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     return this.clampIncline();
   }
 
-  @Override public void cameraSetAngleHeading(
+  @Override
+  public void cameraSetAngleHeading(
     final float v)
   {
     this.input_heading = v;
     this.derived_current = false;
   }
 
-  @Override public void cameraSetAngleIncline(
+  @Override
+  public void cameraSetAngleIncline(
     final float h)
   {
     this.input_incline = h;
@@ -305,7 +329,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.clampIncline();
   }
 
-  @Override public void cameraSetTargetPosition(
+  @Override
+  public void cameraSetTargetPosition(
     final VectorReadable3FType v)
   {
     VectorM3F.copy(
@@ -314,7 +339,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.derived_current = false;
   }
 
-  @Override public void cameraSetTargetPosition3f(
+  @Override
+  public void cameraSetTargetPosition3f(
     final float x,
     final float y,
     final float z)
@@ -323,7 +349,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.input_target_position.set3F(x, y, z);
   }
 
-  @Override public void cameraSetZoom(
+  @Override
+  public void cameraSetZoom(
     final float r)
   {
     this.derived_current = false;
@@ -331,7 +358,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.clampRadius();
   }
 
-  @Override public boolean cameraZoomIn(
+  @Override
+  public boolean cameraZoomIn(
     final float r)
   {
     this.derived_current = false;
@@ -339,7 +367,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     return this.clampRadius();
   }
 
-  @Override public boolean cameraZoomOut(
+  @Override
+  public boolean cameraZoomOut(
     final float r)
   {
     return this.cameraZoomIn(-r);
@@ -438,7 +467,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.derived_current = true;
   }
 
-  @Override public boolean equals(
+  @Override
+  public boolean equals(
     final @Nullable Object obj)
   {
     if (this == obj) {
@@ -453,24 +483,25 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     final JCameraSpherical other = (JCameraSpherical) obj;
     return (this.clamp_incline == other.clamp_incline)
       && (Float.floatToIntBits(this.clamp_incline_max) == Float
-        .floatToIntBits(other.clamp_incline_max))
+      .floatToIntBits(other.clamp_incline_max))
       && (Float.floatToIntBits(this.clamp_incline_min) == Float
-        .floatToIntBits(other.clamp_incline_min))
+      .floatToIntBits(other.clamp_incline_min))
       && (this.clamp_radius == other.clamp_radius)
       && (Float.floatToIntBits(this.clamp_radius_max) == Float
-        .floatToIntBits(other.clamp_radius_max))
+      .floatToIntBits(other.clamp_radius_max))
       && (Float.floatToIntBits(this.clamp_radius_min) == Float
-        .floatToIntBits(other.clamp_radius_min))
+      .floatToIntBits(other.clamp_radius_min))
       && this.input_target_position.equals(other.input_target_position)
       && (Float.floatToIntBits(this.input_heading) == Float
-        .floatToIntBits(other.input_heading))
+      .floatToIntBits(other.input_heading))
       && (Float.floatToIntBits(this.input_incline) == Float
-        .floatToIntBits(other.input_incline))
+      .floatToIntBits(other.input_incline))
       && (Float.floatToIntBits(this.input_radius) == Float
-        .floatToIntBits(other.input_radius));
+      .floatToIntBits(other.input_radius));
   }
 
-  @Override public int hashCode()
+  @Override
+  public int hashCode()
   {
     final int prime = 31;
     int result = 1;
@@ -487,7 +518,8 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     return result;
   }
 
-  @Override public String toString()
+  @Override
+  public String toString()
   {
     final StringBuilder b = new StringBuilder();
     b.append("[JCameraSpherical clamp_incline=");

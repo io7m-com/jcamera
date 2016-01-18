@@ -16,6 +16,9 @@
 
 package com.io7m.jcamera.examples.jogl;
 
+import com.io7m.jnull.NullCheck;
+import com.io7m.junreachable.UnreachableCodeException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,20 +26,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.io7m.jnull.NullCheck;
-import com.io7m.junreachable.UnreachableCodeException;
-
 final class ShaderUtilities
 {
   /**
-   * @return <code>true</code> iff any of the following hold:
-   *         <ul>
-   *         <li>The list of lines is empty.</li>
-   *         <li>There are no lines that contain anything other than
-   *         whitespace.</li>
-   *         </ul>
-   * @param lines
-   *          The list of lines.
+   * @param lines The list of lines.
+   *
+   * @return <code>true</code> iff any of the following hold: <ul> <li>The list
+   * of lines is empty.</li> <li>There are no lines that contain anything other
+   * than whitespace.</li> </ul>
    */
 
   static boolean isEmpty(
@@ -55,17 +52,15 @@ final class ShaderUtilities
   }
 
   /**
-   * <p>
-   * Read lines of input from <code>stream</code> until there is nothing left
-   * to read, and return a list of all the lines returned. Each line will be
-   * terminated with (at least) an LF character.
-   * </p>
+   * <p> Read lines of input from <code>stream</code> until there is nothing
+   * left to read, and return a list of all the lines returned. Each line will
+   * be terminated with (at least) an LF character. </p>
    *
-   * @param stream
-   *          The input stream.
+   * @param stream The input stream.
+   *
    * @return A list of lines.
-   * @throws IOException
-   *           Iff an I/O error occurs whilst reading.
+   *
+   * @throws IOException Iff an I/O error occurs whilst reading.
    */
 
   static List<String> readLines(
@@ -77,7 +72,7 @@ final class ShaderUtilities
     final BufferedReader reader =
       new BufferedReader(new InputStreamReader(stream));
     final List<String> lines = new ArrayList<String>();
-    for (;;) {
+    while (true) {
       final String line = reader.readLine();
       if (line == null) {
         break;

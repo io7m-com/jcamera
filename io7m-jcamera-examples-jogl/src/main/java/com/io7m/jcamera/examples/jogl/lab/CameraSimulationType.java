@@ -16,10 +16,9 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import javax.media.opengl.GLEventListener;
-
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
+import com.jogamp.opengl.GLEventListener;
 
 interface CameraSimulationType extends CameraUIControlsType
 {

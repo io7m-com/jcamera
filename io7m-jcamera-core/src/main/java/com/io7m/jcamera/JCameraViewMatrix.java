@@ -17,40 +17,42 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
+import com.io7m.jtensors.Matrix4x4FType;
 import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.VectorM3F;
+import com.io7m.jtensors.Vector3FType;
 import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
 import com.io7m.jtensors.parameterized.PMatrixM4x4F;
-import com.io7m.jtensors.parameterized.PVectorM3F;
+import com.io7m.jtensors.parameterized.PVector3FType;
 import com.io7m.junreachable.UnreachableCodeException;
 
 /**
  * Functions to produce view matrices.
  */
 
-@EqualityReference public final class JCameraViewMatrix
+@EqualityReference
+public final class JCameraViewMatrix
 {
+  private JCameraViewMatrix()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
    * Construct a view matrix from the given position, forward, up, and, right
    * vectors.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
-   * @param position
-   *          The position
-   * @param right
-   *          The right vector
-   * @param up
-   *          The up vector
-   * @param forward
-   *          The forward vector
+   * @param ctx      Preallocated storage
+   * @param m        The output matrix
+   * @param position The position
+   * @param right    The right vector
+   * @param up       The up vector
+   * @param forward  The forward vector
    */
 
   public static void makeViewMatrix(
     final JCameraContext ctx,
-    final MatrixM4x4F m,
+    final Matrix4x4FType m,
     final VectorReadable3FType position,
     final VectorReadable3FType right,
     final VectorReadable3FType up,
@@ -60,27 +62,37 @@ import com.io7m.junreachable.UnreachableCodeException;
      * Calculate basis vectors for rotated coordinate system.
      */
 
-    final MatrixM4x4F r = ctx.getTemporaryMatrixR();
-    MatrixM4x4F.setIdentity(r);
-    r.set(0, 0, right.getXF());
-    r.set(0, 1, right.getYF());
-    r.set(0, 2, right.getZF());
-    r.set(1, 0, up.getXF());
-    r.set(1, 1, up.getYF());
-    r.set(1, 2, up.getZF());
-    r.set(2, 0, -forward.getXF());
-    r.set(2, 1, -forward.getYF());
-    r.set(2, 2, -forward.getZF());
+    final Matrix4x4FType r = ctx.getTemporaryMatrixR();
+
+    r.setR0C0F(right.getXF());
+    r.setR0C1F(right.getYF());
+    r.setR0C2F(right.getZF());
+    r.setR0C3F(0.0f);
+
+    r.setR1C0F(up.getXF());
+    r.setR1C1F(up.getYF());
+    r.setR1C2F(up.getZF());
+    r.setR1C3F(0.0f);
+
+    r.setR2C0F(-forward.getXF());
+    r.setR2C1F(-forward.getYF());
+    r.setR2C2F(-forward.getZF());
+    r.setR2C3F(0.0f);
+
+    r.setR3C0F(0.0f);
+    r.setR3C1F(0.0f);
+    r.setR3C2F(0.0f);
+    r.setR3C3F(1.0f);
 
     /**
      * Calculate translation matrix.
      */
 
-    final MatrixM4x4F t = ctx.getTemporaryMatrixT();
-    final VectorM3F tv = ctx.getTemporaryVector();
+    final Matrix4x4FType t = ctx.getTemporaryMatrixT();
+    final Vector3FType tv = ctx.getTemporaryVector();
     MatrixM4x4F.setIdentity(t);
     tv.set3F(-position.getXF(), -position.getYF(), -position.getZF());
-    MatrixM4x4F.makeTranslation3FInto(tv, t);
+    MatrixM4x4F.makeTranslation3F(tv, t);
 
     /**
      * Produce final transform.
@@ -93,27 +105,20 @@ import com.io7m.junreachable.UnreachableCodeException;
    * Construct a view matrix from the given position, forward, up, and, right
    * vectors.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
-   * @param position
-   *          The position
-   * @param right
-   *          The right vector
-   * @param up
-   *          The up vector
-   * @param forward
-   *          The forward vector
-   * @param <T0>
-   *          The source coordinate space
-   * @param <T1>
-   *          The target coordinate space
+   * @param ctx      Preallocated storage
+   * @param m        The output matrix
+   * @param position The position
+   * @param right    The right vector
+   * @param up       The up vector
+   * @param forward  The forward vector
+   * @param <T0>     The source coordinate space
+   * @param <T1>     The target coordinate space
    */
 
-  @SuppressWarnings("unchecked") public static <T0, T1> void makeViewPMatrix(
+  @SuppressWarnings("unchecked")
+  public static <T0, T1> void makeViewPMatrix(
     final JCameraContext ctx,
-    final PMatrixM4x4F<T0, T1> m,
+    final PMatrix4x4FType<T0, T1> m,
     final VectorReadable3FType position,
     final VectorReadable3FType right,
     final VectorReadable3FType up,
@@ -123,42 +128,47 @@ import com.io7m.junreachable.UnreachableCodeException;
      * Calculate basis vectors for rotated coordinate system.
      */
 
-    final PMatrixM4x4F<Object, Object> r =
-      (PMatrixM4x4F<Object, Object>) ctx.getTemporaryPMatrixR();
-    PMatrixM4x4F.setIdentity(r);
-    r.set(0, 0, right.getXF());
-    r.set(0, 1, right.getYF());
-    r.set(0, 2, right.getZF());
-    r.set(1, 0, up.getXF());
-    r.set(1, 1, up.getYF());
-    r.set(1, 2, up.getZF());
-    r.set(2, 0, -forward.getXF());
-    r.set(2, 1, -forward.getYF());
-    r.set(2, 2, -forward.getZF());
+    final PMatrix4x4FType<Object, Object> r =
+      (PMatrix4x4FType<Object, Object>) ctx.getTemporaryPMatrixR();
+
+    r.setR0C0F(right.getXF());
+    r.setR0C1F(right.getYF());
+    r.setR0C2F(right.getZF());
+    r.setR0C3F(0.0f);
+
+    r.setR1C0F(up.getXF());
+    r.setR1C1F(up.getYF());
+    r.setR1C2F(up.getZF());
+    r.setR1C3F(0.0f);
+
+    r.setR2C0F(-forward.getXF());
+    r.setR2C1F(-forward.getYF());
+    r.setR2C2F(-forward.getZF());
+    r.setR2C3F(0.0f);
+
+    r.setR3C0F(0.0f);
+    r.setR3C1F(0.0f);
+    r.setR3C2F(0.0f);
+    r.setR3C3F(1.0f);
 
     /**
      * Calculate translation matrix.
      */
 
-    final PMatrixM4x4F<Object, Object> t =
-      (PMatrixM4x4F<Object, Object>) ctx.getTemporaryPMatrixT();
-    PMatrixM4x4F.setIdentity(t);
-    final PVectorM3F<?> tv = ctx.getPTemporaryVector();
+    final PMatrix4x4FType<Object, Object> t =
+      (PMatrix4x4FType<Object, Object>) ctx.getTemporaryPMatrixT();
+    MatrixM4x4F.setIdentity(t);
+    final PVector3FType<?> tv = ctx.getPTemporaryVector();
     tv.set3F(-position.getXF(), -position.getYF(), -position.getZF());
-    PMatrixM4x4F.makeTranslation3FInto(tv, t);
+    MatrixM4x4F.makeTranslation3F(tv, t);
 
     /**
      * Produce final transform.
      */
 
     PMatrixM4x4F.multiply(
-      (PMatrixM4x4F<Object, T1>) r,
-      (PMatrixM4x4F<T0, Object>) t,
+      (PMatrix4x4FType<Object, T1>) r,
+      (PMatrix4x4FType<T0, Object>) t,
       m);
-  }
-
-  private JCameraViewMatrix()
-  {
-    throw new UnreachableCodeException();
   }
 }

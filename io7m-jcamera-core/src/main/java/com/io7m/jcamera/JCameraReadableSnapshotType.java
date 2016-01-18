@@ -17,9 +17,9 @@
 package com.io7m.jcamera;
 
 /**
- * The {@link JCameraReadableType} type with an extra promise that the
- * returned values will never change. In other words, the camera is actually
- * an immutable snapshot.
+ * The {@link JCameraReadableType} type with an extra promise that the returned
+ * values will never change. In other words, the camera is actually an immutable
+ * snapshot.
  */
 
 public interface JCameraReadableSnapshotType extends JCameraReadableType

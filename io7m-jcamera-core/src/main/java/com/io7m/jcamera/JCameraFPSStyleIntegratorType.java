@@ -17,9 +17,7 @@
 package com.io7m.jcamera;
 
 /**
- * <p>
- * The type of integrators for {@link JCameraFPSStyleType} cameras.
- * </p>
+ * <p> The type of integrators for {@link JCameraFPSStyleType} cameras. </p>
  */
 
 public interface JCameraFPSStyleIntegratorType extends

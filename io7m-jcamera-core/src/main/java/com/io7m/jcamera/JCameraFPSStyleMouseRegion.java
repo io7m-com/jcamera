@@ -25,34 +25,14 @@ import com.io7m.jranges.RangeCheck;
  * coefficients.
  */
 
-@EqualityReference public final class JCameraFPSStyleMouseRegion
+@EqualityReference
+public final class JCameraFPSStyleMouseRegion
 {
-  /**
-   * Construct a new mouse region.
-   *
-   * @param in_origin
-   *          The screen origin.
-   * @param in_width
-   *          The region width.
-   * @param in_height
-   *          The region height.
-   * @return A new mouse region.
-   */
-
-  public static JCameraFPSStyleMouseRegion newRegion(
-    final JCameraScreenOrigin in_origin,
-    final float in_width,
-    final float in_height)
-  {
-    return new JCameraFPSStyleMouseRegion(in_origin, in_width, in_height);
-  }
-
   private final float               center_x;
   private final float               center_y;
   private final float               height;
   private final JCameraScreenOrigin origin;
   private final float               width;
-
   private JCameraFPSStyleMouseRegion(
     final JCameraScreenOrigin in_origin,
     final float in_width,
@@ -78,6 +58,24 @@ import com.io7m.jranges.RangeCheck;
   }
 
   /**
+   * Construct a new mouse region.
+   *
+   * @param in_origin The screen origin.
+   * @param in_width  The region width.
+   * @param in_height The region height.
+   *
+   * @return A new mouse region.
+   */
+
+  public static JCameraFPSStyleMouseRegion newRegion(
+    final JCameraScreenOrigin in_origin,
+    final float in_width,
+    final float in_height)
+  {
+    return new JCameraFPSStyleMouseRegion(in_origin, in_width, in_height);
+  }
+
+  /**
    * @return The X coordinate of the center of the region
    */
 
@@ -99,12 +97,9 @@ import com.io7m.jranges.RangeCheck;
    * Return the region-space coefficients for the screen-space position
    * <code>(x, y)</code>.
    *
-   * @param x
-   *          The x coordinate
-   * @param y
-   *          The y coordinate
-   * @param out
-   *          The output vector
+   * @param x   The x coordinate
+   * @param y   The y coordinate
+   * @param out The output vector
    */
 
   public void getCoefficients(
@@ -120,14 +115,12 @@ import com.io7m.jranges.RangeCheck;
     final float rot_h = ((fy - this.center_y) / this.height) * 2.0f;
 
     switch (this.origin) {
-      case SCREEN_ORIGIN_BOTTOM_LEFT:
-      {
+      case SCREEN_ORIGIN_BOTTOM_LEFT: {
         out.setHorizontal(rot_h);
         out.setVertical(-rot_v);
         break;
       }
-      case SCREEN_ORIGIN_TOP_LEFT:
-      {
+      case SCREEN_ORIGIN_TOP_LEFT: {
         out.setHorizontal(-rot_h);
         out.setVertical(-rot_v);
         break;

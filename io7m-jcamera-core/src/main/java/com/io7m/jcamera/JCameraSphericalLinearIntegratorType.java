@@ -17,8 +17,8 @@
 package com.io7m.jcamera;
 
 /**
- * The type of integrators that integrate linear movement for
- * {@link JCameraSphericalType} cameras.
+ * The type of integrators that integrate linear movement for {@link
+ * JCameraSphericalType} cameras.
  */
 
 public interface JCameraSphericalLinearIntegratorType extends
@@ -39,8 +39,7 @@ public interface JCameraSphericalLinearIntegratorType extends
   /**
    * Set the linear acceleration (of the camera target) to <code>a</code>.
    *
-   * @param a
-   *          The linear acceleration.
+   * @param a The linear acceleration.
    */
 
   void integratorLinearTargetSetAcceleration(
@@ -49,8 +48,7 @@ public interface JCameraSphericalLinearIntegratorType extends
   /**
    * Set the linear drag factor (of the camera target) to <code>f</code>.
    *
-   * @param f
-   *          The linear drag factor.
+   * @param f The linear drag factor.
    */
 
   void integratorLinearTargetSetDrag(
@@ -60,8 +58,7 @@ public interface JCameraSphericalLinearIntegratorType extends
    * Set the maximum linear movement speed (of the camera target) to
    * <code>s</code>.
    *
-   * @param s
-   *          The maximum linear speed.
+   * @param s The maximum linear speed.
    */
 
   void integratorLinearTargetSetMaximumSpeed(
@@ -70,8 +67,7 @@ public interface JCameraSphericalLinearIntegratorType extends
   /**
    * Set the linear acceleration (of the camera zoom) to <code>a</code>.
    *
-   * @param a
-   *          The linear acceleration.
+   * @param a The linear acceleration.
    */
 
   void integratorLinearZoomSetAcceleration(
@@ -80,8 +76,7 @@ public interface JCameraSphericalLinearIntegratorType extends
   /**
    * Set the linear drag factor (of the camera zoom) to <code>f</code>.
    *
-   * @param f
-   *          The linear drag factor.
+   * @param f The linear drag factor.
    */
 
   void integratorLinearZoomSetDrag(
@@ -91,8 +86,7 @@ public interface JCameraSphericalLinearIntegratorType extends
    * Set the maximum linear movement speed (of the camera zoom) to
    * <code>s</code>.
    *
-   * @param s
-   *          The maximum linear speed.
+   * @param s The maximum linear speed.
    */
 
   void integratorLinearZoomSetMaximumSpeed(
