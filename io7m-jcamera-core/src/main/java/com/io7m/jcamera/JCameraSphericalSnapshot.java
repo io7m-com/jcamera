@@ -43,6 +43,7 @@ public final class JCameraSphericalSnapshot implements
   private final VectorI3F right;
   private final VectorI3F target_position;
   private final VectorI3F up;
+
   JCameraSphericalSnapshot(
     final VectorI3F in_forward,
     final VectorI3F in_right,
