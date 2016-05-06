@@ -4,7 +4,8 @@
    * @return A new camera snapshot.
    */
 
-  @Override public JCameraFPSStyleSnapshot integrate()
+  @Override
+  public JCameraFPSStyleSnapshot integrate()
   {
     /**
      * If the camera is actually enabled, integrate and produce a snapshot,
@@ -22,33 +23,39 @@
     return this.fixed_snapshot;
   }
 
-  @Override public boolean cameraIsEnabled()
+  @Override
+  public boolean cameraIsEnabled()
   {
     return this.camera_enabled.get();
   }
 
-  @Override public void cameraSetEnabled(
+  @Override
+  public void cameraSetEnabled(
     final boolean b)
   {
     this.camera_enabled.set(b);
   }
 
-  @Override public float getDeltaTime()
+  @Override
+  public float getDeltaTime()
   {
     return this.integrator_time_seconds;
   }
 
-  @Override public JCameraFPSStyleInput getInput()
+  @Override
+  public JCameraFPSStyleInputType getInput()
   {
     return this.input;
   }
 
-  @Override public JCameraFPSStyleIntegratorType getIntegrator()
+  @Override
+  public JCameraFPSStyleIntegratorType getIntegrator()
   {
     return this.integrator;
   }
 
-  @Override public JCameraFPSStyleType getCamera()
+  @Override
+  public JCameraFPSStyleType getCamera()
   {
     return this.camera;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,31 @@
 
 package com.io7m.jcamera.examples.jogl;
 
+import com.io7m.jcamera.JCameraContext;
+import com.io7m.jcamera.JCameraReadableSnapshotType;
+import com.io7m.jfunctional.OptionType;
+import com.io7m.jfunctional.Some;
+import com.io7m.jnull.NullCheck;
+import com.io7m.jnull.Nullable;
+import com.io7m.jtensors.Matrix4x4FType;
+import com.io7m.jtensors.MatrixDirect4x4FType;
+import com.io7m.jtensors.MatrixDirectM4x4F;
+import com.io7m.jtensors.MatrixHeapArrayM4x4F;
+import com.io7m.jtensors.MatrixM4x4F;
+import com.io7m.jtensors.VectorI3F;
+import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
+import com.io7m.jtensors.parameterized.PMatrixHeapArrayM4x4F;
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.newt.Window;
+import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2ES2;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,27 +49,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2ES2;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLException;
-
-import com.io7m.jcamera.JCameraContext;
-import com.io7m.jcamera.JCameraReadableSnapshotType;
-import com.io7m.jfunctional.OptionType;
-import com.io7m.jfunctional.Some;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.VectorI3F;
-import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.jtensors.parameterized.PMatrixM4x4F;
-import com.jogamp.common.nio.Buffers;
-import com.jogamp.newt.Window;
-import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 
 // CHECKSTYLE_JAVADOC:OFF
 
@@ -97,12 +101,43 @@ public final class ExampleRenderer implements ExampleRendererType
       ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_SIZE;
   }
 
+  private final     JCameraContext                                 ctx;
+  private final     Matrix4x4FType                                 model;
+  private final     MatrixDirect4x4FType                           modelview;
+  private final     MatrixDirect4x4FType                           projection;
+  private final     PMatrix4x4FType<WorldSpaceType, ViewSpaceType> view;
+  private @Nullable GL3                                            gl;
+  private           int                                            indices;
+  private           int                                            mesh_lying;
+  private           int                                            mesh_upright;
+  private           int                                            program;
+  private @Nullable Texture                                        texture;
+  private           AtomicBoolean                                  want_warp;
+  private @Nullable Window                                         window;
+  private           int                                            program_uv;
+
+  public ExampleRenderer()
+  {
+    this.gl = null;
+    this.indices = -1;
+    this.mesh_upright = -1;
+    this.mesh_lying = -1;
+    this.program = -1;
+    this.projection = MatrixDirectM4x4F.newMatrix();
+    this.model = MatrixHeapArrayM4x4F.newMatrix();
+    this.view = PMatrixHeapArrayM4x4F.newMatrix();
+    this.modelview = MatrixDirectM4x4F.newMatrix();
+    this.want_warp = new AtomicBoolean(false);
+    this.ctx = new JCameraContext();
+    this.texture = null;
+  }
+
   private static int compileFragmentShader(
     final GL3 g,
     final IntBuffer status,
     final String file)
     throws FileNotFoundException,
-      IOException
+    IOException
   {
     final InputStream f_stream =
       ExampleRenderer.class.getResourceAsStream(file);
@@ -149,7 +184,7 @@ public final class ExampleRenderer implements ExampleRendererType
     final IntBuffer status,
     final String file)
     throws FileNotFoundException,
-      IOException
+    IOException
   {
     final InputStream v_stream =
       ExampleRenderer.class.getResourceAsStream(file);
@@ -221,7 +256,7 @@ public final class ExampleRenderer implements ExampleRendererType
 
   private static Texture loadTexture()
     throws GLException,
-      IOException
+    IOException
   {
     InputStream f_stream = null;
     try {
@@ -253,7 +288,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g
       .glBufferData(
         GL.GL_ELEMENT_ARRAY_BUFFER,
-        6 * 4,
+        (long) (6 * 4),
         data,
         GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -320,7 +355,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
+      (long) ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -391,7 +426,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
+      (long) ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -400,7 +435,7 @@ public final class ExampleRenderer implements ExampleRendererType
 
   /**
    * A "repeatable random" function. Will always return the same pseudo-random
-   * value for a given <code>x</code> value.
+   * value for a given {@code x} value.
    */
 
   private static float noise(
@@ -410,42 +445,12 @@ public final class ExampleRenderer implements ExampleRendererType
     final int q = (z << 13) ^ z;
     final int s =
       ((q * ((q * q * 15731) + 789221)) + 1376312589) & 0x7fffffff;
-    final float r = 1.0f - (s / 1073741824.0f);
+    final float r = 1.0f - ((float) s / 1073741824.0f);
     return Math.abs(r);
   }
 
-  private final JCameraContext                              ctx;
-  private @Nullable GL3                                     gl;
-  private int                                               indices;
-  private int                                               mesh_lying;
-  private int                                               mesh_upright;
-  private final MatrixM4x4F                                 model;
-  private final MatrixM4x4F                                 modelview;
-  private int                                               program;
-  private final MatrixM4x4F                                 projection;
-  private @Nullable Texture                                 texture;
-  private final PMatrixM4x4F<WorldSpaceType, ViewSpaceType> view;
-  private AtomicBoolean                                     want_warp;
-  private @Nullable Window                                  window;
-  private int                                               program_uv;
-
-  public ExampleRenderer()
-  {
-    this.gl = null;
-    this.indices = -1;
-    this.mesh_upright = -1;
-    this.mesh_lying = -1;
-    this.program = -1;
-    this.projection = new MatrixM4x4F();
-    this.model = new MatrixM4x4F();
-    this.view = new PMatrixM4x4F<WorldSpaceType, ViewSpaceType>();
-    this.modelview = new MatrixM4x4F();
-    this.want_warp = new AtomicBoolean(false);
-    this.ctx = new JCameraContext();
-    this.texture = null;
-  }
-
-  @Override public void draw(
+  @Override
+  public void draw(
     final JCameraReadableSnapshotType s,
     final OptionType<VectorReadable3FType> target)
   {
@@ -454,11 +459,11 @@ public final class ExampleRenderer implements ExampleRendererType
     if (g != null) {
       s.cameraMakeViewPMatrix(this.ctx, this.view);
 
-      g.glClearDepth(1.0f);
+      g.glClearDepth(1.0);
       g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
       g.glClear(GL.GL_COLOR_BUFFER_BIT
-        | GL.GL_DEPTH_BUFFER_BIT
-        | GL.GL_STENCIL_BUFFER_BIT);
+                  | GL.GL_DEPTH_BUFFER_BIT
+                  | GL.GL_STENCIL_BUFFER_BIT);
       g.glEnable(GL.GL_DEPTH_TEST);
       g.glDepthFunc(GL.GL_LEQUAL);
       g.glDisable(GL.GL_CULL_FACE);
@@ -491,7 +496,7 @@ public final class ExampleRenderer implements ExampleRendererType
     final float z)
   {
     MatrixM4x4F.setIdentity(this.model);
-    MatrixM4x4F.makeTranslation3FInto(new VectorI3F(x, y, -z), this.model);
+    MatrixM4x4F.makeTranslation3F(new VectorI3F(x, y, -z), this.model);
 
     MatrixM4x4F.setIdentity(this.modelview);
     MatrixM4x4F.multiply(this.view, this.model, this.modelview);
@@ -526,7 +531,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_POSITION_OFFSET);
+        (long) ExampleRenderer.VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -540,7 +545,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_COLOR_OFFSET);
+        (long) ExampleRenderer.VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -560,9 +565,9 @@ public final class ExampleRenderer implements ExampleRendererType
       assert uid != -1;
 
       for (int index = 0; index < 100; ++index) {
-        final float x = 10.0f - (ExampleRenderer.noise(index * 10) * 20.0f);
+        final float x = 10.0f - (ExampleRenderer.noise((float) (index * 10)) * 20.0f);
         final float y = 0.0f;
-        final float z = 10.0f - (ExampleRenderer.noise(index * 100) * 20.0f);
+        final float z = 10.0f - (ExampleRenderer.noise((float) (index * 100)) * 20.0f);
         this.drawQuad(g, uid, x, y, z);
       }
 
@@ -597,7 +602,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_POSITION_OFFSET);
+        (long) ExampleRenderer.VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -611,7 +616,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_UV_OFFSET);
+        (long) ExampleRenderer.VERTEX_UV_OFFSET);
     }
 
     {
@@ -639,11 +644,11 @@ public final class ExampleRenderer implements ExampleRendererType
       assert uid != -1;
 
       MatrixM4x4F.setIdentity(this.model);
-      MatrixM4x4F.makeTranslation3FInto(
+      MatrixM4x4F.makeTranslation3F(
         new VectorI3F(0.0f, -0.5f, 0.0f),
         this.model);
-      MatrixM4x4F.set(this.model, 0, 0, 128.0f);
-      MatrixM4x4F.set(this.model, 2, 2, 128.0f);
+      this.model.setR0C0F(128.0f);
+      this.model.setR2C2F(128.0f);
 
       MatrixM4x4F.setIdentity(this.modelview);
       MatrixM4x4F.multiply(this.view, this.model, this.modelview);
@@ -687,7 +692,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        0);
+        0L);
     }
 
     {
@@ -701,7 +706,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         ExampleRenderer.VERTEX_SIZE,
-        ExampleRenderer.VERTEX_COLOR_OFFSET);
+        (long) ExampleRenderer.VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -728,7 +733,8 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glUseProgram(0);
   }
 
-  @Override public void init(
+  @Override
+  public void init(
     final GLWindow in_window,
     final GL3 in_gl)
     throws IOException
@@ -745,21 +751,23 @@ public final class ExampleRenderer implements ExampleRendererType
     this.texture = ExampleRenderer.loadTexture();
   }
 
-  @Override public void reshape(
+  @Override
+  public void reshape(
     final int width,
     final int height)
   {
-    final float fw = width;
-    final float fh = height;
+    final float fw = (float) width;
+    final float fh = (float) height;
     ProjectionMatrix.makePerspectiveProjection(
       this.projection,
-      0.01f,
-      100.0f,
-      fw / fh,
-      Math.toRadians(90.0f));
+      0.01,
+      100.0,
+      (double) (fw / fh),
+      Math.toRadians(90.0));
   }
 
-  @Override public void sendWantWarpPointer()
+  @Override
+  public void sendWantWarpPointer()
   {
     this.want_warp.set(true);
   }

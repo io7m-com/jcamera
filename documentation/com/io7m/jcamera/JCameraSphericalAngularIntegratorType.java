@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,68 +17,62 @@
 package com.io7m.jcamera;
 
 /**
- * The type of integrators that integrate angular movement for
- * {@link JCameraSphericalType} cameras.
+ * The type of integrators that integrate angular movement for {@link
+ * JCameraSphericalType} cameras.
  */
 
 public interface JCameraSphericalAngularIntegratorType extends
   JCameraIntegratorType
 {
   /**
-   * Set the acceleration for heading orbiting to <code>a</code>.
+   * Set the acceleration for heading orbiting to {@code a}.
    *
-   * @param a
-   *          The acceleration value.
+   * @param a The acceleration value.
    */
 
   void integratorAngularOrbitHeadingSetAcceleration(
     final float a);
 
   /**
-   * Set the drag for heading orbiting to <code>a</code>.
+   * Set the drag for heading orbiting to {@code a}.
    *
-   * @param d
-   *          The drag value.
+   * @param d The drag value.
    */
 
   void integratorAngularOrbitHeadingSetDrag(
     final float d);
 
   /**
-   * Set the maximum rotation speed for heading orbiting to <code>s</code> .
+   * Set the maximum rotation speed for heading orbiting to {@code s} .
    *
-   * @param s
-   *          The maximum rotation speed.
+   * @param s The maximum rotation speed.
    */
 
   void integratorAngularOrbitHeadingSetMaximumSpeed(
     final float s);
 
   /**
-   * Set the acceleration for incline orbiting to <code>a</code>.
+   * Set the acceleration for incline orbiting to {@code a}.
    *
-   * @param a
-   *          The acceleration value.
+   * @param a The acceleration value.
    */
 
   void integratorAngularOrbitInclineSetAcceleration(
     final float a);
 
   /**
-   * Set the drag for incline orbiting to <code>a</code>.
+   * Set the drag for incline orbiting to {@code a}.
    *
-   * @param d
-   *          The drag value.
+   * @param d The drag value.
    */
 
   void integratorAngularOrbitInclineSetDrag(
     final float d);
 
   /**
-   * Set the maximum rotation speed for incline orbiting to <code>s</code>.
+   * Set the maximum rotation speed for incline orbiting to {@code s}.
    *
-   * @param s
-   *          The maximum rotation speed.
+   * @param s The maximum rotation speed.
    */
 
   void integratorAngularOrbitInclineSetMaximumSpeed(
@@ -94,5 +88,5 @@ public interface JCameraSphericalAngularIntegratorType extends
    * @return The input used to drive the integrator.
    */
 
-  JCameraSphericalInput integratorGetInput();
+  JCameraSphericalInputType integratorGetInput();
 }

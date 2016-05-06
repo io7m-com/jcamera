@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,13 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-
-import javax.swing.JComboBox;
-
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleSimulation;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleSimulationType;
 import com.io7m.jcamera.examples.jogl.ExampleRendererType;
@@ -30,12 +23,18 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.junreachable.UnreachableCodeException;
 import com.jogamp.newt.opengl.GLWindow;
 
+import javax.swing.JComboBox;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+
 final class CameraSimulations
 {
   static JComboBox<String> newSelector(
     final Map<String, CameraSimulationType> s)
   {
-    final JComboBox<String> c = new JComboBox<String>();
+    final JComboBox<String> c = new JComboBox<>();
     for (final String k : s.keySet()) {
       c.addItem(k);
     }
@@ -47,8 +46,7 @@ final class CameraSimulations
     final ExampleRendererType in_renderer,
     final GLWindow in_window)
   {
-    final Map<String, CameraSimulationType> m =
-      new HashMap<String, CameraSimulationType>();
+    final Map<String, CameraSimulationType> m = new HashMap<>();
 
     {
       final CameraSimulationSpherical sim_spherical =

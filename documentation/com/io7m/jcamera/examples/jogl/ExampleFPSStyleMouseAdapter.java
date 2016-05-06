@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,14 +16,14 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraRotationCoefficients;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The mouse adapter used to handle mouse events.
@@ -34,7 +34,7 @@ import com.jogamp.newt.event.MouseEvent;
 public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 {
   private final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region;
-  private final JCameraFPSStyleInput                        input;
+  private final JCameraFPSStyleInputType                    input;
   private final ExampleFPSStyleSimulationType               sim;
   private final JCameraRotationCoefficients                 rotations;
 
@@ -61,8 +61,8 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 
     if (this.sim.cameraIsEnabled()) {
       this.mouse_region.get().getCoefficients(
-        e.getX(),
-        e.getY(),
+        (float) e.getX(),
+        (float) e.getY(),
         this.rotations);
       this.input.addRotationAroundHorizontal(this.rotations.getHorizontal());
       this.input.addRotationAroundVertical(this.rotations.getVertical());

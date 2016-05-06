@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>io7m-jcamera 0.3.0 Documentation: 2.2. First-person camera</title><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-layout.css"/><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-colour.css"/><link rel="stylesheet" type="text/css" href="documentation.css"/></head><body><div class="st200_body"><div class="brand">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>io7m-jcamera 0.4.0 Documentation: 2.2. First-person camera</title><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-layout.css"/><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-colour.css"/><link rel="stylesheet" type="text/css" href="documentation.css"/></head><body><div class="st200_body"><div class="brand">
   <div class="brand_left">
     <a href="http://io7m.com/">io7m</a>
   </div>
   <div class="brand_right">
-    <a href="http://io7m.github.io/jcamera/">io7m-jcamera</a> 0.3.0
+    <a href="http://io7m.github.io/jcamera/">io7m-jcamera</a> 0.4.0
   </div>
 </div><div class="st200_navbar st200_navbar_top"><table class="st200_navbar_table" summary="Navigation bar"><tr><td class="st200_navbar_prev_title_cell">2.1. Usage</td><td class="st200_navbar_up_title_cell">2. Usage</td><td class="st200_navbar_next_title_cell">2.3. Example sources</td></tr><tr><td class="st200_navbar_prev_file_cell"><a href="p2s1.xhtml#st200_p2s1">Previous</a></td><td class="st200_navbar_up_file_cell"><a href="p2.xhtml#st200_p2">Up</a></td><td class="st200_navbar_next_file_cell"><a href="p2s3.xhtml#st200_p2s3">Next</a></td></tr></table><hr class="st200_hr"/></div><div class="st200_section_container"><div class="st200_section_title_number"><a id="st200_p2s2" href="#st200_p2s2">2.2</a></div><div class="st200_section_title">First-person camera</div><ul class="st200_contents st200_section_contents_outer st200_section_contents"><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss1">2.2.1. Overview</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss2">2.2.2. FPS Simulation</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss3">2.2.3. Input</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss4">2.2.4. Rendering/Interpolation</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss5">2.2.5. Main</a></li></ul><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss1" href="#st200_p2s2ss1">2.2.1</a></div><div class="st200_subsection_title">Overview</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg1" href="#st200_p2s2ss1pg1">1</a></div><div class="st200_paragraph">
       In order to aid comprehension, and to follow good software engineering
@@ -44,7 +44,7 @@
       The interface exposed to JOGL by the example renderer is as follows
       [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">ExampleRendererType.java</a>]:
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss1fo2" href="#st200_p2s2ss1fo2">2.2.1.2. Renderer interface</a></div><pre class="st200_verbatim">/*
- * Copyright © 2014 &lt;code@io7m.com&gt; http://io7m.com
+ * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -61,14 +61,13 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.io.IOException;
-
-import javax.media.opengl.GL3;
-
 import com.io7m.jcamera.JCameraReadableSnapshotType;
 import com.io7m.jfunctional.OptionType;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL3;
+
+import java.io.IOException;
 
 /**
  * The interface exposed by the renderer to JOGL.
@@ -136,7 +135,7 @@ public interface ExampleRendererType extends ExampleRendererControllerType
       The interface exposed to JOGL by the example simulation is as follows
       [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulationType.java">ExampleFPSStyleSimulationType.java</a>]:
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo1" href="#st200_p2s2ss2fo1">2.2.2.1. Simulation interface</a></div><pre class="st200_verbatim">/*
- * Copyright © 2014 &lt;code@io7m.com&gt; http://io7m.com
+ * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -153,7 +152,7 @@ public interface ExampleRendererType extends ExampleRendererControllerType
 
 package com.io7m.jcamera.examples.jogl;
 
-import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
@@ -165,7 +164,7 @@ import com.io7m.jcamera.JCameraFPSStyleType;
 public interface ExampleFPSStyleSimulationType
 {
   /**
-   * @return &lt;code&gt;true&lt;/code&gt; if the camera is enabled.
+   * @return {@code true} if the camera is enabled.
    */
 
   boolean cameraIsEnabled();
@@ -174,7 +173,7 @@ public interface ExampleFPSStyleSimulationType
    * Enable/disable the camera.
    *
    * @param b
-   *          &lt;code&gt;true&lt;/code&gt; if the camera should be enabled.
+   *          {@code true} if the camera should be enabled.
    */
 
   void cameraSetEnabled(
@@ -196,7 +195,7 @@ public interface ExampleFPSStyleSimulationType
    * @return The camera input
    */
 
-  JCameraFPSStyleInput getInput();
+  JCameraFPSStyleInputType getInput();
 
   /**
    * @return The integrator used for the camera.
@@ -221,7 +220,7 @@ public interface ExampleFPSStyleSimulationType
       exposes the following interface to the simulation
       [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">ExampleRendererControllerType.java</a>]:
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo2" href="#st200_p2s2ss2fo2">2.2.2.2. Renderer control interface</a></div><pre class="st200_verbatim">/*
- * Copyright © 2014 &lt;code@io7m.com&gt; http://io7m.com
+ * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -258,8 +257,7 @@ public interface ExampleRendererControllerType
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo3" href="#st200_p2s2ss2fo3">2.2.2.3. Camera declarations and storage</a></div><pre class="st200_verbatim">  /**
    * $example: Construct a new simulation.
    *
-   * @param in_renderer
-   *          The interface to the renderer
+   * @param in_renderer The interface to the renderer
    */
 
   public ExampleFPSStyleSimulation(
@@ -303,14 +301,12 @@ public interface ExampleRendererControllerType
 
     this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
     this.integrator.integratorAngularSetDragVertical(0.000000001f);
-
-    this.integrator
-      .integratorAngularSetAccelerationHorizontal((float) ((Math.PI / 12) / this.integrator_time_seconds));
-    this.integrator
-      .integratorAngularSetAccelerationVertical((float) ((Math.PI / 12) / this.integrator_time_seconds));
-
-    this.integrator
-      .integratorLinearSetAcceleration((float) (3.0 / this.integrator_time_seconds));
+    this.integrator.integratorAngularSetAccelerationHorizontal(
+      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+    this.integrator.integratorAngularSetAccelerationVertical(
+      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+    this.integrator.integratorLinearSetAcceleration(
+      (float) (3.0 / (double) this.integrator_time_seconds));
     this.integrator.integratorLinearSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearSetDrag(0.000000001f);
   }
@@ -330,7 +326,8 @@ public interface ExampleRendererControllerType
    * @return A new camera snapshot.
    */
 
-  @Override public JCameraFPSStyleSnapshot integrate()
+  @Override
+  public JCameraFPSStyleSnapshot integrate()
   {
     /**
      * If the camera is actually enabled, integrate and produce a snapshot,
@@ -348,33 +345,39 @@ public interface ExampleRendererControllerType
     return this.fixed_snapshot;
   }
 
-  @Override public boolean cameraIsEnabled()
+  @Override
+  public boolean cameraIsEnabled()
   {
     return this.camera_enabled.get();
   }
 
-  @Override public void cameraSetEnabled(
+  @Override
+  public void cameraSetEnabled(
     final boolean b)
   {
     this.camera_enabled.set(b);
   }
 
-  @Override public float getDeltaTime()
+  @Override
+  public float getDeltaTime()
   {
     return this.integrator_time_seconds;
   }
 
-  @Override public JCameraFPSStyleInput getInput()
+  @Override
+  public JCameraFPSStyleInputType getInput()
   {
     return this.input;
   }
 
-  @Override public JCameraFPSStyleIntegratorType getIntegrator()
+  @Override
+  public JCameraFPSStyleIntegratorType getIntegrator()
   {
     return this.integrator;
   }
 
-  @Override public JCameraFPSStyleType getCamera()
+  @Override
+  public JCameraFPSStyleType getCamera()
   {
     return this.camera;
   }
@@ -400,7 +403,7 @@ public interface ExampleRendererControllerType
       on a background thread, rather than the thread handling input and/or
       rendering for the current window.
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss3fo1" href="#st200_p2s2ss3fo1">2.2.3.1. Main (KeyListener)</a></div><pre class="st200_verbatim">/*
- * Copyright © 2014 &lt;code@io7m.com&gt; http://io7m.com
+ * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -417,14 +420,14 @@ public interface ExampleRendererControllerType
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ExecutorService;
-
-import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.opengl.GLWindow;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * The key listener used to handle keyboard events.
@@ -438,7 +441,7 @@ import com.jogamp.newt.opengl.GLWindow;
   private final ExampleFPSStyleSimulationType sim;
   private final ExecutorService               background_workers;
   private final ExampleRendererType           renderer;
-  private final JCameraFPSStyleInput          input;
+  private final JCameraFPSStyleInputType      input;
   private final GLWindow                      window;
 
   public ExampleFPSStyleKeyListener(
@@ -618,8 +621,8 @@ import com.jogamp.newt.opengl.GLWindow;
       System.out.println("Enabling camera");
       this.window.confinePointer(true);
       this.renderer.sendWantWarpPointer();
-      this.input.setRotationHorizontal(0);
-      this.input.setRotationVertical(0);
+      this.input.setRotationHorizontal(0.0F);
+      this.input.setRotationVertical(0.0F);
     }
 
     this.sim.cameraSetEnabled(!enabled);
@@ -630,7 +633,7 @@ import com.jogamp.newt.opengl.GLWindow;
       Every time the user moves the mouse, the rotation coefficients are calculated
       and sent to the simulation camera's input:
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss3fo2" href="#st200_p2s2ss3fo2">2.2.3.2. Main (MouseAdapter)</a></div><pre class="st200_verbatim">/*
- * Copyright © 2014 &lt;code@io7m.com&gt; http://io7m.com
+ * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -647,14 +650,14 @@ import com.jogamp.newt.opengl.GLWindow;
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraRotationCoefficients;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The mouse adapter used to handle mouse events.
@@ -665,7 +668,7 @@ import com.jogamp.newt.event.MouseEvent;
 public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 {
   private final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; mouse_region;
-  private final JCameraFPSStyleInput                        input;
+  private final JCameraFPSStyleInputType                    input;
   private final ExampleFPSStyleSimulationType               sim;
   private final JCameraRotationCoefficients                 rotations;
 
@@ -692,8 +695,8 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 
     if (this.sim.cameraIsEnabled()) {
       this.mouse_region.get().getCoefficients(
-        e.getX(),
-        e.getY(),
+        (float) e.getX(),
+        (float) e.getY(),
         this.rotations);
       this.input.addRotationAroundHorizontal(this.rotations.getHorizontal());
       this.input.addRotationAroundVertical(this.rotations.getVertical());
@@ -709,7 +712,7 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
       between the most recently received camera snapshots in order to provide smooth
       animation independent of the simulation and/or frame rate.
     </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss4fo1" href="#st200_p2s2ss4fo1">2.2.4.1. Main (GLEventListener)</a></div><pre class="st200_verbatim">/*
- * Copyright © 2014 &lt;code@io7m.com&gt; http://io7m.com
+ * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -726,15 +729,6 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.opengl.DebugGL3;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraScreenOrigin;
@@ -743,6 +737,14 @@ import com.io7m.jfunctional.OptionType;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.DebugGL3;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The GL event listener used to handle rendering and driving of the
@@ -757,10 +759,10 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   private final ExampleFPSStyleSimulationType               sim;
   private final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; mouse_region;
   private final ExampleRendererType                         renderer;
-  private long                                              time_then;
-  private double                                            time_accum;
-  private JCameraFPSStyleSnapshot                           snap_curr;
-  private JCameraFPSStyleSnapshot                           snap_prev;
+  private       long                                        time_then;
+  private       double                                      time_accum;
+  private       JCameraFPSStyleSnapshot                     snap_curr;
+  private       JCameraFPSStyleSnapshot                     snap_prev;
 
   public ExampleFPSStyleGLListener(
     final GLWindow in_window,
@@ -780,11 +782,11 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   /**
    * Initialize the simulation.
    *
-   * @param drawable
-   *          The OpenGL drawable
+   * @param drawable The OpenGL drawable
    */
 
-  @Override public void init(
+  @Override
+  public void init(
     final @Nullable GLAutoDrawable drawable)
   {
     try {
@@ -801,13 +803,15 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     }
   }
 
-  @Override public void dispose(
+  @Override
+  public void dispose(
     final @Nullable GLAutoDrawable drawable)
   {
     // Nothing.
   }
 
-  @Override public void display(
+  @Override
+  public void display(
     final @Nullable GLAutoDrawable drawable)
   {
     assert drawable != null;
@@ -819,15 +823,15 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
 
     final long time_now = System.nanoTime();
     final long time_diff = time_now - this.time_then;
-    final double time_diff_s = time_diff / 1000000000.0;
+    final double time_diff_s = (double) time_diff / 1000000000.0;
     this.time_accum = this.time_accum + time_diff_s;
     this.time_then = time_now;
 
     final float sim_delta = this.sim.getDeltaTime();
-    while (this.time_accum &gt;= sim_delta) {
+    while (this.time_accum &gt;= (double) sim_delta) {
       this.snap_prev = this.snap_curr;
       this.snap_curr = this.sim.integrate();
-      this.time_accum -= sim_delta;
+      this.time_accum -= (double) sim_delta;
     }
 
     /**
@@ -836,7 +840,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
      * states.
      */
 
-    final float alpha = (float) (this.time_accum / sim_delta);
+    final float alpha = (float) (this.time_accum / (double) sim_delta);
     final JCameraFPSStyleSnapshot snap_interpolated =
       JCameraFPSStyleSnapshot.interpolate(
         this.snap_prev,
@@ -855,7 +859,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     this.renderer.draw(snap_interpolated, none);
   }
 
-  @Override public void reshape(
+  @Override
+  public void reshape(
     final @Nullable GLAutoDrawable drawable,
     final int x,
     final int y,
@@ -864,8 +869,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   {
     this.mouse_region.set(JCameraFPSStyleMouseRegion.newRegion(
       JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-      width,
-      height));
+      (float) width,
+      (float) height));
     this.renderer.reshape(width, height);
   }
 }
@@ -908,11 +913,11 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     final JCameraRotationCoefficients rotations =
       new JCameraRotationCoefficients();
     final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; mouse_region =
-      new AtomicReference&lt;JCameraFPSStyleMouseRegion&gt;(
+      new AtomicReference&lt;&gt;(
         JCameraFPSStyleMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640,
-          480));
+          640.0F,
+          480.0F));
 
 </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg4" href="#st200_p2s2ss5pg4">4</a></div><div class="st200_paragraph">
       An OpenGL window is created, an <span class="st200_term type">Animator</span>
@@ -966,7 +971,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
       }
     });
 
-    window.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+    window.setDefaultCloseOperation(
+      WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
     /**

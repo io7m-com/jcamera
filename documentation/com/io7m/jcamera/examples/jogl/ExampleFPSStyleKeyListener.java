@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,14 +16,14 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ExecutorService;
-
-import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.opengl.GLWindow;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * The key listener used to handle keyboard events.
@@ -37,7 +37,7 @@ import com.jogamp.newt.opengl.GLWindow;
   private final ExampleFPSStyleSimulationType sim;
   private final ExecutorService               background_workers;
   private final ExampleRendererType           renderer;
-  private final JCameraFPSStyleInput          input;
+  private final JCameraFPSStyleInputType      input;
   private final GLWindow                      window;
 
   public ExampleFPSStyleKeyListener(
@@ -217,8 +217,8 @@ import com.jogamp.newt.opengl.GLWindow;
       System.out.println("Enabling camera");
       this.window.confinePointer(true);
       this.renderer.sendWantWarpPointer();
-      this.input.setRotationHorizontal(0);
-      this.input.setRotationVertical(0);
+      this.input.setRotationHorizontal(0.0F);
+      this.input.setRotationVertical(0.0F);
     }
 
     this.sim.cameraSetEnabled(!enabled);

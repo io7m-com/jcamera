@@ -46,7 +46,8 @@
       }
     });
 
-    window.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+    window.setDefaultCloseOperation(
+      WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
     /**

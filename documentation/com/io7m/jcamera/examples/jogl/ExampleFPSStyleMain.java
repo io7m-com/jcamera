@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,14 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraRotationCoefficients;
@@ -31,10 +23,17 @@ import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
 import com.io7m.junreachable.UnreachableCodeException;
+import com.jogamp.nativewindow.WindowClosingProtocol;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Trivial camera example.
@@ -85,11 +84,11 @@ public final class ExampleFPSStyleMain
     final JCameraRotationCoefficients rotations =
       new JCameraRotationCoefficients();
     final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region =
-      new AtomicReference<JCameraFPSStyleMouseRegion>(
+      new AtomicReference<>(
         JCameraFPSStyleMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640,
-          480));
+          640.0F,
+          480.0F));
 
     /**
      * $example: Initialize JOGL and open a window, construct an animator to
@@ -139,7 +138,8 @@ public final class ExampleFPSStyleMain
       }
     });
 
-    window.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+    window.setDefaultCloseOperation(
+      WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
     /**

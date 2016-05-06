@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -24,50 +24,26 @@ import com.io7m.jranges.RangeCheck;
  * The default implementation of {@link JCameraSphericalLinearIntegratorType}.
  */
 
-@EqualityReference public final class JCameraSphericalLinearIntegrator implements
+@EqualityReference
+public final class JCameraSphericalLinearIntegrator implements
   JCameraSphericalLinearIntegratorType
 {
-  private static float applyDrag(
-    final float f,
-    final float drag,
-    final float time)
-  {
-    return (float) (f * Math.pow(drag, time));
-  }
-
-  /**
-   * Construct a new integrator.
-   *
-   * @param in_camera
-   *          The camera to be integrated.
-   * @param in_input
-   *          The input to be sampled.
-   * @return A new integrator
-   */
-
-  public static JCameraSphericalLinearIntegratorType newIntegrator(
-    final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
-  {
-    return new JCameraSphericalLinearIntegrator(in_camera, in_input);
-  }
-
-  private final JCameraSphericalType  camera;
-  private final JCameraSphericalInput input;
-  private float                       speed_forward;
-  private float                       speed_right;
-  private float                       speed_up;
-  private float                       speed_zoom;
-  private float                       target_acceleration;
-  private float                       target_drag;
-  private float                       target_maximum_speed;
-  private float                       zoom_acceleration;
-  private float                       zoom_drag;
-  private float                       zoom_maximum_speed;
+  private final JCameraSphericalType      camera;
+  private final JCameraSphericalInputType input;
+  private       float                     speed_forward;
+  private       float                     speed_right;
+  private       float                     speed_up;
+  private       float                     speed_zoom;
+  private       float                     target_acceleration;
+  private       float                     target_drag;
+  private       float                     target_maximum_speed;
+  private       float                     zoom_acceleration;
+  private       float                     zoom_drag;
+  private       float                     zoom_maximum_speed;
 
   private JCameraSphericalLinearIntegrator(
     final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
+    final JCameraSphericalInputType in_input)
   {
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
@@ -86,7 +62,32 @@ import com.io7m.jranges.RangeCheck;
     this.zoom_acceleration = 30.0f;
   }
 
-  @Override public void integrate(
+  private static float applyDrag(
+    final float f,
+    final float drag,
+    final float time)
+  {
+    return (float) ((double) f * Math.pow((double) drag, (double) time));
+  }
+
+  /**
+   * Construct a new integrator.
+   *
+   * @param in_camera The camera to be integrated.
+   * @param in_input  The input to be sampled.
+   *
+   * @return A new integrator
+   */
+
+  public static JCameraSphericalLinearIntegratorType newIntegrator(
+    final JCameraSphericalType in_camera,
+    final JCameraSphericalInputType in_input)
+  {
+    return new JCameraSphericalLinearIntegrator(in_camera, in_input);
+  }
+
+  @Override
+  public void integrate(
     final float t)
   {
     this.speed_zoom = this.integrateZoom(t);
@@ -188,79 +189,87 @@ import com.io7m.jranges.RangeCheck;
       .applyDrag(s, this.zoom_drag, time);
   }
 
-  @Override public JCameraSphericalType integratorGetCamera()
+  @Override
+  public JCameraSphericalType integratorGetCamera()
   {
     return this.camera;
   }
 
-  @Override public JCameraSphericalInput integratorGetInput()
+  @Override
+  public JCameraSphericalInputType integratorGetInput()
   {
     return this.input;
   }
 
-  @Override public void integratorLinearTargetSetAcceleration(
+  @Override
+  public void integratorLinearTargetSetAcceleration(
     final float a)
   {
     this.target_acceleration =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
   }
 
-  @Override public void integratorLinearTargetSetDrag(
+  @Override
+  public void integratorLinearTargetSetDrag(
     final float f)
   {
     this.target_drag =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(f, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) f, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
   }
 
-  @Override public void integratorLinearTargetSetMaximumSpeed(
+  @Override
+  public void integratorLinearTargetSetMaximumSpeed(
     final float s)
   {
     this.target_maximum_speed =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");
   }
 
-  @Override public void integratorLinearZoomSetAcceleration(
+  @Override
+  public void integratorLinearZoomSetAcceleration(
     final float a)
   {
     this.zoom_acceleration =
       (float) RangeCheck.checkGreaterDouble(
-        a,
+        (double) a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
   }
 
-  @Override public void integratorLinearZoomSetDrag(
+  @Override
+  public void integratorLinearZoomSetDrag(
     final float f)
   {
     this.zoom_drag =
       (float) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble(f, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble((double) f, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
   }
 
-  @Override public void integratorLinearZoomSetMaximumSpeed(
+  @Override
+  public void integratorLinearZoomSetMaximumSpeed(
     final float s)
   {
     this.zoom_maximum_speed =
       (float) RangeCheck.checkGreaterEqualDouble(
-        s,
+        (double) s,
         "Speed limit",
         0.0,
         "Minimum limit");

@@ -1,8 +1,7 @@
   /**
    * $example: Construct a new simulation.
    *
-   * @param in_renderer
-   *          The interface to the renderer
+   * @param in_renderer The interface to the renderer
    */
 
   public ExampleFPSStyleSimulation(

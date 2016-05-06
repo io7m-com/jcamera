@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,15 +15,6 @@
  */
 
 package com.io7m.jcamera.examples.jogl.lab;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.opengl.GLEventListener;
-import javax.swing.JLabel;
-
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.RowGroup;
 
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
@@ -41,8 +32,15 @@ import com.io7m.jnull.NullCheck;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLEventListener;
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.RowGroup;
 
-@SuppressWarnings({ "boxing" }) final class CameraSimulationFPSStyle implements
+import javax.swing.JLabel;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicReference;
+
+final class CameraSimulationFPSStyle implements
   CameraSimulationType
 {
   private final JCameraRotationCoefficients                 coefficients;
@@ -75,11 +73,11 @@ import com.jogamp.newt.opengl.GLWindow;
     this.sim = NullCheck.notNull(in_sim);
 
     this.mouse_region =
-      new AtomicReference<JCameraFPSStyleMouseRegion>(
+      new AtomicReference<>(
         JCameraFPSStyleMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          in_window.getWidth(),
-          in_window.getHeight()));
+          (float) in_window.getWidth(),
+          (float) in_window.getHeight()));
 
     this.key_listener =
       new ExampleFPSStyleKeyListener(
@@ -120,7 +118,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorLinearSetDrag(x);
+        integrator.integratorLinearSetDrag(x.floatValue());
       }
     });
     this.linear_drag.setCurrent(this.linear_drag.getMinimum());
@@ -131,7 +129,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorLinearSetAcceleration(x / delta);
+        integrator.integratorLinearSetAcceleration(x.floatValue() / delta);
       }
     });
     this.linear_acceleration
@@ -143,7 +141,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorLinearSetMaximumSpeed(x / delta);
+        integrator.integratorLinearSetMaximumSpeed(x.floatValue() / delta);
       }
     });
     this.linear_maximum.setCurrent(this.linear_maximum.getMaximum());
@@ -154,7 +152,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorAngularSetDragHorizontal(x);
+        integrator.integratorAngularSetDragHorizontal(x.floatValue());
       }
     });
     this.horizontal_drag.setCurrent(this.horizontal_drag.getMinimum());
@@ -166,7 +164,7 @@ import com.jogamp.newt.opengl.GLWindow;
         @Override public void call(
           final Float x)
         {
-          integrator.integratorAngularSetAccelerationHorizontal(x / delta);
+          integrator.integratorAngularSetAccelerationHorizontal(x.floatValue() / delta);
         }
       });
     this.horizontal_acceleration.setCurrent(this.horizontal_acceleration
@@ -178,7 +176,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorAngularSetMaximumSpeedHorizontal(x / delta);
+        integrator.integratorAngularSetMaximumSpeedHorizontal(x.floatValue() / delta);
       }
     });
     this.horizontal_maximum.setCurrent(this.horizontal_maximum.getMaximum());
@@ -189,7 +187,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorAngularSetDragVertical(x);
+        integrator.integratorAngularSetDragVertical(x.floatValue());
       }
     });
     this.vertical_drag.setCurrent(this.vertical_drag.getMinimum());
@@ -201,7 +199,7 @@ import com.jogamp.newt.opengl.GLWindow;
         @Override public void call(
           final Float x)
         {
-          integrator.integratorAngularSetAccelerationVertical(x / delta);
+          integrator.integratorAngularSetAccelerationVertical(x.floatValue() / delta);
         }
       });
     this.vertical_acceleration.setCurrent(this.vertical_acceleration
@@ -213,7 +211,7 @@ import com.jogamp.newt.opengl.GLWindow;
       @Override public void call(
         final Float x)
       {
-        integrator.integratorAngularSetMaximumSpeedVertical(x / delta);
+        integrator.integratorAngularSetMaximumSpeedVertical(x.floatValue() / delta);
       }
     });
     this.vertical_maximum.setCurrent(this.vertical_maximum.getMaximum());

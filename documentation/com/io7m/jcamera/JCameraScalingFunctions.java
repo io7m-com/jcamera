@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -23,27 +23,37 @@ import com.io7m.junreachable.UnreachableCodeException;
  * Implementations of various scaling functions.
  */
 
-@EqualityReference public final class JCameraScalingFunctions
+@EqualityReference
+public final class JCameraScalingFunctions
 {
   private static final JCameraScalingFunctionType SCALE_IDENTITY;
   private static final JCameraScalingFunctionType SCALE_SQUARE_ROOT;
 
   static {
-    SCALE_IDENTITY = new JCameraScalingFunctionType() {
-      @Override public float evaluate(
+    SCALE_IDENTITY = new JCameraScalingFunctionType()
+    {
+      @Override
+      public float evaluate(
         final float x)
       {
         return x;
       }
     };
 
-    SCALE_SQUARE_ROOT = new JCameraScalingFunctionType() {
-      @Override public float evaluate(
+    SCALE_SQUARE_ROOT = new JCameraScalingFunctionType()
+    {
+      @Override
+      public float evaluate(
         final float x)
       {
-        return (float) Math.sqrt(x);
+        return (float) Math.sqrt((double) x);
       }
     };
+  }
+
+  private JCameraScalingFunctions()
+  {
+    throw new UnreachableCodeException();
   }
 
   /**
@@ -62,10 +72,5 @@ import com.io7m.junreachable.UnreachableCodeException;
   public static JCameraScalingFunctionType scaleSquareRoot()
   {
     return JCameraScalingFunctions.SCALE_SQUARE_ROOT;
-  }
-
-  private JCameraScalingFunctions()
-  {
-    throw new UnreachableCodeException();
   }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright © 2014 <code@io7m.com> http://io7m.com
+  Copyright © 2016 <code@io7m.com> http://io7m.com
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -19,7 +19,7 @@
 <s:document
   xmlns:s="http://schemas.io7m.com/structural/2.1.0"
   xmlns:xi="http://www.w3.org/2001/XInclude">
-  <s:document-title>io7m-jcamera 0.3.0 Documentation</s:document-title>
+  <s:document-title>io7m-jcamera 0.4.0 Documentation</s:document-title>
   <s:document-style>documentation.css</s:document-style>
   <s:document-contents/>
 
@@ -62,7 +62,7 @@
           <s:verbatim s:type="example"><![CDATA[<dependency>
   <groupId>com.io7m.jcamera</groupId>
   <artifactId>io7m-jcamera-core</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>]]></s:verbatim>
         </s:paragraph>
         <s:paragraph>
@@ -90,7 +90,7 @@
       <s:paragraph>
         All files distributed with the <s:term s:type="package">io7m-jcamera</s:term>
         package are placed under the following license:
-        <s:verbatim s:type="license"><![CDATA[Copyright © 2014 <code@io7m.com> http://io7m.com
+        <s:verbatim s:type="license"><![CDATA[Copyright © 2016 <code@io7m.com> http://io7m.com
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
