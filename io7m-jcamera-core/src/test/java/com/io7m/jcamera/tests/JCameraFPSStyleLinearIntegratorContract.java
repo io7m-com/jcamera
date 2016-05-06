@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 
 package com.io7m.jcamera.tests;
 
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,12 +44,12 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
 
   abstract @NonNull JCameraFPSStyleLinearIntegratorType newIntegrator(
     final @NonNull JCameraFPSStyleType c,
-    final @NonNull JCameraFPSStyleInput i);
+    final @NonNull JCameraFPSStyleInputType i);
 
   @Test public final void testCamera_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
     Assert.assertEquals(c, d.integratorGetCamera());
   }
@@ -56,7 +57,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testInput_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
     Assert.assertEquals(i, d.integratorGetInput());
   }
@@ -64,7 +65,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingBackward_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingBackward(true);
@@ -92,7 +93,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingBackward_1()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingBackward(true);
@@ -119,7 +120,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingDown_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingDown(true);
@@ -146,7 +147,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingDown_1()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingDown(true);
@@ -173,7 +174,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingDrag_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingForward(true);
@@ -218,7 +219,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingForward_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingForward(true);
@@ -245,7 +246,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingForward_1()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingForward(true);
@@ -272,7 +273,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingLeft_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingLeft(true);
@@ -299,7 +300,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingLeft_1()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingLeft(true);
@@ -326,7 +327,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingRight_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingRight(true);
@@ -353,7 +354,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingRight_1()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingRight(true);
@@ -380,7 +381,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingUp_0()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingUp(true);
@@ -407,7 +408,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testMovingUp_1()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     i.setMovingUp(true);
@@ -434,7 +435,7 @@ public abstract class JCameraFPSStyleLinearIntegratorContract
   @Test public final void testStatic()
   {
     final JCameraFPSStyleType c = JCameraFPSStyle.newCamera();
-    final JCameraFPSStyleInput i = JCameraFPSStyleInput.newInput();
+    final JCameraFPSStyleInputType i = JCameraFPSStyleInput.newInput();
     final JCameraFPSStyleLinearIntegratorType d = this.newIntegrator(c, i);
 
     d.integrate(1.0f);

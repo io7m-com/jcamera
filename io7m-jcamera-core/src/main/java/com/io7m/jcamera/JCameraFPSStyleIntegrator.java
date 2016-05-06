@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -20,26 +20,31 @@ import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.junreachable.UnreachableCodeException;
 
 /**
- * Aggregation of the {@link JCameraFPSStyleAngularIntegratorType} and
- * {@link JCameraFPSStyleLinearIntegratorType} types.
+ * Aggregation of the {@link JCameraFPSStyleAngularIntegratorType} and {@link
+ * JCameraFPSStyleLinearIntegratorType} types.
  */
 
-@EqualityReference public final class JCameraFPSStyleIntegrator
+@EqualityReference
+public final class JCameraFPSStyleIntegrator
 {
+  private JCameraFPSStyleIntegrator()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
    * Return a new integrator for the given camera and input using the default
    * integrator implementations.
    *
-   * @param in_camera
-   *          The camera
-   * @param in_input
-   *          The input
+   * @param in_camera The camera
+   * @param in_input  The input
+   *
    * @return A new integrator
    */
 
   public static JCameraFPSStyleIntegratorType newIntegrator(
     final JCameraFPSStyleType in_camera,
-    final JCameraFPSStyleInput in_input)
+    final JCameraFPSStyleInputType in_input)
   {
     final JCameraFPSStyleAngularIntegratorType ai =
       JCameraFPSStyleAngularIntegrator.newIntegrator(in_camera, in_input);
@@ -52,10 +57,8 @@ import com.io7m.junreachable.UnreachableCodeException;
   /**
    * Return a new integrator using the given integrator implementations.
    *
-   * @param ai
-   *          The angular integrator
-   * @param li
-   *          The linera integrator
+   * @param ai The angular integrator
+   * @param li The linera integrator
    *
    * @return A new integrator
    */
@@ -66,89 +69,97 @@ import com.io7m.junreachable.UnreachableCodeException;
   {
     if (ai.integratorGetCamera() != li.integratorGetCamera()) {
       throw new IllegalArgumentException(
-        "Angular integrator camera does not match the linear integrator camera");
+        "Angular integrator camera does not match linear integrator camera");
     }
     if (ai.integratorGetInput() != li.integratorGetInput()) {
       throw new IllegalArgumentException(
-        "Angular integrator input does not match the linear integrator input");
+        "Angular integrator input does not match linear integrator input");
     }
 
-    return new JCameraFPSStyleIntegratorType() {
-      @Override public void integrate(
+    return new JCameraFPSStyleIntegratorType()
+    {
+      @Override
+      public void integrate(
         final float d)
       {
         li.integrate(d);
         ai.integrate(d);
       }
 
-      @Override public void integratorAngularSetAccelerationHorizontal(
+      @Override
+      public void integratorAngularSetAccelerationHorizontal(
         final float a)
       {
         ai.integratorAngularSetAccelerationHorizontal(a);
       }
 
-      @Override public void integratorAngularSetAccelerationVertical(
+      @Override
+      public void integratorAngularSetAccelerationVertical(
         final float a)
       {
         ai.integratorAngularSetAccelerationVertical(a);
       }
 
-      @Override public void integratorAngularSetDragHorizontal(
+      @Override
+      public void integratorAngularSetDragHorizontal(
         final float d)
       {
         ai.integratorAngularSetDragHorizontal(d);
       }
 
-      @Override public void integratorAngularSetDragVertical(
+      @Override
+      public void integratorAngularSetDragVertical(
         final float d)
       {
         ai.integratorAngularSetDragVertical(d);
       }
 
-      @Override public void integratorAngularSetMaximumSpeedHorizontal(
+      @Override
+      public void integratorAngularSetMaximumSpeedHorizontal(
         final float s)
       {
         ai.integratorAngularSetMaximumSpeedHorizontal(s);
       }
 
-      @Override public void integratorAngularSetMaximumSpeedVertical(
+      @Override
+      public void integratorAngularSetMaximumSpeedVertical(
         final float s)
       {
         ai.integratorAngularSetMaximumSpeedVertical(s);
       }
 
-      @Override public JCameraFPSStyleReadableType integratorGetCamera()
+      @Override
+      public JCameraFPSStyleReadableType integratorGetCamera()
       {
         return li.integratorGetCamera();
       }
 
-      @Override public JCameraFPSStyleInput integratorGetInput()
+      @Override
+      public JCameraFPSStyleInputType integratorGetInput()
       {
         return ai.integratorGetInput();
       }
 
-      @Override public void integratorLinearSetAcceleration(
+      @Override
+      public void integratorLinearSetAcceleration(
         final float a)
       {
         li.integratorLinearSetAcceleration(a);
       }
 
-      @Override public void integratorLinearSetDrag(
+      @Override
+      public void integratorLinearSetDrag(
         final float f)
       {
         li.integratorLinearSetDrag(f);
       }
 
-      @Override public void integratorLinearSetMaximumSpeed(
+      @Override
+      public void integratorLinearSetMaximumSpeed(
         final float s)
       {
         li.integratorLinearSetMaximumSpeed(s);
       }
     };
-  }
-
-  private JCameraFPSStyleIntegrator()
-  {
-    throw new UnreachableCodeException();
   }
 }

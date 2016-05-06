@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,9 +16,7 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-import com.io7m.jcamera.JCameraSphericalInput;
+import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.VectorM2F;
@@ -26,6 +24,8 @@ import com.io7m.jtensors.VectorM2I;
 import com.jogamp.newt.Window;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The mouse adapter used to handle mouse events.
@@ -37,7 +37,7 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
 {
   private final AtomicReference<JCameraSphericalMouseRegion> mouse_region;
   private final VectorM2F                                    position_normalized;
-  private final JCameraSphericalInput                        input;
+  private final JCameraSphericalInputType                    input;
   private final ExampleRendererType                          renderer;
   private final VectorM2I                                    saved;
   private final Window                                       window;
@@ -45,7 +45,7 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
   public ExampleSphericalMouseListener(
     final Window in_window,
     final AtomicReference<JCameraSphericalMouseRegion> in_mouse_region,
-    final JCameraSphericalInput in_input,
+    final JCameraSphericalInputType in_input,
     final ExampleRendererType in_renderer)
   {
     this.window = in_window;
@@ -61,8 +61,8 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
   {
     assert e != null;
     this.mouse_region.get().getPosition(
-      e.getX(),
-      e.getY(),
+      (float) e.getX(),
+      (float) e.getY(),
       this.position_normalized);
 
     if (this.position_normalized.getXF() <= -0.98f) {
@@ -115,8 +115,8 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
     assert e != null;
     if (e.isButtonDown(2)) {
       this.mouse_region.get().getPosition(
-        e.getX(),
-        e.getY(),
+        (float) e.getX(),
+        (float) e.getY(),
         this.position_normalized);
       final float px = -this.position_normalized.getXF();
       final float py = -this.position_normalized.getYF();

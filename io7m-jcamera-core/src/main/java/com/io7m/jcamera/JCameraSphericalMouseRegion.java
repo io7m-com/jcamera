@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -25,34 +25,14 @@ import com.io7m.jtensors.VectorWritable2FType;
  * An immutable rectangular region that maps mouse positions to movements.
  */
 
-@EqualityReference public final class JCameraSphericalMouseRegion
+@EqualityReference
+public final class JCameraSphericalMouseRegion
 {
-  /**
-   * Construct a new mouse region.
-   *
-   * @param in_origin
-   *          The screen origin.
-   * @param in_width
-   *          The region width.
-   * @param in_height
-   *          The region height.
-   * @return A new mouse region.
-   */
-
-  public static JCameraSphericalMouseRegion newRegion(
-    final JCameraScreenOrigin in_origin,
-    final float in_width,
-    final float in_height)
-  {
-    return new JCameraSphericalMouseRegion(in_origin, in_width, in_height);
-  }
-
   private final float               center_x;
   private final float               center_y;
   private final float               height;
   private final JCameraScreenOrigin origin;
   private final float               width;
-
   private JCameraSphericalMouseRegion(
     final JCameraScreenOrigin in_origin,
     final float in_width,
@@ -62,19 +42,37 @@ import com.io7m.jtensors.VectorWritable2FType;
 
     this.height =
       (float) RangeCheck.checkGreaterEqualDouble(
-        in_height,
+        (double) in_height,
         "Height",
-        2.0f,
+        2.0,
         "Minimum height");
     this.center_y = this.height / 2.0f;
 
     this.width =
       (float) RangeCheck.checkGreaterEqualDouble(
-        in_width,
+        (double) in_width,
         "Width",
-        2.0f,
+        2.0,
         "Minimum width");
     this.center_x = this.width / 2.0f;
+  }
+
+  /**
+   * Construct a new mouse region.
+   *
+   * @param in_origin The screen origin.
+   * @param in_width  The region width.
+   * @param in_height The region height.
+   *
+   * @return A new mouse region.
+   */
+
+  public static JCameraSphericalMouseRegion newRegion(
+    final JCameraScreenOrigin in_origin,
+    final float in_width,
+    final float in_height)
+  {
+    return new JCameraSphericalMouseRegion(in_origin, in_width, in_height);
   }
 
   /**
@@ -96,15 +94,12 @@ import com.io7m.jtensors.VectorWritable2FType;
   }
 
   /**
-   * Get the normalized coordinates for the given screen coordinates
-   * <code>(x, y)</code>.
+   * Get the normalized coordinates for the given screen coordinates {@code (x,
+   * y)}.
    *
-   * @param x
-   *          The x coordinate
-   * @param y
-   *          The y coordinate
-   * @param out
-   *          The output vector
+   * @param x   The x coordinate
+   * @param y   The y coordinate
+   * @param out The output vector
    */
 
   public void getPosition(
@@ -120,13 +115,11 @@ import com.io7m.jtensors.VectorWritable2FType;
     final float my = ((fy - this.center_y) / this.height) * 2.0f;
 
     switch (this.origin) {
-      case SCREEN_ORIGIN_BOTTOM_LEFT:
-      {
+      case SCREEN_ORIGIN_BOTTOM_LEFT: {
         out.set2F(mx, my);
         break;
       }
-      case SCREEN_ORIGIN_TOP_LEFT:
-      {
+      case SCREEN_ORIGIN_TOP_LEFT: {
         out.set2F(mx, -my);
         break;
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -23,7 +23,7 @@ final class CameraFloatField extends JTextField
   private static final long serialVersionUID = -2563049281161431288L;
   private float             value;
 
-  public CameraFloatField()
+  CameraFloatField()
   {
     this.setEditable(false);
     this.setValue(0.0f);

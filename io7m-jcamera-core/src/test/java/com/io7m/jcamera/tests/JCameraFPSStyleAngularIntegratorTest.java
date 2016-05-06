@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@ package com.io7m.jcamera.tests;
 
 import com.io7m.jcamera.JCameraFPSStyleAngularIntegrator;
 import com.io7m.jcamera.JCameraFPSStyleAngularIntegratorType;
-import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleType;
 import com.io7m.jnull.NonNull;
 
@@ -27,7 +27,7 @@ public final class JCameraFPSStyleAngularIntegratorTest extends
 {
   @Override JCameraFPSStyleAngularIntegratorType newIntegrator(
     final @NonNull JCameraFPSStyleType c,
-    final @NonNull JCameraFPSStyleInput i)
+    final @NonNull JCameraFPSStyleInputType i)
   {
     return JCameraFPSStyleAngularIntegrator.newIntegrator(c, i);
   }

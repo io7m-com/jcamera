@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,18 +16,19 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.io7m.jcamera.JCameraFPSStyle;
 import com.io7m.jcamera.JCameraFPSStyleInput;
+import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleIntegrator;
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
- * The example physical simulation containing just the fps-style camera,
- * updated at a fixed time step.
+ * The example physical simulation containing just the fps-style camera, updated
+ * at a fixed time step.
  */
 
 public final class ExampleFPSStyleSimulation implements
@@ -36,7 +37,7 @@ public final class ExampleFPSStyleSimulation implements
   private final JCameraFPSStyleType           camera;
   private final AtomicBoolean                 camera_enabled;
   private final JCameraFPSStyleSnapshot       fixed_snapshot;
-  private final JCameraFPSStyleInput          input;
+  private final JCameraFPSStyleInputType      input;
   private final JCameraFPSStyleIntegratorType integrator;
   private final float                         integrator_time_seconds;
   private final ExampleRendererControllerType renderer;
@@ -44,8 +45,7 @@ public final class ExampleFPSStyleSimulation implements
   /**
    * $example: Construct a new simulation.
    *
-   * @param in_renderer
-   *          The interface to the renderer
+   * @param in_renderer The interface to the renderer
    */
 
   public ExampleFPSStyleSimulation(
@@ -80,14 +80,12 @@ public final class ExampleFPSStyleSimulation implements
 
     this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
     this.integrator.integratorAngularSetDragVertical(0.000000001f);
-
-    this.integrator
-      .integratorAngularSetAccelerationHorizontal((float) ((Math.PI / 12) / this.integrator_time_seconds));
-    this.integrator
-      .integratorAngularSetAccelerationVertical((float) ((Math.PI / 12) / this.integrator_time_seconds));
-
-    this.integrator
-      .integratorLinearSetAcceleration((float) (3.0 / this.integrator_time_seconds));
+    this.integrator.integratorAngularSetAccelerationHorizontal(
+      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+    this.integrator.integratorAngularSetAccelerationVertical(
+      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+    this.integrator.integratorLinearSetAcceleration(
+      (float) (3.0 / (double) this.integrator_time_seconds));
     this.integrator.integratorLinearSetMaximumSpeed(3.0f);
     this.integrator.integratorLinearSetDrag(0.000000001f);
   }
@@ -98,7 +96,8 @@ public final class ExampleFPSStyleSimulation implements
    * @return A new camera snapshot.
    */
 
-  @Override public JCameraFPSStyleSnapshot integrate()
+  @Override
+  public JCameraFPSStyleSnapshot integrate()
   {
     /**
      * If the camera is actually enabled, integrate and produce a snapshot,
@@ -116,33 +115,39 @@ public final class ExampleFPSStyleSimulation implements
     return this.fixed_snapshot;
   }
 
-  @Override public boolean cameraIsEnabled()
+  @Override
+  public boolean cameraIsEnabled()
   {
     return this.camera_enabled.get();
   }
 
-  @Override public void cameraSetEnabled(
+  @Override
+  public void cameraSetEnabled(
     final boolean b)
   {
     this.camera_enabled.set(b);
   }
 
-  @Override public float getDeltaTime()
+  @Override
+  public float getDeltaTime()
   {
     return this.integrator_time_seconds;
   }
 
-  @Override public JCameraFPSStyleInput getInput()
+  @Override
+  public JCameraFPSStyleInputType getInput()
   {
     return this.input;
   }
 
-  @Override public JCameraFPSStyleIntegratorType getIntegrator()
+  @Override
+  public JCameraFPSStyleIntegratorType getIntegrator()
   {
     return this.integrator;
   }
 
-  @Override public JCameraFPSStyleType getCamera()
+  @Override
+  public JCameraFPSStyleType getCamera()
   {
     return this.camera;
   }

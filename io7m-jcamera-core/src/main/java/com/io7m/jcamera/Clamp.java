@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -19,18 +19,19 @@ package com.io7m.jcamera;
 import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.junreachable.UnreachableCodeException;
 
-@EqualityReference final class Clamp
+@EqualityReference
+final class Clamp
 {
+  private Clamp()
+  {
+    throw new UnreachableCodeException();
+  }
+
   static float clamp(
     final float x,
     final float min,
     final float max)
   {
     return Math.max(Math.min(x, max), min);
-  }
-
-  private Clamp()
-  {
-    throw new UnreachableCodeException();
   }
 }

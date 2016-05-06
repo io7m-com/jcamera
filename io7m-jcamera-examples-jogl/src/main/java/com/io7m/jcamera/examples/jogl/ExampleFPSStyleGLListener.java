@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,15 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.opengl.DebugGL3;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraScreenOrigin;
@@ -33,6 +24,14 @@ import com.io7m.jfunctional.OptionType;
 import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.DebugGL3;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The GL event listener used to handle rendering and driving of the
@@ -47,10 +46,10 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   private final ExampleFPSStyleSimulationType               sim;
   private final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region;
   private final ExampleRendererType                         renderer;
-  private long                                              time_then;
-  private double                                            time_accum;
-  private JCameraFPSStyleSnapshot                           snap_curr;
-  private JCameraFPSStyleSnapshot                           snap_prev;
+  private       long                                        time_then;
+  private       double                                      time_accum;
+  private       JCameraFPSStyleSnapshot                     snap_curr;
+  private       JCameraFPSStyleSnapshot                     snap_prev;
 
   public ExampleFPSStyleGLListener(
     final GLWindow in_window,
@@ -70,11 +69,11 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   /**
    * Initialize the simulation.
    *
-   * @param drawable
-   *          The OpenGL drawable
+   * @param drawable The OpenGL drawable
    */
 
-  @Override public void init(
+  @Override
+  public void init(
     final @Nullable GLAutoDrawable drawable)
   {
     try {
@@ -91,13 +90,15 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     }
   }
 
-  @Override public void dispose(
+  @Override
+  public void dispose(
     final @Nullable GLAutoDrawable drawable)
   {
     // Nothing.
   }
 
-  @Override public void display(
+  @Override
+  public void display(
     final @Nullable GLAutoDrawable drawable)
   {
     assert drawable != null;
@@ -109,15 +110,15 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
 
     final long time_now = System.nanoTime();
     final long time_diff = time_now - this.time_then;
-    final double time_diff_s = time_diff / 1000000000.0;
+    final double time_diff_s = (double) time_diff / 1000000000.0;
     this.time_accum = this.time_accum + time_diff_s;
     this.time_then = time_now;
 
     final float sim_delta = this.sim.getDeltaTime();
-    while (this.time_accum >= sim_delta) {
+    while (this.time_accum >= (double) sim_delta) {
       this.snap_prev = this.snap_curr;
       this.snap_curr = this.sim.integrate();
-      this.time_accum -= sim_delta;
+      this.time_accum -= (double) sim_delta;
     }
 
     /**
@@ -126,7 +127,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
      * states.
      */
 
-    final float alpha = (float) (this.time_accum / sim_delta);
+    final float alpha = (float) (this.time_accum / (double) sim_delta);
     final JCameraFPSStyleSnapshot snap_interpolated =
       JCameraFPSStyleSnapshot.interpolate(
         this.snap_prev,
@@ -145,7 +146,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     this.renderer.draw(snap_interpolated, none);
   }
 
-  @Override public void reshape(
+  @Override
+  public void reshape(
     final @Nullable GLAutoDrawable drawable,
     final int x,
     final int y,
@@ -154,8 +156,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   {
     this.mouse_region.set(JCameraFPSStyleMouseRegion.newRegion(
       JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-      width,
-      height));
+      (float) width,
+      (float) height));
     this.renderer.reshape(width, height);
   }
 }

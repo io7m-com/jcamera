@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,48 +17,44 @@
 package com.io7m.jcamera;
 
 /**
- * The type of integrators that integrate angular movement for
- * {@link JCameraFPSStyleType} cameras.
+ * The type of integrators that integrate angular movement for {@link
+ * JCameraFPSStyleType} cameras.
  */
 
 public interface JCameraFPSStyleAngularIntegratorType extends
   JCameraIntegratorType
 {
   /**
-   * Set the acceleration around the horizontal axis to <code>a</code>.
+   * Set the acceleration around the horizontal axis to {@code a}.
    *
-   * @param a
-   *          The acceleration value.
+   * @param a The acceleration value.
    */
 
   void integratorAngularSetAccelerationHorizontal(
     final float a);
 
   /**
-   * Set the acceleration around the vertical axis to <code>a</code>.
+   * Set the acceleration around the vertical axis to {@code a}.
    *
-   * @param a
-   *          The acceleration value.
+   * @param a The acceleration value.
    */
 
   void integratorAngularSetAccelerationVertical(
     final float a);
 
   /**
-   * Set the drag around the horizontal axis to <code>a</code>.
+   * Set the drag around the horizontal axis to {@code a}.
    *
-   * @param d
-   *          The drag value.
+   * @param d The drag value.
    */
 
   void integratorAngularSetDragHorizontal(
     final float d);
 
   /**
-   * Set the drag around the vertical axis to <code>a</code>.
+   * Set the drag around the vertical axis to {@code a}.
    *
-   * @param d
-   *          The drag value.
+   * @param d The drag value.
    */
 
   void integratorAngularSetDragVertical(
@@ -66,21 +62,19 @@ public interface JCameraFPSStyleAngularIntegratorType extends
 
   /**
    * Set the maximum rotation speed around the horizontal axis to
-   * <code>s</code>.
+   * {@code s}.
    *
-   * @param s
-   *          The maximum rotation speed.
+   * @param s The maximum rotation speed.
    */
 
   void integratorAngularSetMaximumSpeedHorizontal(
     final float s);
 
   /**
-   * Set the maximum rotation speed around the vertical axis to <code>s</code>
+   * Set the maximum rotation speed around the vertical axis to {@code s}
    * .
    *
-   * @param s
-   *          The maximum rotation speed.
+   * @param s The maximum rotation speed.
    */
 
   void integratorAngularSetMaximumSpeedVertical(
@@ -96,5 +90,5 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    * @return The input used to drive the integrator.
    */
 
-  JCameraFPSStyleInput integratorGetInput();
+  JCameraFPSStyleInputType integratorGetInput();
 }

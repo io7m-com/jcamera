@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,14 +16,9 @@
 
 package com.io7m.jcamera.tests;
 
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
+import com.io7m.jequality.validator.AnnotationRequirement;
+import com.io7m.jequality.validator.EqualityValidator;
+import com.io7m.jequality.validator.ValidatorResult;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -32,9 +27,14 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import com.io7m.jequality.validator.AnnotationRequirement;
-import com.io7m.jequality.validator.EqualityValidator;
-import com.io7m.jequality.validator.ValidatorResult;
+import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @SuppressWarnings("static-method") public final class EqualityTest
 {
@@ -49,7 +49,7 @@ import com.io7m.jequality.validator.ValidatorResult;
         .include(FilterBuilder.prefix("com.io7m.jcamera"))
         .exclude(FilterBuilder.prefix("com.io7m.jcamera.tests"));
 
-    final Set<URL> urls =
+    final Collection<URL> urls =
       ClasspathHelper.forClassLoader(classLoadersList
         .toArray(new ClassLoader[0]));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,20 +16,21 @@
 
 package com.io7m.jcamera.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.io7m.jcamera.JCameraContext;
 import com.io7m.jcamera.JCameraFPSStyle;
 import com.io7m.jcamera.JCameraFPSStyleReadableType;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
+import com.io7m.jtensors.Matrix4x4FType;
+import com.io7m.jtensors.MatrixHeapArrayM4x4F;
 import com.io7m.jtensors.MatrixI4x4F;
-import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
+import com.io7m.jtensors.parameterized.PMatrixHeapArrayM4x4F;
 import com.io7m.jtensors.parameterized.PMatrixI4x4F;
-import com.io7m.jtensors.parameterized.PMatrixM4x4F;
+import org.junit.Assert;
+import org.junit.Test;
 
 @SuppressWarnings("static-method") public final class JCameraFPSStyleTest
 {
@@ -72,27 +73,32 @@ import com.io7m.jtensors.parameterized.PMatrixM4x4F;
     this.compareVector(snap.cameraGetUp(), c.cameraGetUp());
     this.compareVector(snap.cameraGetPosition(), c.cameraGetPosition());
 
-    final MatrixM4x4F m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final MatrixM4x4F snap_m = new MatrixM4x4F();
-    final PMatrixM4x4F<WorldSpace, ViewSpace> snap_pm =
-      new PMatrixM4x4F<WorldSpace, ViewSpace>();
-    final JCameraContext ctx = new JCameraContext();
+    final Matrix4x4FType m =
+      MatrixHeapArrayM4x4F.newMatrix();
+    final PMatrix4x4FType<WorldSpace, ViewSpace> pm =
+      PMatrixHeapArrayM4x4F.newMatrix();
+    final Matrix4x4FType snap_m =
+      MatrixHeapArrayM4x4F.newMatrix();
+    final PMatrix4x4FType<WorldSpace, ViewSpace> snap_pm =
+      PMatrixHeapArrayM4x4F.newMatrix();
+    final JCameraContext ctx =
+      new JCameraContext();
 
     c.cameraMakeViewMatrix(ctx, m);
     c.cameraMakeViewPMatrix(ctx, pm);
 
     final PMatrixI4x4F<WorldSpace, ViewSpace> ipm =
       PMatrixI4x4F.newFromReadable(pm);
-    final MatrixI4x4F im = MatrixI4x4F.newFromReadable(m);
+    final MatrixI4x4F im =
+      MatrixI4x4F.newFromReadable(m);
 
     snap.cameraMakeViewMatrix(ctx, snap_m);
     snap.cameraMakeViewPMatrix(ctx, snap_pm);
 
     final PMatrixI4x4F<WorldSpace, ViewSpace> snap_ipm =
       PMatrixI4x4F.newFromReadable(snap_pm);
-    final MatrixI4x4F snap_im = MatrixI4x4F.newFromReadable(snap_m);
+    final MatrixI4x4F snap_im =
+      MatrixI4x4F.newFromReadable(snap_m);
 
     Assert.assertEquals(im, snap_im);
     Assert.assertEquals(ipm, snap_ipm);

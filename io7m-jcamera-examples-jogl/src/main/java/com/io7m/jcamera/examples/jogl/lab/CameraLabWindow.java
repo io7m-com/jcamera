@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,20 +16,19 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.io7m.jcamera.examples.jogl.ExampleRenderer;
+import com.io7m.jcamera.examples.jogl.ExampleRendererType;
+import com.io7m.jnull.NullCheck;
+import com.io7m.jnull.Nullable;
+import com.jogamp.newt.awt.NewtCanvasAWT;
+import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.util.Animator;
+import net.java.dev.designgridlayout.DesignGridLayout;
 
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,34 +39,35 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import net.java.dev.designgridlayout.DesignGridLayout;
 
-import com.io7m.jcamera.examples.jogl.ExampleRenderer;
-import com.io7m.jcamera.examples.jogl.ExampleRendererType;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
-import com.jogamp.newt.awt.NewtCanvasAWT;
-import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.util.Animator;
-
-@SuppressWarnings("synthetic-access") final class CameraLabWindow extends
+@SuppressWarnings("synthetic-access")
+final class CameraLabWindow extends
   JFrame
 {
   private static final class Panel extends JPanel
   {
-    private static final long                       serialVersionUID;
+    private static final long serialVersionUID;
 
     static {
       serialVersionUID = -3681497290868816970L;
     }
 
-    private @Nullable CameraSimulationType          current;
-    private final JButton                           grab_mouse;
-    private final JLabel                            grab_mouse_info;
-    private final JComboBox<String>                 selector;
-    private final Map<String, CameraSimulationType> simulations;
-    private final GLWindow                          window;
+    private @Nullable CameraSimulationType              current;
+    private final     JButton                           grab_mouse;
+    private final     JLabel                            grab_mouse_info;
+    private final     JComboBox<String>                 selector;
+    private final     Map<String, CameraSimulationType> simulations;
+    private final     GLWindow                          window;
 
     Panel(
       final ExecutorService in_background_workers,
@@ -84,8 +84,10 @@ import com.jogamp.opengl.util.Animator;
           in_window);
 
       this.selector = CameraSimulations.newSelector(this.simulations);
-      this.selector.addActionListener(new ActionListener() {
-        @Override public void actionPerformed(
+      this.selector.addActionListener(new ActionListener()
+      {
+        @Override
+        public void actionPerformed(
           final @Nullable ActionEvent e)
         {
           final String name = (String) Panel.this.selector.getSelectedItem();
@@ -95,8 +97,10 @@ import com.jogamp.opengl.util.Animator;
       });
 
       this.grab_mouse = new JButton("Grab mouse/keyboard");
-      this.grab_mouse.addActionListener(new ActionListener() {
-        @Override public void actionPerformed(
+      this.grab_mouse.addActionListener(new ActionListener()
+      {
+        @Override
+        public void actionPerformed(
           final @Nullable ActionEvent e)
         {
           final CameraSimulationType c = Panel.this.current;
@@ -127,8 +131,10 @@ import com.jogamp.opengl.util.Animator;
        * grabbed.
        */
 
-      this.window.addGLEventListener(new GLEventListener() {
-        @Override public void display(
+      this.window.addGLEventListener(new GLEventListener()
+      {
+        @Override
+        public void display(
           final @Nullable GLAutoDrawable drawable)
         {
           final CameraSimulationType c = Panel.this.current;
@@ -140,19 +146,22 @@ import com.jogamp.opengl.util.Animator;
           }
         }
 
-        @Override public void dispose(
+        @Override
+        public void dispose(
           final @Nullable GLAutoDrawable drawable)
         {
           // Nothing
         }
 
-        @Override public void init(
+        @Override
+        public void init(
           final @Nullable GLAutoDrawable drawable)
         {
           // Nothing
         }
 
-        @Override public void reshape(
+        @Override
+        public void reshape(
           final @Nullable GLAutoDrawable drawable,
           final int x,
           final int y,
@@ -208,8 +217,10 @@ import com.jogamp.opengl.util.Animator;
     final JFrame window)
   {
     final JMenuItem quit = new JMenuItem("Quit");
-    quit.addActionListener(new ActionListener() {
-      @Override public void actionPerformed(
+    quit.addActionListener(new ActionListener()
+    {
+      @Override
+      public void actionPerformed(
         final @Nullable ActionEvent e)
       {
         final WindowEvent ev =

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,8 +17,8 @@
 package com.io7m.jcamera;
 
 /**
- * The type of integrators that integrate linear movement for
- * {@link JCameraFPSStyleType} cameras.
+ * The type of integrators that integrate linear movement for {@link
+ * JCameraFPSStyleType} cameras.
  */
 
 public interface JCameraFPSStyleLinearIntegratorType extends
@@ -34,33 +34,30 @@ public interface JCameraFPSStyleLinearIntegratorType extends
    * @return The input used to drive the integrator.
    */
 
-  JCameraFPSStyleInput integratorGetInput();
+  JCameraFPSStyleInputType integratorGetInput();
 
   /**
-   * Set the linear acceleration to <code>a</code>.
+   * Set the linear acceleration to {@code a}.
    *
-   * @param a
-   *          The linear acceleration.
+   * @param a The linear acceleration.
    */
 
   void integratorLinearSetAcceleration(
     final float a);
 
   /**
-   * Set the linear drag factor to <code>f</code>.
+   * Set the linear drag factor to {@code f}.
    *
-   * @param f
-   *          The linear drag factor.
+   * @param f The linear drag factor.
    */
 
   void integratorLinearSetDrag(
     final float f);
 
   /**
-   * Set the maximum linear movement speed to <code>s</code>.
+   * Set the maximum linear movement speed to {@code s}.
    *
-   * @param s
-   *          The maximum linear speed.
+   * @param s The maximum linear speed.
    */
 
   void integratorLinearSetMaximumSpeed(

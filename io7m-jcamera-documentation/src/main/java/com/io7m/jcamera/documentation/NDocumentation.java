@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,8 @@
 
 package com.io7m.jcamera.documentation;
 
+import com.io7m.junreachable.UnreachableCodeException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,6 +28,15 @@ import java.net.URL;
 
 public final class NDocumentation
 {
+  private NDocumentation()
+  {
+    throw new UnreachableCodeException();
+  }
+
+  /**
+   * @return The URI of the documentation resource
+   */
+
   public static URI getDocumentationXMLLocation()
   {
     try {

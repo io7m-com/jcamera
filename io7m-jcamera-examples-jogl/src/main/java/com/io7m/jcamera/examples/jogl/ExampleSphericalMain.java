@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,25 +16,24 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-
 import com.io7m.jcamera.JCameraScreenOrigin;
-import com.io7m.jcamera.JCameraSphericalInput;
+import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
 import com.io7m.jcamera.JCameraSphericalSnapshot;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
 import com.io7m.junreachable.UnreachableCodeException;
+import com.jogamp.nativewindow.WindowClosingProtocol;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Trivial camera example.
@@ -50,8 +49,7 @@ public final class ExampleSphericalMain
   /**
    * Main function.
    *
-   * @param args
-   *          Command line arguments.
+   * @param args Command line arguments.
    */
 
   public static void main(
@@ -74,7 +72,7 @@ public final class ExampleSphericalMain
 
     final ExampleSphericalSimulationType sim =
       new ExampleSphericalSimulation();
-    final JCameraSphericalInput input = sim.getInput();
+    final JCameraSphericalInputType input = sim.getInput();
     final JCameraSphericalSnapshot snap = sim.integrate();
 
     /**
@@ -83,11 +81,11 @@ public final class ExampleSphericalMain
      */
 
     final AtomicReference<JCameraSphericalMouseRegion> mouse_region =
-      new AtomicReference<JCameraSphericalMouseRegion>(
+      new AtomicReference<>(
         JCameraSphericalMouseRegion.newRegion(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640,
-          480));
+          640.0F,
+          480.0F));
 
     /**
      * $example: Initialize JOGL and open a window.
@@ -135,8 +133,10 @@ public final class ExampleSphericalMain
      * $example: Close the program when the window closes.
      */
 
-    window.addWindowListener(new WindowAdapter() {
-      @Override public void windowDestroyed(
+    window.addWindowListener(new WindowAdapter()
+    {
+      @Override
+      public void windowDestroyed(
         final @Nullable WindowEvent e)
       {
         System.out.println("Stopping animator");
@@ -146,7 +146,8 @@ public final class ExampleSphericalMain
       }
     });
 
-    window.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+    window.setDefaultCloseOperation(
+      WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
     /**

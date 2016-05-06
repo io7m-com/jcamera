@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 
 package com.io7m.jcamera.tests;
 
+import com.io7m.jcamera.JCameraSphericalInputType;
 import org.junit.Test;
 
 import com.io7m.jcamera.JCameraSpherical;
@@ -32,7 +33,7 @@ import com.io7m.jcamera.JCameraSphericalType;
 {
   @Override JCameraSphericalLinearIntegratorType newIntegrator(
     final JCameraSphericalType c,
-    final JCameraSphericalInput i)
+    final JCameraSphericalInputType i)
   {
     return JCameraSphericalIntegrator.newIntegrator(c, i);
   }
@@ -44,7 +45,7 @@ import com.io7m.jcamera.JCameraSphericalType;
     final JCameraSphericalType c0 = JCameraSpherical.newCamera();
     final JCameraSphericalType c1 = JCameraSpherical.newCamera();
 
-    final JCameraSphericalInput i = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i = JCameraSphericalInput.newInput();
     final JCameraSphericalAngularIntegratorType ai =
       JCameraSphericalAngularIntegrator.newIntegrator(c0, i);
     final JCameraSphericalLinearIntegratorType li =
@@ -59,8 +60,8 @@ import com.io7m.jcamera.JCameraSphericalType;
   {
     final JCameraSphericalType c = JCameraSpherical.newCamera();
 
-    final JCameraSphericalInput i0 = JCameraSphericalInput.newInput();
-    final JCameraSphericalInput i1 = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i0 = JCameraSphericalInput.newInput();
+    final JCameraSphericalInputType i1 = JCameraSphericalInput.newInput();
 
     final JCameraSphericalAngularIntegratorType ai =
       JCameraSphericalAngularIntegrator.newIntegrator(c, i0);

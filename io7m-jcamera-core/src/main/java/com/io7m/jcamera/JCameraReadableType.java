@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,8 +16,8 @@
 
 package com.io7m.jcamera;
 
-import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.parameterized.PMatrixM4x4F;
+import com.io7m.jtensors.Matrix4x4FType;
+import com.io7m.jtensors.parameterized.PMatrix4x4FType;
 
 /**
  * The type of (readable) cameras.
@@ -27,33 +27,27 @@ public interface JCameraReadableType
 {
   /**
    * Construct a view matrix for the camera, using preallocated storage in
-   * <code>ctx</code> and writing the result to <code>m</code>.
+   * {@code ctx} and writing the result to {@code m}.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
+   * @param ctx Preallocated storage
+   * @param m   The output matrix
    */
 
   void cameraMakeViewMatrix(
     final JCameraContext ctx,
-    final MatrixM4x4F m);
+    final Matrix4x4FType m);
 
   /**
    * Construct a view matrix for the camera, using preallocated storage in
-   * <code>ctx</code> and writing the result to <code>m</code>.
+   * {@code ctx} and writing the result to {@code m}.
    *
-   * @param ctx
-   *          Preallocated storage
-   * @param m
-   *          The output matrix
-   * @param <T0>
-   *          The source coordinate system
-   * @param <T1>
-   *          The target coordiante system
+   * @param ctx  Preallocated storage
+   * @param m    The output matrix
+   * @param <T0> The source coordinate system
+   * @param <T1> The target coordiante system
    */
 
   <T0, T1> void cameraMakeViewPMatrix(
     final JCameraContext ctx,
-    final PMatrixM4x4F<T0, T1> m);
+    final PMatrix4x4FType<T0, T1> m);
 }

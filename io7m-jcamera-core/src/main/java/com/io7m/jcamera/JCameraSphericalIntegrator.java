@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 <code@io7m.com> http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -20,26 +20,31 @@ import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.junreachable.UnreachableCodeException;
 
 /**
- * Aggregation of the {@link JCameraSphericalAngularIntegratorType} and
- * {@link JCameraSphericalLinearIntegratorType} types.
+ * Aggregation of the {@link JCameraSphericalAngularIntegratorType} and {@link
+ * JCameraSphericalLinearIntegratorType} types.
  */
 
-@EqualityReference public final class JCameraSphericalIntegrator
+@EqualityReference
+public final class JCameraSphericalIntegrator
 {
+  private JCameraSphericalIntegrator()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
    * Return a new integrator for the given camera and input using the default
    * integrator implementations.
    *
-   * @param in_camera
-   *          The camera
-   * @param in_input
-   *          The input
+   * @param in_camera The camera
+   * @param in_input  The input
+   *
    * @return A new integrator
    */
 
   public static JCameraSphericalIntegratorType newIntegrator(
     final JCameraSphericalType in_camera,
-    final JCameraSphericalInput in_input)
+    final JCameraSphericalInputType in_input)
   {
     final JCameraSphericalAngularIntegratorType ai =
       JCameraSphericalAngularIntegrator.newIntegrator(in_camera, in_input);
@@ -52,10 +57,8 @@ import com.io7m.junreachable.UnreachableCodeException;
   /**
    * Return a new integrator using the given integrator implementations.
    *
-   * @param ai
-   *          The angular integrator
-   * @param li
-   *          The linera integrator
+   * @param ai The angular integrator
+   * @param li The linera integrator
    *
    * @return A new integrator
    */
@@ -66,107 +69,118 @@ import com.io7m.junreachable.UnreachableCodeException;
   {
     if (ai.integratorGetCamera() != li.integratorGetCamera()) {
       throw new IllegalArgumentException(
-        "Angular integrator camera does not match the linear integrator camera");
+        "Angular integrator camera does not match linear integrator camera");
     }
     if (ai.integratorGetInput() != li.integratorGetInput()) {
       throw new IllegalArgumentException(
-        "Angular integrator input does not match the linear integrator input");
+        "Angular integrator input does not match linear integrator input");
     }
 
-    return new JCameraSphericalIntegratorType() {
-      @Override public void integrate(
+    return new JCameraSphericalIntegratorType()
+    {
+      @Override
+      public void integrate(
         final float d)
       {
         li.integrate(d);
         ai.integrate(d);
       }
 
-      @Override public void integratorAngularOrbitHeadingSetAcceleration(
+      @Override
+      public void integratorAngularOrbitHeadingSetAcceleration(
         final float a)
       {
         ai.integratorAngularOrbitHeadingSetAcceleration(a);
       }
 
-      @Override public void integratorAngularOrbitHeadingSetDrag(
+      @Override
+      public void integratorAngularOrbitHeadingSetDrag(
         final float d)
       {
         ai.integratorAngularOrbitHeadingSetDrag(d);
       }
 
-      @Override public void integratorAngularOrbitHeadingSetMaximumSpeed(
+      @Override
+      public void integratorAngularOrbitHeadingSetMaximumSpeed(
         final float s)
       {
         ai.integratorAngularOrbitHeadingSetMaximumSpeed(s);
       }
 
-      @Override public void integratorAngularOrbitInclineSetAcceleration(
+      @Override
+      public void integratorAngularOrbitInclineSetAcceleration(
         final float a)
       {
         ai.integratorAngularOrbitInclineSetAcceleration(a);
       }
 
-      @Override public void integratorAngularOrbitInclineSetDrag(
+      @Override
+      public void integratorAngularOrbitInclineSetDrag(
         final float d)
       {
         ai.integratorAngularOrbitInclineSetDrag(d);
       }
 
-      @Override public void integratorAngularOrbitInclineSetMaximumSpeed(
+      @Override
+      public void integratorAngularOrbitInclineSetMaximumSpeed(
         final float s)
       {
         ai.integratorAngularOrbitInclineSetMaximumSpeed(s);
       }
 
-      @Override public JCameraSphericalReadableType integratorGetCamera()
+      @Override
+      public JCameraSphericalReadableType integratorGetCamera()
       {
         return li.integratorGetCamera();
       }
 
-      @Override public JCameraSphericalInput integratorGetInput()
+      @Override
+      public JCameraSphericalInputType integratorGetInput()
       {
         return ai.integratorGetInput();
       }
 
-      @Override public void integratorLinearTargetSetAcceleration(
+      @Override
+      public void integratorLinearTargetSetAcceleration(
         final float a)
       {
         li.integratorLinearTargetSetAcceleration(a);
       }
 
-      @Override public void integratorLinearTargetSetDrag(
+      @Override
+      public void integratorLinearTargetSetDrag(
         final float f)
       {
         li.integratorLinearTargetSetDrag(f);
       }
 
-      @Override public void integratorLinearTargetSetMaximumSpeed(
+      @Override
+      public void integratorLinearTargetSetMaximumSpeed(
         final float s)
       {
         li.integratorLinearTargetSetMaximumSpeed(s);
       }
 
-      @Override public void integratorLinearZoomSetAcceleration(
+      @Override
+      public void integratorLinearZoomSetAcceleration(
         final float a)
       {
         li.integratorLinearZoomSetAcceleration(a);
       }
 
-      @Override public void integratorLinearZoomSetDrag(
+      @Override
+      public void integratorLinearZoomSetDrag(
         final float f)
       {
         li.integratorLinearZoomSetDrag(f);
       }
 
-      @Override public void integratorLinearZoomSetMaximumSpeed(
+      @Override
+      public void integratorLinearZoomSetMaximumSpeed(
         final float s)
       {
         li.integratorLinearZoomSetMaximumSpeed(s);
       }
     };
-  }
-
-  private JCameraSphericalIntegrator()
-  {
-    throw new UnreachableCodeException();
   }
 }
