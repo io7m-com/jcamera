@@ -24,8 +24,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <siteReposDirectory>/com/io7m/jcamera</siteReposDirectory>
-    <siteDocumentationDirectory>/com/io7m/jcamera/io7m-jcamera-documentation</siteDocumentationDirectory>
+    <siteReposDirectory>com/io7m/jcamera</siteReposDirectory>
+    <siteDocumentationDirectory>com/io7m/jcamera/io7m-jcamera-documentation</siteDocumentationDirectory>
   </properties>
 
   <licenses>
