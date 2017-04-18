@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright © 2016 <code@io7m.com> http://io7m.com
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+<s:section
+  xmlns:s="http://schemas.io7m.com/structural/2.1.0"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+  <s:section-title>Conventions</s:section-title>
+  <s:section-contents/>
+
+  <s:subsection xml:id="dai.conventions.overview">
+    <s:subsection-title>Overview</s:subsection-title>
+    <s:paragraph>
+      This section attempts to document the mathematical and typographical
+      conventions used in the rest of the documentation.
+    </s:paragraph>
+  </s:subsection>
+
+  <s:subsection xml:id="dai.conventions.arch">
+    <s:subsection-title>Architecture</s:subsection-title>
+    <s:paragraph>
+      The intention here is to first describe a simple
+      purely mathematical rendering-and-input-system-independent
+      <s:term s:type="term">camera</s:term>
+      that can be positioned and
+      oriented, but that does not
+      know anything about integration of its position and rotation over
+      time. A separate system (the <s:term s:type="term">integrator</s:term>)
+      is built upon this camera that provides interpolation of the position
+      and orientation over time to provide configurable smooth animation.
+      Finally, a system (the <s:term s:type="term">input</s:term>) is described
+      that actually attaches the camera system to a keyboard and mouse package.
+      The input package used in the examples is that of
+      <s:link-external s:target="http://jogamp.org/www/jogl">
+        JOGL</s:link-external>,
+      but the system is specifically described in a manner to allow it to
+      be easily adapted to any other input package. Essentially, the
+      <s:term s:type="package">${project.parent.name}</s:term>
+      package
+      tries to provide a cleanly-separated system-independent core, with
+      the addition of a system to allow it to be attached to system-specific
+      keyboard/mouse input packages. This is essential for the correctness
+      of the software and also for the actual ease of understanding of the
+      mathematics and implementation <s:footnote>
+      Most camera systems documented (usually in blogs) online either
+      describe only the mathematics and fail to describe the intricacies of
+      driving
+      the system with input, or violently mash all of the mathematics
+      into an existing assumption-ridden input and rendering system -
+      meaning that the reader has to fully understand an input system
+      or rendering system that they may not ever have even seen before
+      just to understand how the camera works.
+    </s:footnote>.
+    </s:paragraph>
+    <s:formal-item s:kind="diagram">
+      <s:formal-item-title>Architecture</s:formal-item-title>
+      <s:image s:source="images/system.png">Architecture</s:image>
+    </s:formal-item>
+  </s:subsection>
+
+  <s:subsection xml:id="r1.dai.conventions.mathematics">
+    <s:subsection-title>Mathematics</s:subsection-title>
+    <s:paragraph>
+      Rather than rely on untyped and ambiguous mathematical notation, this
+      documentation expresses all mathematics in strict
+      <s:link-external s:target="http://www.haskell.org/onlinereport/haskell2010/">
+        Haskell 2010
+      </s:link-external>
+      with no extensions. All Haskell sources are included along with
+      the documentation and can therefore be executed from the command
+      line
+      <s:link-external s:target="http://www.haskell.org/haskellwiki/GHC/GHCi">
+        GHCi
+      </s:link-external>
+      tool in order to interactively check results and experiment with
+      functions.
+    </s:paragraph>
+    <s:paragraph>
+      When used within prose, functions are referred to using fully qualified
+      notation, such as
+      <s:term s:type="expression">(Vector3f.cross n t)</s:term>. This
+      an the application of the <s:term s:type="function">cross</s:term> function
+      defined in the
+      <s:link-external s:target="haskell/Vector3f.hs">Vector3f</s:link-external>
+      module, to the arguments <s:term s:type="variable">n</s:term> and
+      <s:term s:type="variable">t</s:term>.
+    </s:paragraph>
+    <s:paragraph>
+      Formal examples and definitions, however, will typically be defined
+      within their own modules, possibly with import statements used to allow
+      for shorter names. As an example
+      [<s:link-external s:target="haskell/Forward.hs">
+      Forward.hs</s:link-external>]:
+    </s:paragraph>
+    <s:formal-item s:kind="specification">
+      <s:formal-item-title>Forward movement</s:formal-item-title>
+      <s:verbatim>
+        <xi:include href="haskell/Forward.hs" parse="text"/>
+      </s:verbatim>
+    </s:formal-item>
+  </s:subsection>
+
+</s:section>
