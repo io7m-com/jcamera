@@ -19,8 +19,8 @@ package com.io7m.jcamera.examples.jogl;
 import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
 import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.VectorM2F;
-import com.io7m.jtensors.VectorM2I;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector2I;
 import com.jogamp.newt.Window;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
@@ -36,11 +36,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ExampleSphericalMouseListener extends MouseAdapter
 {
   private final AtomicReference<JCameraSphericalMouseRegion> mouse_region;
-  private final VectorM2F                                    position_normalized;
-  private final JCameraSphericalInputType                    input;
-  private final ExampleRendererType                          renderer;
-  private final VectorM2I                                    saved;
-  private final Window                                       window;
+  private final JCameraSphericalInputType input;
+  private final ExampleRendererType renderer;
+  private final Window window;
+  private Vector2D position_normalized;
+  private Vector2I saved;
 
   public ExampleSphericalMouseListener(
     final Window in_window,
@@ -52,74 +52,76 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
     this.mouse_region = in_mouse_region;
     this.input = in_input;
     this.renderer = in_renderer;
-    this.saved = new VectorM2I();
-    this.position_normalized = new VectorM2F();
+    this.saved = Vector2I.of(0, 0);
+    this.position_normalized = Vector2D.of(0.0, 0.0);
   }
 
-  @Override public void mouseMoved(
+  @Override
+  public void mouseMoved(
     final @Nullable MouseEvent e)
   {
     assert e != null;
-    this.mouse_region.get().getPosition(
-      (float) e.getX(),
-      (float) e.getY(),
-      this.position_normalized);
 
-    if (this.position_normalized.getXF() <= -0.98f) {
+    this.position_normalized =
+      this.mouse_region.get().position((double) e.getX(), (double) e.getY());
+
+    if (this.position_normalized.x() <= -0.98) {
       this.input.setTargetMovingLeftCursor(true);
     } else {
       this.input.setTargetMovingLeftCursor(false);
     }
-    if (this.position_normalized.getXF() >= 0.98f) {
+    if (this.position_normalized.x() >= 0.98) {
       this.input.setTargetMovingRightCursor(true);
     } else {
       this.input.setTargetMovingRightCursor(false);
     }
 
-    if (this.position_normalized.getYF() <= -0.98f) {
+    if (this.position_normalized.y() <= -0.98) {
       this.input.setTargetMovingBackwardCursor(true);
     } else {
       this.input.setTargetMovingBackwardCursor(false);
     }
-    if (this.position_normalized.getYF() >= 0.98f) {
+    if (this.position_normalized.y() >= 0.98) {
       this.input.setTargetMovingForwardCursor(true);
     } else {
       this.input.setTargetMovingForwardCursor(false);
     }
   }
 
-  @Override public void mousePressed(
+  @Override
+  public void mousePressed(
     final @Nullable MouseEvent e)
   {
     assert e != null;
     if (e.isButtonDown(2)) {
-      this.saved.set2I(e.getX(), e.getY());
-      this.input.setTargetMovingContinuousForward(0.0f);
-      this.input.setTargetMovingContinuousRight(0.0f);
+      this.saved = Vector2I.of(e.getX(), e.getY());
+      this.input.setTargetMovingContinuousForward(0.0);
+      this.input.setTargetMovingContinuousRight(0.0);
       this.renderer.sendWantWarpPointer();
     }
   }
 
-  @Override public void mouseReleased(
+  @Override
+  public void mouseReleased(
     final @Nullable MouseEvent e)
   {
     assert e != null;
     if (e.isButtonDown(2)) {
-      this.window.warpPointer(this.saved.getXI(), this.saved.getYI());
+      this.window.warpPointer(this.saved.x(), this.saved.y());
     }
   }
 
-  @Override public void mouseDragged(
+  @Override
+  public void mouseDragged(
     final @Nullable MouseEvent e)
   {
     assert e != null;
     if (e.isButtonDown(2)) {
-      this.mouse_region.get().getPosition(
-        (float) e.getX(),
-        (float) e.getY(),
-        this.position_normalized);
-      final float px = -this.position_normalized.getXF();
-      final float py = -this.position_normalized.getYF();
+      this.position_normalized =
+        this.mouse_region.get().position((double) e.getX(), (double) e.getY());
+
+      final double px = -this.position_normalized.x();
+      final double py = -this.position_normalized.y();
       this.input.addTargetMovingContinuousForward(py);
       this.input.addTargetMovingContinuousRight(px);
       this.renderer.sendWantWarpPointer();

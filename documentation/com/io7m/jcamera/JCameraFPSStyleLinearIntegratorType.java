@@ -43,7 +43,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
    */
 
   void integratorLinearSetAcceleration(
-    final float a);
+    final double a);
 
   /**
    * Set the linear drag factor to {@code f}.
@@ -52,7 +52,7 @@ public interface JCameraFPSStyleLinearIntegratorType extends
    */
 
   void integratorLinearSetDrag(
-    final float f);
+    final double f);
 
   /**
    * Set the maximum linear movement speed to {@code s}.
@@ -61,5 +61,5 @@ public interface JCameraFPSStyleLinearIntegratorType extends
    */
 
   void integratorLinearSetMaximumSpeed(
-    final float s);
+    final double s);
 }

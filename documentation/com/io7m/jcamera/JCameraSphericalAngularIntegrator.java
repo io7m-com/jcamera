@@ -29,16 +29,16 @@ import com.io7m.jranges.RangeCheck;
 public final class JCameraSphericalAngularIntegrator implements
   JCameraSphericalAngularIntegratorType
 {
-  private final JCameraSphericalType      camera;
+  private final JCameraSphericalType camera;
   private final JCameraSphericalInputType input;
-  private       float                     acceleration_heading;
-  private       float                     acceleration_incline;
-  private       float                     drag_heading;
-  private       float                     drag_incline;
-  private       float                     maximum_speed_heading;
-  private       float                     maximum_speed_incline;
-  private       float                     speed_heading;
-  private       float                     speed_incline;
+  private double acceleration_heading;
+  private double acceleration_incline;
+  private double drag_heading;
+  private double drag_incline;
+  private double maximum_speed_heading;
+  private double maximum_speed_incline;
+  private double speed_heading;
+  private double speed_incline;
 
   private JCameraSphericalAngularIntegrator(
     final JCameraSphericalType in_camera,
@@ -47,22 +47,22 @@ public final class JCameraSphericalAngularIntegrator implements
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
 
-    this.maximum_speed_heading = (float) (2.0 * Math.PI);
-    this.maximum_speed_incline = (float) (2.0 * Math.PI);
-    this.acceleration_heading = this.maximum_speed_heading / 2.0f;
-    this.acceleration_incline = this.maximum_speed_incline / 2.0f;
-    this.drag_incline = 0.05f;
-    this.drag_heading = 0.05f;
-    this.speed_heading = 0.0f;
-    this.speed_incline = 0.0f;
+    this.maximum_speed_heading = 2.0 * Math.PI;
+    this.maximum_speed_incline = 2.0 * Math.PI;
+    this.acceleration_heading = this.maximum_speed_heading / 2.0;
+    this.acceleration_incline = this.maximum_speed_incline / 2.0;
+    this.drag_incline = 0.05;
+    this.drag_heading = 0.05;
+    this.speed_heading = 0.0;
+    this.speed_incline = 0.0;
   }
 
-  private static float applyDrag(
-    final float f,
-    final float drag,
-    final float time)
+  private static double applyDrag(
+    final double f,
+    final double drag,
+    final double time)
   {
-    return (float) ((double) f * Math.pow((double) drag, (double) time));
+    return f * Math.pow(drag, time);
   }
 
   /**
@@ -83,16 +83,16 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integrate(
-    final float time)
+    final double time)
   {
     this.speed_heading = this.integrateHeading(time);
     this.speed_incline = this.integrateIncline(time);
   }
 
-  private float integrateHeading(
-    final float time)
+  private double integrateHeading(
+    final double time)
   {
-    float s = this.speed_heading;
+    double s = this.speed_heading;
 
     final boolean positive = this.input.isOrbitingHeadingPositive();
     if (positive) {
@@ -103,8 +103,7 @@ public final class JCameraSphericalAngularIntegrator implements
       s -= this.acceleration_heading * time;
     }
 
-    s =
-      Clamp.clamp(s, -this.maximum_speed_heading, this.maximum_speed_heading);
+    s = Clamp.clamp(s, -this.maximum_speed_heading, this.maximum_speed_heading);
 
     this.camera.cameraOrbitHeading(s * time);
     return JCameraSphericalAngularIntegrator.applyDrag(
@@ -113,10 +112,10 @@ public final class JCameraSphericalAngularIntegrator implements
       time);
   }
 
-  private float integrateIncline(
-    final float time)
+  private double integrateIncline(
+    final double time)
   {
-    float s = this.speed_incline;
+    double s = this.speed_incline;
 
     final boolean positive = this.input.isOrbitingInclinePositive();
     if (positive) {
@@ -127,10 +126,9 @@ public final class JCameraSphericalAngularIntegrator implements
       s -= this.acceleration_incline * time;
     }
 
-    s =
-      Clamp.clamp(s, -this.maximum_speed_incline, this.maximum_speed_incline);
+    s = Clamp.clamp(s, -this.maximum_speed_incline, this.maximum_speed_incline);
 
-    /**
+    /*
      * If applying the movement resulted in a value that was clamped, then
      * remove all speed in that direction by returning zero. Otherwise, the
      * user has to achieve a greater than or equal speed in the opposite
@@ -139,7 +137,7 @@ public final class JCameraSphericalAngularIntegrator implements
 
     final boolean clamped = this.camera.cameraOrbitIncline(s * time);
     if (clamped) {
-      return 0.0f;
+      return 0.0;
     }
 
     return JCameraSphericalAngularIntegrator.applyDrag(
@@ -150,11 +148,11 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integratorAngularOrbitHeadingSetAcceleration(
-    final float a)
+    final double a)
   {
     this.acceleration_heading =
-      (float) RangeCheck.checkGreaterDouble(
-        (double) a,
+      RangeCheck.checkGreaterDouble(
+        a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -162,12 +160,12 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integratorAngularOrbitHeadingSetDrag(
-    final float d)
+    final double d)
   {
     this.drag_heading =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble((double) d, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble(d, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -175,11 +173,11 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integratorAngularOrbitHeadingSetMaximumSpeed(
-    final float s)
+    final double s)
   {
     this.maximum_speed_heading =
-      (float) RangeCheck.checkGreaterEqualDouble(
-        (double) s,
+      RangeCheck.checkGreaterEqualDouble(
+        s,
         "Speed limit",
         0.0,
         "Minimum limit");
@@ -187,11 +185,11 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integratorAngularOrbitInclineSetAcceleration(
-    final float a)
+    final double a)
   {
     this.acceleration_incline =
-      (float) RangeCheck.checkGreaterDouble(
-        (double) a,
+      RangeCheck.checkGreaterDouble(
+        a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -199,12 +197,12 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integratorAngularOrbitInclineSetDrag(
-    final float d)
+    final double d)
   {
     this.drag_incline =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble((double) d, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble(d, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -212,11 +210,11 @@ public final class JCameraSphericalAngularIntegrator implements
 
   @Override
   public void integratorAngularOrbitInclineSetMaximumSpeed(
-    final float s)
+    final double s)
   {
     this.maximum_speed_incline =
-      (float) RangeCheck.checkGreaterEqualDouble(
-        (double) s,
+      RangeCheck.checkGreaterEqualDouble(
+        s,
         "Speed limit",
         0.0,
         "Minimum limit");

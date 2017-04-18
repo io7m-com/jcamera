@@ -7,7 +7,7 @@
   @Override
   public JCameraFPSStyleSnapshot integrate()
   {
-    /**
+    /*
      * If the camera is actually enabled, integrate and produce a snapshot,
      * and then tell the renderer/window system that it should warp the
      * pointer back to the center of the screen.
@@ -15,7 +15,8 @@
 
     if (this.cameraIsEnabled()) {
       this.integrator.integrate(this.integrator_time_seconds);
-      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
+      final JCameraFPSStyleSnapshot snap =
+        JCameraFPSStyleSnapshots.of(this.camera);
       this.renderer.sendWantWarpPointer();
       return snap;
     }

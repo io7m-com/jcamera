@@ -26,48 +26,23 @@ import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-@SuppressWarnings({ "boxing", "synthetic-access" }) final class CameraFloatSlider implements
+final class CameraFloatSlider implements
   CameraUIControlsType
 {
-  private static float convertFromSlider(
-    final int x,
-    final float min,
-    final float max)
-  {
-    final float factor = (float) x / 100.0f;
-    return (factor * (max - min)) + min;
-  }
-
-  private static int convertToSlider(
-    final float f,
-    final float min,
-    final float max)
-  {
-    return (int) (((f - min) / (max - min)) * 100.0F);
-  }
-
-  private float                          current;
-  private final JTextField               field;
-  private final RowGroup                 group;
-  private final JLabel                   label;
-  private final float                    maximum;
-  private final float                    minimum;
-  private final JSlider                  slider;
-  private @Nullable ProcedureType<Float> on_change;
-
-  public void setOnChangeListener(
-    final ProcedureType<Float> p)
-  {
-    this.on_change = NullCheck.notNull(p, "Procedure");
-  }
+  private final JTextField field;
+  private final RowGroup group;
+  private final JLabel label;
+  private final double maximum;
+  private final double minimum;
+  private final JSlider slider;
+  private double current;
+  private @Nullable ProcedureType<Double> on_change;
 
   CameraFloatSlider(
     final String in_label,
-    final float in_minimum,
-    final float in_maximum)
+    final double in_minimum,
+    final double in_maximum)
   {
     this.label = new JLabel(NullCheck.notNull(in_label, "ForwardLabel"));
     this.group = new RowGroup();
@@ -75,31 +50,47 @@ import javax.swing.event.ChangeListener;
     this.maximum = in_maximum;
     this.minimum = in_minimum;
 
-    this.field = new JTextField(Float.toString(in_minimum));
+    this.field = new JTextField(Double.toString(in_minimum));
     this.slider = new JSlider(SwingConstants.HORIZONTAL);
     this.slider.setMinimum(0);
     this.slider.setMaximum(100);
     this.slider.setValue(0);
 
-    this.slider.addChangeListener(new ChangeListener() {
-      @Override public void stateChanged(
-        final @Nullable ChangeEvent ev)
-      {
-        final int slider_current = CameraFloatSlider.this.slider.getValue();
-        CameraFloatSlider.this.current =
-          CameraFloatSlider.convertFromSlider(
-            slider_current,
-            in_minimum,
-            in_maximum);
-        CameraFloatSlider.this.refreshText();
-        CameraFloatSlider.this.callListener();
-      }
+    this.slider.addChangeListener(ev -> {
+      final int slider_current = CameraFloatSlider.this.slider.getValue();
+      this.current = convertFromSlider(slider_current, in_minimum, in_maximum);
+      this.refreshText();
+      this.callListener();
     });
 
     this.field.setEditable(false);
   }
 
-  @Override public void controlsAddToLayout(
+  private static double convertFromSlider(
+    final int x,
+    final double min,
+    final double max)
+  {
+    final double factor = (double) x / 100.0;
+    return (factor * (max - min)) + min;
+  }
+
+  private static int convertToSlider(
+    final double f,
+    final double min,
+    final double max)
+  {
+    return (int) (((f - min) / (max - min)) * 100.0);
+  }
+
+  public void setOnChangeListener(
+    final ProcedureType<Double> p)
+  {
+    this.on_change = NullCheck.notNull(p, "Procedure");
+  }
+
+  @Override
+  public void controlsAddToLayout(
     final DesignGridLayout layout)
   {
     layout
@@ -110,19 +101,30 @@ import javax.swing.event.ChangeListener;
       .add(this.field);
   }
 
-  @Override public void controlsHide()
+  @Override
+  public void controlsHide()
   {
     this.group.hide();
   }
 
-  @Override public void controlsShow()
+  @Override
+  public void controlsShow()
   {
     this.group.forceShow();
   }
 
-  public float getCurrent()
+  public double getCurrent()
   {
     return this.current;
+  }
+
+  public void setCurrent(
+    final double e)
+  {
+    this.slider.setValue(convertToSlider(e, this.minimum, this.maximum));
+    this.current = e;
+    this.refreshText();
+    this.callListener();
   }
 
   public JTextField getField()
@@ -135,40 +137,28 @@ import javax.swing.event.ChangeListener;
     return this.label;
   }
 
-  public float getMaximum()
+  public double getMaximum()
   {
     return this.maximum;
   }
 
-  public float getMinimum()
+  public double getMinimum()
   {
     return this.minimum;
   }
 
   private void refreshText()
   {
-    final String ctext = String.format("%.6f", this.current);
+    final String ctext = String.format("%.6f", Double.valueOf(this.current));
     this.field.setText(ctext);
-  }
-
-  public void setCurrent(
-    final float e)
-  {
-    this.slider.setValue(CameraFloatSlider.convertToSlider(
-      e,
-      this.minimum,
-      this.maximum));
-    this.current = e;
-    this.refreshText();
-    this.callListener();
   }
 
   private void callListener()
   {
-    final ProcedureType<Float> proc = CameraFloatSlider.this.on_change;
+    final ProcedureType<Double> proc = this.on_change;
     if (proc != null) {
-      final float x = CameraFloatSlider.this.current;
-      proc.call(x);
+      final double x = this.current;
+      proc.call(Double.valueOf(x));
     }
   }
 }

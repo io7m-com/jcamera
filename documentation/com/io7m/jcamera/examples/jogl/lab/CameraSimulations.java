@@ -31,6 +31,11 @@ import java.util.concurrent.ExecutorService;
 
 final class CameraSimulations
 {
+  private CameraSimulations()
+  {
+    throw new UnreachableCodeException();
+  }
+
   static JComboBox<String> newSelector(
     final Map<String, CameraSimulationType> s)
   {
@@ -70,10 +75,5 @@ final class CameraSimulations
     }
 
     return NullCheck.notNull(Collections.unmodifiableMap(m));
-  }
-
-  private CameraSimulations()
-  {
-    throw new UnreachableCodeException();
   }
 }

@@ -18,7 +18,7 @@ package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
-import com.io7m.jcamera.JCameraRotationCoefficients;
+import com.io7m.jcamera.JCameraRotationCoefficientsMutable;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
@@ -34,14 +34,14 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 {
   private final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region;
-  private final JCameraFPSStyleInputType                    input;
-  private final ExampleFPSStyleSimulationType               sim;
-  private final JCameraRotationCoefficients                 rotations;
+  private final JCameraFPSStyleInputType input;
+  private final ExampleFPSStyleSimulationType sim;
+  private final JCameraRotationCoefficientsMutable rotations;
 
   public ExampleFPSStyleMouseAdapter(
     final AtomicReference<JCameraFPSStyleMouseRegion> in_mouse_region,
     final ExampleFPSStyleSimulationType in_sim,
-    final JCameraRotationCoefficients in_rotations)
+    final JCameraRotationCoefficientsMutable in_rotations)
   {
     this.mouse_region = in_mouse_region;
     this.input = in_sim.getInput();
@@ -49,23 +49,24 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
     this.rotations = in_rotations;
   }
 
-  @Override public void mouseMoved(
+  @Override
+  public void mouseMoved(
     final @Nullable MouseEvent e)
   {
     assert e != null;
 
-    /**
+    /*
      * If the camera is enabled, get the rotation coefficients for the mouse
      * movement.
      */
 
     if (this.sim.cameraIsEnabled()) {
-      this.mouse_region.get().getCoefficients(
-        (float) e.getX(),
-        (float) e.getY(),
-        this.rotations);
-      this.input.addRotationAroundHorizontal(this.rotations.getHorizontal());
-      this.input.addRotationAroundVertical(this.rotations.getVertical());
+      this.rotations.from(
+        this.mouse_region.get().coefficients(
+          (double) e.getX(),
+          (double) e.getY()));
+      this.input.addRotationAroundHorizontal(this.rotations.horizontal());
+      this.input.addRotationAroundVertical(this.rotations.vertical());
     }
   }
 }

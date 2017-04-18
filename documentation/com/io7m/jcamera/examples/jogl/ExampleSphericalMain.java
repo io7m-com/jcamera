@@ -59,13 +59,13 @@ public final class ExampleSphericalMain
     final ExecutorService background_workers =
       NullCheck.notNull(Executors.newFixedThreadPool(1));
 
-    /**
+    /*
      * $example: Construct a new renderer.
      */
 
     final ExampleRendererType renderer = new ExampleRenderer();
 
-    /**
+    /*
      * $example: Construct a new simulation, get access to the camera's input,
      * and produce an initial snapshot of the camera for later use.
      */
@@ -75,19 +75,19 @@ public final class ExampleSphericalMain
     final JCameraSphericalInputType input = sim.getInput();
     final JCameraSphericalSnapshot snap = sim.integrate();
 
-    /**
+    /*
      * $example: Declare a mouse region to map screen-space positions to
      * normalized positions.
      */
 
     final AtomicReference<JCameraSphericalMouseRegion> mouse_region =
       new AtomicReference<>(
-        JCameraSphericalMouseRegion.newRegion(
+        JCameraSphericalMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640.0F,
-          480.0F));
+          640.0,
+          480.0));
 
-    /**
+    /*
      * $example: Initialize JOGL and open a window.
      */
 
@@ -97,14 +97,14 @@ public final class ExampleSphericalMain
     window.setSize(640, 480);
     window.setTitle(ExampleSphericalMain.class.getCanonicalName());
 
-    /**
+    /*
      * Construct an animator to regularly refresh the screen.
      */
 
     final Animator anim = new Animator();
     anim.add(window);
 
-    /**
+    /*
      * $example: Initialize JOGL and open a window, construct an animator to
      * regularly refresh the screen, and assign GL event listener, mouse
      * listener, and keyboard listener.
@@ -129,7 +129,7 @@ public final class ExampleSphericalMain
       input,
       renderer));
 
-    /**
+    /*
      * $example: Close the program when the window closes.
      */
 
@@ -150,7 +150,7 @@ public final class ExampleSphericalMain
       WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
-    /**
+    /*
      * Start everything running.
      */
 

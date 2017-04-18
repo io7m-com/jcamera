@@ -42,20 +42,23 @@ public final class ExampleTimer
    * Enable the high resolution timer.
    */
 
-  @SuppressWarnings("unused") public static void enableHighResolutionTimer()
+  @SuppressWarnings("unused")
+  public static void enableHighResolutionTimer()
   {
     if (ExampleTimer.ENABLED) {
       return;
     }
 
-    new Thread() {
+    new Thread()
+    {
       {
         this.setDaemon(true);
         this.setName("high-resolution-timer-hack");
         this.start();
       }
 
-      @Override public void run()
+      @Override
+      public void run()
       {
         while (true) {
           try {

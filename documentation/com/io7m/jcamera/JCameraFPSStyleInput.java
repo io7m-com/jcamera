@@ -33,18 +33,18 @@ public final class JCameraFPSStyleInput implements JCameraFPSStyleInputType
   private volatile boolean forward;
   private volatile boolean left;
   private volatile boolean right;
-  private volatile float   rotate_horizontal;
-  private volatile float   rotate_horizontal_factor;
-  private volatile float   rotate_vertical;
-  private volatile float   rotate_vertical_factor;
+  private volatile double rotate_horizontal;
+  private volatile double rotate_horizontal_factor;
+  private volatile double rotate_vertical;
+  private volatile double rotate_vertical_factor;
   private volatile boolean up;
 
   private JCameraFPSStyleInput()
   {
-    this.rotate_horizontal = 0.0f;
-    this.rotate_vertical = 0.0f;
-    this.rotate_horizontal_factor = 1.0f;
-    this.rotate_vertical_factor = 1.0f;
+    this.rotate_horizontal = 0.0;
+    this.rotate_vertical = 0.0;
+    this.rotate_horizontal_factor = 1.0;
+    this.rotate_vertical_factor = 1.0;
   }
 
   /**
@@ -58,40 +58,40 @@ public final class JCameraFPSStyleInput implements JCameraFPSStyleInputType
 
   @Override
   public void addRotationAroundHorizontal(
-    final float r)
+    final double r)
   {
     this.rotate_horizontal += r;
   }
 
   @Override
   public void addRotationAroundVertical(
-    final float r)
+    final double r)
   {
     this.rotate_vertical += r;
   }
 
   @Override
-  public float getRotationHorizontal()
+  public double getRotationHorizontal()
   {
     return this.rotate_horizontal * this.rotate_horizontal_factor;
   }
 
   @Override
   public void setRotationHorizontal(
-    final float r)
+    final double r)
   {
     this.rotate_horizontal = r;
   }
 
   @Override
-  public float getRotationVertical()
+  public double getRotationVertical()
   {
     return this.rotate_vertical * this.rotate_vertical_factor;
   }
 
   @Override
   public void setRotationVertical(
-    final float r)
+    final double r)
   {
     this.rotate_vertical = r;
   }
@@ -176,11 +176,11 @@ public final class JCameraFPSStyleInput implements JCameraFPSStyleInputType
 
   @Override
   public void setRotationHorizontalFactor(
-    final float f)
+    final double f)
   {
     this.rotate_horizontal_factor =
-      (float) RangeCheck.checkGreaterDouble(
-        (double) f,
+      RangeCheck.checkGreaterDouble(
+        f,
         "Factor",
         0.0,
         "Minimum factor");
@@ -188,36 +188,36 @@ public final class JCameraFPSStyleInput implements JCameraFPSStyleInputType
 
   @Override
   public void setRotationVerticalFactor(
-    final float f)
+    final double f)
   {
     this.rotate_vertical_factor =
-      (float) RangeCheck.checkGreaterDouble(
-        (double) f,
+      RangeCheck.checkGreaterDouble(
+        f,
         "Factor",
         0.0,
         "Minimum factor");
   }
 
   @Override
-  public float takeRotationHorizontal()
+  public double takeRotationHorizontal()
   {
-    final float r = this.getRotationHorizontal();
-    this.rotate_horizontal = 0.0f;
+    final double r = this.getRotationHorizontal();
+    this.rotate_horizontal = 0.0;
     return r;
   }
 
   @Override
-  public float takeRotationVertical()
+  public double takeRotationVertical()
   {
-    final float r = this.getRotationVertical();
-    this.rotate_vertical = 0.0f;
+    final double r = this.getRotationVertical();
+    this.rotate_vertical = 0.0;
     return r;
   }
 
   @Override
   public String toString()
   {
-    final StringBuilder b = new StringBuilder();
+    final StringBuilder b = new StringBuilder(128);
     b.append("[JCameraFPSStyleInput backward=");
     b.append(this.backward);
     b.append(", down=");
@@ -239,8 +239,6 @@ public final class JCameraFPSStyleInput implements JCameraFPSStyleInputType
     b.append(", rotate_vertical_factor=");
     b.append(this.rotate_vertical_factor);
     b.append("]");
-    final String r = b.toString();
-    assert r != null;
-    return r;
+    return b.toString();
   }
 }

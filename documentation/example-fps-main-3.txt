@@ -1,4 +1,4 @@
-    /**
+    /*
      * $example: Initialize JOGL and open a window, construct an animator to
      * regularly refresh the screen, and assign GL event listener, mouse
      * listener, and keyboard listener.
@@ -31,12 +31,14 @@
       renderer,
       window));
 
-    /**
+    /*
      * Close the program when the window closes.
      */
 
-    window.addWindowListener(new WindowAdapter() {
-      @Override public void windowDestroyed(
+    window.addWindowListener(new WindowAdapter()
+    {
+      @Override
+      public void windowDestroyed(
         final @Nullable WindowEvent e)
       {
         System.out.println("Stopping animator");
@@ -50,7 +52,7 @@
       WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
-    /**
+    /*
      * Start everything running.
      */
 

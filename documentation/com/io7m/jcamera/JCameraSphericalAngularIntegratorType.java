@@ -31,7 +31,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitHeadingSetAcceleration(
-    final float a);
+    final double a);
 
   /**
    * Set the drag for heading orbiting to {@code a}.
@@ -40,7 +40,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitHeadingSetDrag(
-    final float d);
+    final double d);
 
   /**
    * Set the maximum rotation speed for heading orbiting to {@code s} .
@@ -49,7 +49,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitHeadingSetMaximumSpeed(
-    final float s);
+    final double s);
 
   /**
    * Set the acceleration for incline orbiting to {@code a}.
@@ -58,7 +58,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitInclineSetAcceleration(
-    final float a);
+    final double a);
 
   /**
    * Set the drag for incline orbiting to {@code a}.
@@ -67,7 +67,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitInclineSetDrag(
-    final float d);
+    final double d);
 
   /**
    * Set the maximum rotation speed for incline orbiting to {@code s}.
@@ -76,7 +76,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitInclineSetMaximumSpeed(
-    final float s);
+    final double s);
 
   /**
    * @return The camera that will be affected by the integrator

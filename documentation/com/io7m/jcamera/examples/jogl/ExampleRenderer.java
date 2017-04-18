@@ -16,21 +16,15 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import com.io7m.jcamera.JCameraContext;
 import com.io7m.jcamera.JCameraReadableSnapshotType;
-import com.io7m.jfunctional.OptionType;
-import com.io7m.jfunctional.Some;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.Matrix4x4FType;
-import com.io7m.jtensors.MatrixDirect4x4FType;
-import com.io7m.jtensors.MatrixDirectM4x4F;
-import com.io7m.jtensors.MatrixHeapArrayM4x4F;
-import com.io7m.jtensors.MatrixM4x4F;
-import com.io7m.jtensors.VectorI3F;
-import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.jtensors.parameterized.PMatrix4x4FType;
-import com.io7m.jtensors.parameterized.PMatrixHeapArrayM4x4F;
+import com.io7m.jtensors.core.unparameterized.matrices.Matrices4x4D;
+import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
+import com.io7m.jtensors.storage.bytebuffered.MatrixByteBuffered4x4Type;
+import com.io7m.jtensors.storage.bytebuffered.MatrixByteBuffered4x4s32;
+import com.io7m.mutable.numbers.core.MutableLong;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.Window;
 import com.jogamp.newt.opengl.GLWindow;
@@ -45,9 +39,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 // CHECKSTYLE_JAVADOC:OFF
@@ -71,50 +67,48 @@ public final class ExampleRenderer implements ExampleRendererType
 
   static {
     VERTEX_POSITION_COMPONENTS = 3;
-    VERTEX_POSITION_SIZE = ExampleRenderer.VERTEX_POSITION_COMPONENTS * 4;
+    VERTEX_POSITION_SIZE = VERTEX_POSITION_COMPONENTS * 4;
     VERTEX_POSITION_OFFSET = 0;
 
     VERTEX_COLOR_COMPONENTS = 3;
-    VERTEX_COLOR_SIZE = ExampleRenderer.VERTEX_COLOR_COMPONENTS * 4;
-    VERTEX_COLOR_OFFSET =
-      ExampleRenderer.VERTEX_POSITION_OFFSET
-        + ExampleRenderer.VERTEX_POSITION_SIZE;
+    VERTEX_COLOR_SIZE = VERTEX_COLOR_COMPONENTS * 4;
+    VERTEX_COLOR_OFFSET = VERTEX_POSITION_OFFSET + VERTEX_POSITION_SIZE;
 
     VERTEX_UV_COMPONENTS = 2;
-    VERTEX_UV_SIZE = ExampleRenderer.VERTEX_UV_COMPONENTS * 4;
-    VERTEX_UV_OFFSET =
-      ExampleRenderer.VERTEX_COLOR_OFFSET + ExampleRenderer.VERTEX_COLOR_SIZE;
+    VERTEX_UV_SIZE = VERTEX_UV_COMPONENTS * 4;
+    VERTEX_UV_OFFSET = VERTEX_COLOR_OFFSET + VERTEX_COLOR_SIZE;
 
     VERTEX_COUNT = 4;
     VERTEX_COMPONENTS =
-      ExampleRenderer.VERTEX_POSITION_COMPONENTS
-        + ExampleRenderer.VERTEX_COLOR_COMPONENTS
-        + ExampleRenderer.VERTEX_UV_COMPONENTS;
+      VERTEX_POSITION_COMPONENTS + VERTEX_COLOR_COMPONENTS + VERTEX_UV_COMPONENTS;
     VERTEX_SIZE =
-      ExampleRenderer.VERTEX_POSITION_SIZE
-        + ExampleRenderer.VERTEX_COLOR_SIZE
-        + ExampleRenderer.VERTEX_UV_SIZE;
+      VERTEX_POSITION_SIZE + VERTEX_COLOR_SIZE + VERTEX_UV_SIZE;
 
     VERTICES_TOTAL_COMPONENTS =
-      ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_COMPONENTS;
+      VERTEX_COUNT * VERTEX_COMPONENTS;
     VERTICES_TOTAL_SIZE_BYTES =
-      ExampleRenderer.VERTEX_COUNT * ExampleRenderer.VERTEX_SIZE;
+      VERTEX_COUNT * VERTEX_SIZE;
   }
 
-  private final     JCameraContext                                 ctx;
-  private final     Matrix4x4FType                                 model;
-  private final     MatrixDirect4x4FType                           modelview;
-  private final     MatrixDirect4x4FType                           projection;
-  private final     PMatrix4x4FType<WorldSpaceType, ViewSpaceType> view;
-  private @Nullable GL3                                            gl;
-  private           int                                            indices;
-  private           int                                            mesh_lying;
-  private           int                                            mesh_upright;
-  private           int                                            program;
-  private @Nullable Texture                                        texture;
-  private           AtomicBoolean                                  want_warp;
-  private @Nullable Window                                         window;
-  private           int                                            program_uv;
+  private final ByteBuffer m4x4_buffer;
+  private final MatrixByteBuffered4x4Type m4x4;
+  private final FloatBuffer m4x4_fbuffer;
+
+  private final ByteBuffer mproj_buffer;
+  private final MatrixByteBuffered4x4Type mproj;
+  private final FloatBuffer mproj_fbuffer;
+
+  private @Nullable GL3 gl;
+  private int indices;
+  private int mesh_lying;
+  private int mesh_upright;
+  private int program;
+  private @Nullable Texture texture;
+  private AtomicBoolean want_warp;
+  private @Nullable Window window;
+  private int program_uv;
+  private Matrix4x4D view;
+  private Matrix4x4D projection;
 
   public ExampleRenderer()
   {
@@ -123,13 +117,26 @@ public final class ExampleRenderer implements ExampleRendererType
     this.mesh_upright = -1;
     this.mesh_lying = -1;
     this.program = -1;
-    this.projection = MatrixDirectM4x4F.newMatrix();
-    this.model = MatrixHeapArrayM4x4F.newMatrix();
-    this.view = PMatrixHeapArrayM4x4F.newMatrix();
-    this.modelview = MatrixDirectM4x4F.newMatrix();
     this.want_warp = new AtomicBoolean(false);
-    this.ctx = new JCameraContext();
     this.texture = null;
+    this.view = Matrices4x4D.identity();
+    this.projection = Matrices4x4D.identity();
+
+    this.m4x4_buffer =
+      ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder());
+    this.m4x4_fbuffer =
+      this.m4x4_buffer.asFloatBuffer();
+    this.m4x4 =
+      MatrixByteBuffered4x4s32.createWithBase(
+        this.m4x4_buffer, MutableLong.create(), 0);
+
+    this.mproj_buffer =
+      ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder());
+    this.mproj_fbuffer =
+      this.mproj_buffer.asFloatBuffer();
+    this.mproj =
+      MatrixByteBuffered4x4s32.createWithBase(
+        this.mproj_buffer, MutableLong.create(), 0);
   }
 
   private static int compileFragmentShader(
@@ -299,7 +306,7 @@ public final class ExampleRenderer implements ExampleRendererType
     final GL3 g)
   {
     final FloatBuffer data =
-      Buffers.newDirectFloatBuffer(ExampleRenderer.VERTICES_TOTAL_COMPONENTS);
+      Buffers.newDirectFloatBuffer(VERTICES_TOTAL_COMPONENTS);
 
     int base = 0;
     data.put(base + 0, -0.5f);
@@ -313,7 +320,7 @@ public final class ExampleRenderer implements ExampleRendererType
     data.put(base + 6, 0.0f);
     data.put(base + 7, 1.0f);
 
-    base += ExampleRenderer.VERTEX_COMPONENTS;
+    base += VERTEX_COMPONENTS;
     data.put(base + 0, -0.5f);
     data.put(base + 1, 0.0f);
     data.put(base + 2, -0.5f);
@@ -325,7 +332,7 @@ public final class ExampleRenderer implements ExampleRendererType
     data.put(base + 6, 0.0f);
     data.put(base + 7, 0.0f);
 
-    base += ExampleRenderer.VERTEX_COMPONENTS;
+    base += VERTEX_COMPONENTS;
     data.put(base + 0, 0.5f);
     data.put(base + 1, 0.0f);
     data.put(base + 2, -0.5f);
@@ -337,7 +344,7 @@ public final class ExampleRenderer implements ExampleRendererType
     data.put(base + 6, 1.0f);
     data.put(base + 7, 0.0f);
 
-    base += ExampleRenderer.VERTEX_COMPONENTS;
+    base += VERTEX_COMPONENTS;
     data.put(base + 0, 0.5f);
     data.put(base + 1, 0.0f);
     data.put(base + 2, 0.5f);
@@ -355,7 +362,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      (long) ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
+      (long) VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -371,10 +378,10 @@ public final class ExampleRenderer implements ExampleRendererType
     final IntBuffer status = Buffers.newDirectIntBuffer(1);
     assert status != null;
     final int vs =
-      ExampleRenderer.compileVertexShader(g, status, vertex_file);
+      compileVertexShader(g, status, vertex_file);
     final int fs =
-      ExampleRenderer.compileFragmentShader(g, status, fragment_file);
-    final int p = ExampleRenderer.createProgram(g, vs, fs, status);
+      compileFragmentShader(g, status, fragment_file);
+    final int p = createProgram(g, vs, fs, status);
     return p;
   }
 
@@ -382,7 +389,7 @@ public final class ExampleRenderer implements ExampleRendererType
     final GL3 g)
   {
     final FloatBuffer data =
-      Buffers.newDirectFloatBuffer(ExampleRenderer.VERTICES_TOTAL_COMPONENTS);
+      Buffers.newDirectFloatBuffer(VERTICES_TOTAL_COMPONENTS);
 
     int base = 0;
     data.put(base + 0, -0.5f);
@@ -393,7 +400,7 @@ public final class ExampleRenderer implements ExampleRendererType
     data.put(base + 4, 1.0f);
     data.put(base + 5, 0.0f);
 
-    base += ExampleRenderer.VERTEX_COMPONENTS;
+    base += VERTEX_COMPONENTS;
     data.put(base + 0, -0.5f);
     data.put(base + 1, -0.5f);
     data.put(base + 2, 0.0f);
@@ -402,7 +409,7 @@ public final class ExampleRenderer implements ExampleRendererType
     data.put(base + 4, 0.0f);
     data.put(base + 5, 0.0f);
 
-    base += ExampleRenderer.VERTEX_COMPONENTS;
+    base += VERTEX_COMPONENTS;
     data.put(base + 0, 0.5f);
     data.put(base + 1, -0.5f);
     data.put(base + 2, 0.0f);
@@ -411,7 +418,7 @@ public final class ExampleRenderer implements ExampleRendererType
     data.put(base + 4, 1.0f);
     data.put(base + 5, 0.0f);
 
-    base += ExampleRenderer.VERTEX_COMPONENTS;
+    base += VERTEX_COMPONENTS;
     data.put(base + 0, 0.5f);
     data.put(base + 1, 0.5f);
     data.put(base + 2, 0.0f);
@@ -426,7 +433,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      (long) ExampleRenderer.VERTICES_TOTAL_SIZE_BYTES,
+      (long) VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -452,12 +459,12 @@ public final class ExampleRenderer implements ExampleRendererType
   @Override
   public void draw(
     final JCameraReadableSnapshotType s,
-    final OptionType<VectorReadable3FType> target)
+    final Optional<Vector3D> target)
   {
     final GL3 g = this.gl;
 
     if (g != null) {
-      s.cameraMakeViewPMatrix(this.ctx, this.view);
+      this.view = s.cameraMakeViewMatrix();
 
       g.glClearDepth(1.0);
       g.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
@@ -470,13 +477,7 @@ public final class ExampleRenderer implements ExampleRendererType
 
       this.drawGround(g);
       this.drawSceneQuads(g);
-
-      if (target.isSome()) {
-        final Some<VectorReadable3FType> some =
-          (Some<VectorReadable3FType>) target;
-        final VectorReadable3FType pos = some.get();
-        this.drawSceneTarget(g, pos);
-      }
+      target.ifPresent(pos -> this.drawSceneTarget(g, pos));
     }
 
     if (this.want_warp.get()) {
@@ -491,23 +492,15 @@ public final class ExampleRenderer implements ExampleRendererType
   private void drawQuad(
     final GL3 g,
     final int uid,
-    final float x,
-    final float y,
-    final float z)
+    final double x,
+    final double y,
+    final double z)
   {
-    MatrixM4x4F.setIdentity(this.model);
-    MatrixM4x4F.makeTranslation3F(new VectorI3F(x, y, -z), this.model);
+    final Matrix4x4D model = Matrices4x4D.ofTranslation(x, y, -z);
+    final Matrix4x4D modelview = Matrices4x4D.multiply(this.view, model);
 
-    MatrixM4x4F.setIdentity(this.modelview);
-    MatrixM4x4F.multiply(this.view, this.model, this.modelview);
-
-    g
-      .glUniformMatrix4fv(
-        uid,
-        1,
-        false,
-        this.modelview.getDirectFloatBuffer());
-
+    this.m4x4.setMatrix4x4D(modelview);
+    g.glUniformMatrix4fv(uid, 1, false, this.m4x4_fbuffer);
     g.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
   }
 
@@ -530,8 +523,8 @@ public final class ExampleRenderer implements ExampleRendererType
         3,
         GL.GL_FLOAT,
         false,
-        ExampleRenderer.VERTEX_SIZE,
-        (long) ExampleRenderer.VERTEX_POSITION_OFFSET);
+        VERTEX_SIZE,
+        (long) VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -544,8 +537,8 @@ public final class ExampleRenderer implements ExampleRendererType
         3,
         GL.GL_FLOAT,
         false,
-        ExampleRenderer.VERTEX_SIZE,
-        (long) ExampleRenderer.VERTEX_COLOR_OFFSET);
+        VERTEX_SIZE,
+        (long) VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -555,7 +548,7 @@ public final class ExampleRenderer implements ExampleRendererType
         uid,
         1,
         false,
-        this.projection.getDirectFloatBuffer());
+        this.mproj_fbuffer);
     }
 
     g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, this.indices);
@@ -565,9 +558,9 @@ public final class ExampleRenderer implements ExampleRendererType
       assert uid != -1;
 
       for (int index = 0; index < 100; ++index) {
-        final float x = 10.0f - (ExampleRenderer.noise((float) (index * 10)) * 20.0f);
+        final float x = 10.0f - (noise((float) (index * 10)) * 20.0f);
         final float y = 0.0f;
-        final float z = 10.0f - (ExampleRenderer.noise((float) (index * 100)) * 20.0f);
+        final float z = 10.0f - (noise((float) (index * 100)) * 20.0f);
         this.drawQuad(g, uid, x, y, z);
       }
 
@@ -601,8 +594,8 @@ public final class ExampleRenderer implements ExampleRendererType
         3,
         GL.GL_FLOAT,
         false,
-        ExampleRenderer.VERTEX_SIZE,
-        (long) ExampleRenderer.VERTEX_POSITION_OFFSET);
+        VERTEX_SIZE,
+        (long) VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -615,8 +608,8 @@ public final class ExampleRenderer implements ExampleRendererType
         2,
         GL.GL_FLOAT,
         false,
-        ExampleRenderer.VERTEX_SIZE,
-        (long) ExampleRenderer.VERTEX_UV_OFFSET);
+        VERTEX_SIZE,
+        (long) VERTEX_UV_OFFSET);
     }
 
     {
@@ -626,7 +619,7 @@ public final class ExampleRenderer implements ExampleRendererType
         uid,
         1,
         false,
-        this.projection.getDirectFloatBuffer());
+        this.mproj_fbuffer);
     }
 
     {
@@ -643,22 +636,17 @@ public final class ExampleRenderer implements ExampleRendererType
       final int uid = g.glGetUniformLocation(this.program_uv, "m_modelview");
       assert uid != -1;
 
-      MatrixM4x4F.setIdentity(this.model);
-      MatrixM4x4F.makeTranslation3F(
-        new VectorI3F(0.0f, -0.5f, 0.0f),
-        this.model);
-      this.model.setR0C0F(128.0f);
-      this.model.setR2C2F(128.0f);
+      final Matrix4x4D m_trans =
+        Matrices4x4D.ofTranslation(0.0, -0.5, 0.0);
+      final Matrix4x4D m_scale =
+        Matrices4x4D.ofScale(128.0, 1.0, 128.0);
+      final Matrix4x4D model =
+        Matrices4x4D.multiply(m_scale, m_trans);
+      final Matrix4x4D modelview =
+        Matrices4x4D.multiply(this.view, model);
 
-      MatrixM4x4F.setIdentity(this.modelview);
-      MatrixM4x4F.multiply(this.view, this.model, this.modelview);
-
-      g.glUniformMatrix4fv(
-        uid,
-        1,
-        false,
-        this.modelview.getDirectFloatBuffer());
-
+      this.m4x4.setMatrix4x4D(modelview);
+      g.glUniformMatrix4fv(uid, 1, false, this.m4x4_fbuffer);
       g.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0L);
     }
 
@@ -672,7 +660,7 @@ public final class ExampleRenderer implements ExampleRendererType
 
   private void drawSceneTarget(
     final GL3 g,
-    final VectorReadable3FType pos)
+    final Vector3D pos)
   {
     g.glUseProgram(this.program);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, this.mesh_lying);
@@ -691,7 +679,7 @@ public final class ExampleRenderer implements ExampleRendererType
         3,
         GL.GL_FLOAT,
         false,
-        ExampleRenderer.VERTEX_SIZE,
+        VERTEX_SIZE,
         0L);
     }
 
@@ -705,8 +693,8 @@ public final class ExampleRenderer implements ExampleRendererType
         3,
         GL.GL_FLOAT,
         false,
-        ExampleRenderer.VERTEX_SIZE,
-        (long) ExampleRenderer.VERTEX_COLOR_OFFSET);
+        VERTEX_SIZE,
+        (long) VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -716,14 +704,14 @@ public final class ExampleRenderer implements ExampleRendererType
         uid,
         1,
         false,
-        this.projection.getDirectFloatBuffer());
+        this.mproj_fbuffer);
     }
 
     {
       final int uid = g.glGetUniformLocation(this.program, "m_modelview");
       assert uid != -1;
 
-      this.drawQuad(g, uid, pos.getXF(), pos.getYF(), -pos.getZF());
+      this.drawQuad(g, uid, pos.x(), pos.y(), -pos.z());
     }
 
     g.glDisableVertexAttribArray(color_attrib);
@@ -742,13 +730,13 @@ public final class ExampleRenderer implements ExampleRendererType
     final GL3 g = NullCheck.notNull(in_gl, "GL");
     this.gl = g;
     this.window = NullCheck.notNull(in_window, "Drawable");
-    this.program = ExampleRenderer.makeProgram(g, "basic.v", "basic.f");
-    this.program_uv = ExampleRenderer.makeProgram(g, "basic.v", "basic_uv.f");
-    this.mesh_upright = ExampleRenderer.makeUprightQuadMesh(g);
-    this.mesh_lying = ExampleRenderer.makeLyingQuadMesh(g);
-    this.indices = ExampleRenderer.makeIndices(g);
+    this.program = makeProgram(g, "basic.v", "basic.f");
+    this.program_uv = makeProgram(g, "basic.v", "basic_uv.f");
+    this.mesh_upright = makeUprightQuadMesh(g);
+    this.mesh_lying = makeLyingQuadMesh(g);
+    this.indices = makeIndices(g);
     this.want_warp = new AtomicBoolean(false);
-    this.texture = ExampleRenderer.loadTexture();
+    this.texture = loadTexture();
   }
 
   @Override
@@ -756,14 +744,13 @@ public final class ExampleRenderer implements ExampleRendererType
     final int width,
     final int height)
   {
-    final float fw = (float) width;
-    final float fh = (float) height;
-    ProjectionMatrix.makePerspectiveProjection(
-      this.projection,
-      0.01,
-      100.0,
-      (double) (fw / fh),
-      Math.toRadians(90.0));
+    final double fw = (double) width;
+    final double fh = (double) height;
+
+    this.projection =
+      ProjectionMatrix.perspectiveProjectionRH(
+        0.01, 100.0, fw / fh, Math.toRadians(90.0));
+    this.mproj.setMatrix4x4D(this.projection);
   }
 
   @Override

@@ -31,7 +31,7 @@ public interface JCameraSphericalInputType
    */
 
   void addTargetMovingContinuousForward(
-    float in_forward);
+    double in_forward);
 
   /**
    * Add a movement right to the target position. A negative value decreases the
@@ -42,32 +42,32 @@ public interface JCameraSphericalInputType
    */
 
   void addTargetMovingContinuousRight(
-    float in_right);
+    double in_right);
 
   /**
    * @return The multiplication factor used for continuous forward/backward
    * movement.
    */
 
-  float getForwardFactor();
+  double getForwardFactor();
 
   /**
    * @return The multiplication factor used for continuous right/left movement.
    */
 
-  float getRightFactor();
+  double getRightFactor();
 
   /**
    * @return The current forward movement.
    */
 
-  float getTargetMovingForwardContinuous();
+  double getTargetMovingForwardContinuous();
 
   /**
    * @return The current rightward movement.
    */
 
-  float getTargetMovingRight();
+  double getTargetMovingRight();
 
   /**
    * @return {@code true} if the user is telling the camera to orbit
@@ -187,7 +187,7 @@ public interface JCameraSphericalInputType
    */
 
   void setContinuousForwardFactor(
-    float f);
+    double f);
 
   /**
    * Set the multiplication factor used for continuous left/right movement.
@@ -196,7 +196,7 @@ public interface JCameraSphericalInputType
    */
 
   void setContinuousRightwardFactor(
-    float f);
+    double f);
 
   /**
    * Tell the camera to start/stop orbiting (for heading) in a negative
@@ -263,7 +263,7 @@ public interface JCameraSphericalInputType
    */
 
   void setTargetMovingContinuousForward(
-    float f);
+    double f);
 
   /**
    * Set the amount of continuous rightward movement.
@@ -272,7 +272,7 @@ public interface JCameraSphericalInputType
    */
 
   void setTargetMovingContinuousRight(
-    float f);
+    double f);
 
   /**
    * Tell the camera target to start/stop moving forward.
@@ -335,7 +335,7 @@ public interface JCameraSphericalInputType
    * @return The amount of forward movement.
    */
 
-  float takeTargetMovingForward();
+  double takeTargetMovingForward();
 
   /**
    * Retrieve {@code r} = {@link #getTargetMovingRight()}, set the current
@@ -344,5 +344,5 @@ public interface JCameraSphericalInputType
    * @return The amount of rightward movement.
    */
 
-  float takeTargetMovingRight();
+  double takeTargetMovingRight();
 }

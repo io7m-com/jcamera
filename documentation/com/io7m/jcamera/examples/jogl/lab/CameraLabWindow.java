@@ -42,18 +42,80 @@ import javax.swing.border.Border;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-@SuppressWarnings("synthetic-access")
-final class CameraLabWindow extends
-  JFrame
+final class CameraLabWindow extends JFrame
 {
+  private static final Border BORDER_ACTIVE;
+  private static final Border BORDER_INACTIVE;
+  private static final long serialVersionUID;
+
+  static {
+    BORDER_INACTIVE =
+      NullCheck.notNull(BorderFactory.createLineBorder(Color.GRAY, 3));
+    BORDER_ACTIVE =
+      NullCheck.notNull(BorderFactory.createLineBorder(Color.RED, 3));
+  }
+
+  static {
+    serialVersionUID = 3690294437796540203L;
+  }
+
+  CameraLabWindow()
+  {
+    final Container content = this.getContentPane();
+
+    this.setJMenuBar(menu(this));
+
+    final ExecutorService background_workers =
+      NullCheck.notNull(Executors.newFixedThreadPool(1));
+
+    final GLProfile profile = GLProfile.get(GLProfile.GL3);
+    final GLCapabilities caps = new GLCapabilities(profile);
+    final GLWindow window = GLWindow.create(caps);
+    window.setSize(512, 512);
+
+    final NewtCanvasAWT canvas = new NewtCanvasAWT(window);
+    canvas.requestFocus();
+    final JPanel canvas_panel = new JPanel();
+    canvas_panel.add(canvas);
+
+    final ExampleRenderer renderer = new ExampleRenderer();
+    final Panel controls =
+      new Panel(background_workers, renderer, canvas_panel, window);
+
+    final FlowLayout layout = new FlowLayout(FlowLayout.LEADING, 8, 8);
+    layout.setAlignOnBaseline(true);
+    content.setLayout(layout);
+    content.add(canvas_panel);
+    content.add(controls);
+
+    final Animator anim = new Animator();
+    anim.add(window);
+    anim.start();
+  }
+
+  private static JMenuBar menu(
+    final JFrame window)
+  {
+    final JMenuItem quit = new JMenuItem("Quit");
+    quit.addActionListener(e -> {
+      final WindowEvent ev =
+        new WindowEvent(window, WindowEvent.WINDOW_CLOSING);
+      window.dispatchEvent(ev);
+    });
+
+    final JMenu file = new JMenu("File");
+    file.add(quit);
+
+    final JMenuBar bar = new JMenuBar();
+    bar.add(file);
+    return bar;
+  }
+
   private static final class Panel extends JPanel
   {
     private static final long serialVersionUID;
@@ -62,12 +124,12 @@ final class CameraLabWindow extends
       serialVersionUID = -3681497290868816970L;
     }
 
-    private @Nullable CameraSimulationType              current;
-    private final     JButton                           grab_mouse;
-    private final     JLabel                            grab_mouse_info;
-    private final     JComboBox<String>                 selector;
-    private final     Map<String, CameraSimulationType> simulations;
-    private final     GLWindow                          window;
+    private final JButton grab_mouse;
+    private final JLabel grab_mouse_info;
+    private final JComboBox<String> selector;
+    private final Map<String, CameraSimulationType> simulations;
+    private final GLWindow window;
+    private @Nullable CameraSimulationType current;
 
     Panel(
       final ExecutorService in_background_workers,
@@ -84,30 +146,18 @@ final class CameraLabWindow extends
           in_window);
 
       this.selector = CameraSimulations.newSelector(this.simulations);
-      this.selector.addActionListener(new ActionListener()
-      {
-        @Override
-        public void actionPerformed(
-          final @Nullable ActionEvent e)
-        {
-          final String name = (String) Panel.this.selector.getSelectedItem();
-          assert name != null;
-          Panel.this.selectSimulation(name);
-        }
+      this.selector.addActionListener(e -> {
+        final String name = (String) Panel.this.selector.getSelectedItem();
+        assert name != null;
+        Panel.this.selectSimulation(name);
       });
 
       this.grab_mouse = new JButton("Grab mouse/keyboard");
-      this.grab_mouse.addActionListener(new ActionListener()
-      {
-        @Override
-        public void actionPerformed(
-          final @Nullable ActionEvent e)
-        {
-          final CameraSimulationType c = Panel.this.current;
-          if (c != null) {
-            c.cameraSetEnabled(true);
-            in_window.requestFocus();
-          }
+      this.grab_mouse.addActionListener(e -> {
+        final CameraSimulationType c = Panel.this.current;
+        if (c != null) {
+          c.cameraSetEnabled(true);
+          in_window.requestFocus();
         }
       });
 
@@ -126,7 +176,7 @@ final class CameraLabWindow extends
       dg.row().grid().add(this.grab_mouse);
       dg.row().grid().add(this.grab_mouse_info);
 
-      /**
+      /*
        * Draw a bright border around the GL canvas when keyboard and mouse are
        * grabbed.
        */
@@ -139,10 +189,10 @@ final class CameraLabWindow extends
         {
           final CameraSimulationType c = Panel.this.current;
           if ((c != null) && c.cameraIsEnabled()) {
-            in_canvas_panel.setBorder(CameraLabWindow.BORDER_ACTIVE);
+            in_canvas_panel.setBorder(BORDER_ACTIVE);
             c.updatePeriodic();
           } else {
-            in_canvas_panel.setBorder(CameraLabWindow.BORDER_INACTIVE);
+            in_canvas_panel.setBorder(BORDER_INACTIVE);
           }
         }
 
@@ -196,78 +246,5 @@ final class CameraLabWindow extends
 
       new_current.controlsShow();
     }
-  }
-
-  private static final Border BORDER_ACTIVE;
-  private static final Border BORDER_INACTIVE;
-  private static final long   serialVersionUID;
-
-  static {
-    BORDER_INACTIVE =
-      NullCheck.notNull(BorderFactory.createLineBorder(Color.GRAY, 3));
-    BORDER_ACTIVE =
-      NullCheck.notNull(BorderFactory.createLineBorder(Color.RED, 3));
-  }
-
-  static {
-    serialVersionUID = 3690294437796540203L;
-  }
-
-  private static JMenuBar menu(
-    final JFrame window)
-  {
-    final JMenuItem quit = new JMenuItem("Quit");
-    quit.addActionListener(new ActionListener()
-    {
-      @Override
-      public void actionPerformed(
-        final @Nullable ActionEvent e)
-      {
-        final WindowEvent ev =
-          new WindowEvent(window, WindowEvent.WINDOW_CLOSING);
-        window.dispatchEvent(ev);
-      }
-    });
-
-    final JMenu file = new JMenu("File");
-    file.add(quit);
-
-    final JMenuBar bar = new JMenuBar();
-    bar.add(file);
-    return bar;
-  }
-
-  CameraLabWindow()
-  {
-    final Container content = this.getContentPane();
-
-    this.setJMenuBar(CameraLabWindow.menu(this));
-
-    final ExecutorService background_workers =
-      NullCheck.notNull(Executors.newFixedThreadPool(1));
-
-    final GLProfile profile = GLProfile.get(GLProfile.GL3);
-    final GLCapabilities caps = new GLCapabilities(profile);
-    final GLWindow window = GLWindow.create(caps);
-    window.setSize(512, 512);
-
-    final NewtCanvasAWT canvas = new NewtCanvasAWT(window);
-    canvas.requestFocus();
-    final JPanel canvas_panel = new JPanel();
-    canvas_panel.add(canvas);
-
-    final ExampleRenderer renderer = new ExampleRenderer();
-    final Panel controls =
-      new Panel(background_workers, renderer, canvas_panel, window);
-
-    final FlowLayout layout = new FlowLayout(FlowLayout.LEADING, 8, 8);
-    layout.setAlignOnBaseline(true);
-    content.setLayout(layout);
-    content.add(canvas_panel);
-    content.add(controls);
-
-    final Animator anim = new Animator();
-    anim.add(window);
-    anim.start();
   }
 }

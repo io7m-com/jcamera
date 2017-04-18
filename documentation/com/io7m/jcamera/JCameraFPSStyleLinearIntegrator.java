@@ -28,14 +28,14 @@ import com.io7m.jranges.RangeCheck;
 public final class JCameraFPSStyleLinearIntegrator implements
   JCameraFPSStyleLinearIntegratorType
 {
-  private final JCameraFPSStyleType      camera;
+  private final JCameraFPSStyleType camera;
   private final JCameraFPSStyleInputType input;
-  private       float                    acceleration;
-  private       float                    drag;
-  private       float                    maximum_speed;
-  private       float                    speed_forward;
-  private       float                    speed_right;
-  private       float                    speed_up;
+  private double acceleration;
+  private double drag;
+  private double maximum_speed;
+  private double speed_forward;
+  private double speed_right;
+  private double speed_up;
 
   private JCameraFPSStyleLinearIntegrator(
     final JCameraFPSStyleType in_camera,
@@ -43,12 +43,12 @@ public final class JCameraFPSStyleLinearIntegrator implements
   {
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
-    this.maximum_speed = 3.0f;
-    this.speed_forward = 0.0f;
-    this.speed_right = 0.0f;
-    this.speed_up = 0.0f;
-    this.drag = 0.25f;
-    this.acceleration = 30.0f;
+    this.maximum_speed = 3.0;
+    this.speed_forward = 0.0;
+    this.speed_right = 0.0;
+    this.speed_up = 0.0;
+    this.drag = 0.25;
+    this.acceleration = 30.0;
   }
 
   /**
@@ -67,26 +67,26 @@ public final class JCameraFPSStyleLinearIntegrator implements
     return new JCameraFPSStyleLinearIntegrator(in_camera, in_input);
   }
 
-  private float applyDrag(
-    final float f,
-    final float time)
+  private double applyDrag(
+    final double f,
+    final double time)
   {
-    return (float) ((double) f * Math.pow((double) this.drag, (double) time));
+    return f * Math.pow(this.drag, time);
   }
 
   @Override
   public void integrate(
-    final float t)
+    final double t)
   {
     this.speed_forward = this.integrateForward(t);
     this.speed_right = this.integrateRight(t);
     this.speed_up = this.integrateUp(t);
   }
 
-  private float integrateForward(
-    final float time)
+  private double integrateForward(
+    final double time)
   {
-    float s = this.speed_forward;
+    double s = this.speed_forward;
 
     final boolean forward = this.input.isMovingForward();
     if (forward) {
@@ -102,10 +102,10 @@ public final class JCameraFPSStyleLinearIntegrator implements
     return this.applyDrag(s, time);
   }
 
-  private float integrateRight(
-    final float time)
+  private double integrateRight(
+    final double time)
   {
-    float s = this.speed_right;
+    double s = this.speed_right;
 
     final boolean forward = this.input.isMovingRight();
     if (forward) {
@@ -121,10 +121,10 @@ public final class JCameraFPSStyleLinearIntegrator implements
     return this.applyDrag(s, time);
   }
 
-  private float integrateUp(
-    final float time)
+  private double integrateUp(
+    final double time)
   {
-    float s = this.speed_up;
+    double s = this.speed_up;
 
     final boolean forward = this.input.isMovingUp();
     if (forward) {
@@ -154,11 +154,11 @@ public final class JCameraFPSStyleLinearIntegrator implements
 
   @Override
   public void integratorLinearSetAcceleration(
-    final float a)
+    final double a)
   {
     this.acceleration =
-      (float) RangeCheck.checkGreaterDouble(
-        (double) a,
+      RangeCheck.checkGreaterDouble(
+        a,
         "Acceleration",
         0.0,
         "Minimum acceleration");
@@ -166,12 +166,12 @@ public final class JCameraFPSStyleLinearIntegrator implements
 
   @Override
   public void integratorLinearSetDrag(
-    final float f)
+    final double f)
   {
     this.drag =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      RangeCheck.checkGreaterEqualDouble(
         RangeCheck
-          .checkLessEqualDouble((double) f, "Drag factor", 1.0, "Maximum drag"),
+          .checkLessEqualDouble(f, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
         0.0,
         "Minimum drag");
@@ -179,11 +179,11 @@ public final class JCameraFPSStyleLinearIntegrator implements
 
   @Override
   public void integratorLinearSetMaximumSpeed(
-    final float s)
+    final double s)
   {
     this.maximum_speed =
-      (float) RangeCheck.checkGreaterEqualDouble(
-        (double) s,
+      RangeCheck.checkGreaterEqualDouble(
+        s,
         "Speed limit",
         0.0,
         "Minimum limit");

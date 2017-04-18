@@ -27,9 +27,9 @@ public interface JCameraScalingFunctionType
    *
    * @param x The argument
    *
-   * @return A value of type {@code float}
+   * @return A value of type {@code double}
    */
 
-  float evaluate(
-    final float x);
+  double evaluate(
+    final double x);
 }

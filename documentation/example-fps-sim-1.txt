@@ -1,11 +1,11 @@
-    /**
+    /*
      * $example: Construct an integrator using the default implementations.
      */
 
     this.integrator =
       JCameraFPSStyleIntegrator.newIntegrator(this.camera, this.input);
 
-    /**
+    /*
      * Work out what fraction of a second the given simulation rate is going
      * to require.
      */

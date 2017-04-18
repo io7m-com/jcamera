@@ -28,16 +28,16 @@ import com.io7m.jranges.RangeCheck;
 public final class JCameraFPSStyleAngularIntegrator implements
   JCameraFPSStyleAngularIntegratorType
 {
-  private final JCameraFPSStyleType      camera;
+  private final JCameraFPSStyleType camera;
   private final JCameraFPSStyleInputType input;
-  private       float                    acceleration_horizontal;
-  private       float                    acceleration_vertical;
-  private       float                    drag_horizontal;
-  private       float                    drag_vertical;
-  private       float                    maximum_speed_horizontal;
-  private       float                    maximum_speed_vertical;
-  private       float                    speed_horizontal;
-  private       float                    speed_vertical;
+  private double acceleration_horizontal;
+  private double acceleration_vertical;
+  private double drag_horizontal;
+  private double drag_vertical;
+  private double maximum_speed_horizontal;
+  private double maximum_speed_vertical;
+  private double speed_horizontal;
+  private double speed_vertical;
 
   private JCameraFPSStyleAngularIntegrator(
     final JCameraFPSStyleType in_camera,
@@ -46,20 +46,20 @@ public final class JCameraFPSStyleAngularIntegrator implements
     this.camera = NullCheck.notNull(in_camera, "Camera");
     this.input = NullCheck.notNull(in_input, "Input");
 
-    this.maximum_speed_horizontal = (float) (2.0 * Math.PI);
-    this.maximum_speed_vertical = (float) (2.0 * Math.PI);
+    this.maximum_speed_horizontal = (double) (2.0 * Math.PI);
+    this.maximum_speed_vertical = (double) (2.0 * Math.PI);
     this.acceleration_horizontal = this.maximum_speed_horizontal / 2.0f;
     this.acceleration_vertical = this.maximum_speed_vertical / 2.0f;
     this.drag_horizontal = 0.05f;
     this.drag_vertical = 0.05f;
   }
 
-  private static float applyDrag(
-    final float f,
-    final float drag,
-    final float time)
+  private static double applyDrag(
+    final double f,
+    final double drag,
+    final double time)
   {
-    return (float) ((double) f * Math.pow((double) drag, (double) time));
+    return (double) ((double) f * Math.pow((double) drag, (double) time));
   }
 
   /**
@@ -80,20 +80,20 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integrate(
-    final float time)
+    final double time)
   {
     this.speed_horizontal = this.integrateHorizontal(time);
     this.integrateVertical(time);
   }
 
-  private float integrateHorizontal(
-    final float time)
+  private double integrateHorizontal(
+    final double time)
   {
-    final float r = this.input.takeRotationHorizontal();
-    final float s =
+    final double r = this.input.takeRotationHorizontal();
+    final double s =
       this.speed_horizontal + (r * (this.acceleration_horizontal * time));
 
-    final float sc =
+    final double sc =
       Clamp.clamp(
         s,
         -this.maximum_speed_horizontal,
@@ -118,12 +118,12 @@ public final class JCameraFPSStyleAngularIntegrator implements
   }
 
   private void integrateVertical(
-    final float time)
+    final double time)
   {
-    final float r = this.input.takeRotationVertical();
-    final float s =
+    final double r = this.input.takeRotationVertical();
+    final double s =
       this.speed_vertical + (r * (this.acceleration_vertical * time));
-    final float sc =
+    final double sc =
       Clamp.clamp(
         s,
         -this.maximum_speed_vertical,
@@ -136,10 +136,10 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integratorAngularSetAccelerationHorizontal(
-    final float a)
+    final double a)
   {
     this.acceleration_horizontal =
-      (float) RangeCheck.checkGreaterDouble(
+      (double) RangeCheck.checkGreaterDouble(
         (double) a,
         "Acceleration",
         0.0,
@@ -148,10 +148,10 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integratorAngularSetAccelerationVertical(
-    final float a)
+    final double a)
   {
     this.acceleration_vertical =
-      (float) RangeCheck.checkGreaterDouble(
+      (double) RangeCheck.checkGreaterDouble(
         (double) a,
         "Acceleration",
         0.0,
@@ -160,10 +160,10 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integratorAngularSetDragHorizontal(
-    final float d)
+    final double d)
   {
     this.drag_horizontal =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      (double) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
           .checkLessEqualDouble((double) d, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
@@ -173,10 +173,10 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integratorAngularSetDragVertical(
-    final float d)
+    final double d)
   {
     this.drag_vertical =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      (double) RangeCheck.checkGreaterEqualDouble(
         RangeCheck
           .checkLessEqualDouble((double) d, "Drag factor", 1.0, "Maximum drag"),
         "Drag factor",
@@ -186,10 +186,10 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integratorAngularSetMaximumSpeedHorizontal(
-    final float s)
+    final double s)
   {
     this.maximum_speed_horizontal =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      (double) RangeCheck.checkGreaterEqualDouble(
         (double) s,
         "Speed limit",
         0.0,
@@ -198,10 +198,10 @@ public final class JCameraFPSStyleAngularIntegrator implements
 
   @Override
   public void integratorAngularSetMaximumSpeedVertical(
-    final float s)
+    final double s)
   {
     this.maximum_speed_vertical =
-      (float) RangeCheck.checkGreaterEqualDouble(
+      (double) RangeCheck.checkGreaterEqualDouble(
         (double) s,
         "Speed limit",
         0.0,

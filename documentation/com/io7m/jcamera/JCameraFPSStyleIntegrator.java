@@ -80,7 +80,7 @@ public final class JCameraFPSStyleIntegrator
     {
       @Override
       public void integrate(
-        final float d)
+        final double d)
       {
         li.integrate(d);
         ai.integrate(d);
@@ -88,42 +88,42 @@ public final class JCameraFPSStyleIntegrator
 
       @Override
       public void integratorAngularSetAccelerationHorizontal(
-        final float a)
+        final double a)
       {
         ai.integratorAngularSetAccelerationHorizontal(a);
       }
 
       @Override
       public void integratorAngularSetAccelerationVertical(
-        final float a)
+        final double a)
       {
         ai.integratorAngularSetAccelerationVertical(a);
       }
 
       @Override
       public void integratorAngularSetDragHorizontal(
-        final float d)
+        final double d)
       {
         ai.integratorAngularSetDragHorizontal(d);
       }
 
       @Override
       public void integratorAngularSetDragVertical(
-        final float d)
+        final double d)
       {
         ai.integratorAngularSetDragVertical(d);
       }
 
       @Override
       public void integratorAngularSetMaximumSpeedHorizontal(
-        final float s)
+        final double s)
       {
         ai.integratorAngularSetMaximumSpeedHorizontal(s);
       }
 
       @Override
       public void integratorAngularSetMaximumSpeedVertical(
-        final float s)
+        final double s)
       {
         ai.integratorAngularSetMaximumSpeedVertical(s);
       }
@@ -142,21 +142,21 @@ public final class JCameraFPSStyleIntegrator
 
       @Override
       public void integratorLinearSetAcceleration(
-        final float a)
+        final double a)
       {
         li.integratorLinearSetAcceleration(a);
       }
 
       @Override
       public void integratorLinearSetDrag(
-        final float f)
+        final double f)
       {
         li.integratorLinearSetDrag(f);
       }
 
       @Override
       public void integratorLinearSetMaximumSpeed(
-        final float s)
+        final double s)
       {
         li.integratorLinearSetMaximumSpeed(s);
       }

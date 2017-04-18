@@ -28,11 +28,16 @@ import java.util.List;
 
 final class ShaderUtilities
 {
+  private ShaderUtilities()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
    * @param lines The list of lines.
    *
-   * @return {@code true} iff any of the following hold: <ul> <li>The list
-   * of lines is empty.</li> <li>There are no lines that contain anything other
+   * @return {@code true} iff any of the following hold: <ul> <li>The list of
+   * lines is empty.</li> <li>There are no lines that contain anything other
    * than whitespace.</li> </ul>
    */
 
@@ -81,10 +86,5 @@ final class ShaderUtilities
     }
     reader.close();
     return lines;
-  }
-
-  private ShaderUtilities()
-  {
-    throw new UnreachableCodeException();
   }
 }

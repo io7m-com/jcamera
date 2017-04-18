@@ -1,4 +1,4 @@
-    /**
+    /*
      * $example: Construct a new simulation and produce an initial snapshot of
      * the camera for later use.
      */

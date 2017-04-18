@@ -16,7 +16,7 @@
 
 package com.io7m.jcamera;
 
-import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 
 /**
  * Readable interface to {@link JCameraSphericalType}.
@@ -28,59 +28,53 @@ public interface JCameraSphericalReadableType extends JCameraReadableType
    * @return The angle around the vertical axis.
    */
 
-  float cameraGetAngleHeading();
+  double cameraGetAngleHeading();
 
   /**
    * @return The angle around the horizontal axis.
    */
 
-  float cameraGetAngleIncline();
+  double cameraGetAngleIncline();
 
   /**
    * @return The forward direction for the camera.
    */
 
-  VectorReadable3FType cameraGetForward();
+  Vector3D cameraGetForward();
 
   /**
    * @return The forward direction for the camera, projected onto the X/Z plane.
    */
 
-  VectorReadable3FType cameraGetForwardProjectedOnXZ();
+  Vector3D cameraGetForwardProjectedOnXZ();
 
   /**
    * @return The position of the camera.
    */
 
-  VectorReadable3FType cameraGetPosition();
+  Vector3D cameraGetPosition();
 
   /**
    * @return The right direction for the camera.
    */
 
-  VectorReadable3FType cameraGetRight();
+  Vector3D cameraGetRight();
 
   /**
    * @return The position of the camera target.
    */
 
-  VectorReadable3FType cameraGetTargetPosition();
+  Vector3D cameraGetTargetPosition();
 
   /**
    * @return The up direction for the camera.
    */
 
-  VectorReadable3FType cameraGetUp();
+  Vector3D cameraGetUp();
 
   /**
    * @return The zoom (or <i>radius</i>) of the camera.
    */
 
-  float cameraGetZoom();
-
-  /**
-   * @return A snapshot of the current camera state.
-   */
-
-  JCameraSphericalSnapshot cameraMakeSnapshot();
+  double cameraGetZoom();
 }

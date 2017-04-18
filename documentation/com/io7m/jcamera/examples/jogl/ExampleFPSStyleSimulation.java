@@ -22,6 +22,7 @@ import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleIntegrator;
 import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
+import com.io7m.jcamera.JCameraFPSStyleSnapshots;
 import com.io7m.jcamera.JCameraFPSStyleType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,12 +35,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class ExampleFPSStyleSimulation implements
   ExampleFPSStyleSimulationType
 {
-  private final JCameraFPSStyleType           camera;
-  private final AtomicBoolean                 camera_enabled;
-  private final JCameraFPSStyleSnapshot       fixed_snapshot;
-  private final JCameraFPSStyleInputType      input;
+  private final JCameraFPSStyleType camera;
+  private final AtomicBoolean camera_enabled;
+  private final JCameraFPSStyleSnapshot fixed_snapshot;
+  private final JCameraFPSStyleInputType input;
   private final JCameraFPSStyleIntegratorType integrator;
-  private final float                         integrator_time_seconds;
+  private final float integrator_time_seconds;
   private final ExampleRendererControllerType renderer;
 
   /**
@@ -55,17 +56,17 @@ public final class ExampleFPSStyleSimulation implements
     this.input = JCameraFPSStyleInput.newInput();
     this.camera = JCameraFPSStyle.newCamera();
     final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
-    this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
+    this.fixed_snapshot = JCameraFPSStyleSnapshots.of(camera_fixed);
     this.camera_enabled = new AtomicBoolean(false);
 
-    /**
+    /*
      * $example: Construct an integrator using the default implementations.
      */
 
     this.integrator =
       JCameraFPSStyleIntegrator.newIntegrator(this.camera, this.input);
 
-    /**
+    /*
      * Work out what fraction of a second the given simulation rate is going
      * to require.
      */
@@ -73,21 +74,21 @@ public final class ExampleFPSStyleSimulation implements
     final float rate = 60.0f;
     this.integrator_time_seconds = 1.0f / rate;
 
-    /**
+    /*
      * $example: Configure the integrator. Use a high drag factor to give
      * quite abrupt stops, and use high rotational acceleration.
      */
 
-    this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
-    this.integrator.integratorAngularSetDragVertical(0.000000001f);
+    this.integrator.integratorAngularSetDragHorizontal(0.000000001);
+    this.integrator.integratorAngularSetDragVertical(0.000000001);
     this.integrator.integratorAngularSetAccelerationHorizontal(
-      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+      Math.PI / 12.0 / (double) this.integrator_time_seconds);
     this.integrator.integratorAngularSetAccelerationVertical(
-      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+      Math.PI / 12.0 / (double) this.integrator_time_seconds);
     this.integrator.integratorLinearSetAcceleration(
-      (float) (3.0 / (double) this.integrator_time_seconds));
-    this.integrator.integratorLinearSetMaximumSpeed(3.0f);
-    this.integrator.integratorLinearSetDrag(0.000000001f);
+      3.0 / (double) this.integrator_time_seconds);
+    this.integrator.integratorLinearSetMaximumSpeed(3.0);
+    this.integrator.integratorLinearSetDrag(0.000000001);
   }
 
   /**
@@ -99,7 +100,7 @@ public final class ExampleFPSStyleSimulation implements
   @Override
   public JCameraFPSStyleSnapshot integrate()
   {
-    /**
+    /*
      * If the camera is actually enabled, integrate and produce a snapshot,
      * and then tell the renderer/window system that it should warp the
      * pointer back to the center of the screen.
@@ -107,7 +108,8 @@ public final class ExampleFPSStyleSimulation implements
 
     if (this.cameraIsEnabled()) {
       this.integrator.integrate(this.integrator_time_seconds);
-      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
+      final JCameraFPSStyleSnapshot snap =
+        JCameraFPSStyleSnapshots.of(this.camera);
       this.renderer.sendWantWarpPointer();
       return snap;
     }

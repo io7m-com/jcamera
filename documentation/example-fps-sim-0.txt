@@ -11,6 +11,6 @@
     this.input = JCameraFPSStyleInput.newInput();
     this.camera = JCameraFPSStyle.newCamera();
     final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
-    this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
+    this.fixed_snapshot = JCameraFPSStyleSnapshots.of(camera_fixed);
     this.camera_enabled = new AtomicBoolean(false);
 

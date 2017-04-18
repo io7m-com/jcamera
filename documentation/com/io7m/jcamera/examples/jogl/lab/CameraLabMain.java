@@ -16,11 +16,11 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import com.io7m.jcamera.examples.jogl.ExampleTimer;
 import com.io7m.junreachable.UnreachableCodeException;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * Camera lab main program.
@@ -28,11 +28,15 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 public final class CameraLabMain
 {
+  private CameraLabMain()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
    * Main function.
    *
-   * @param args
-   *          Command line arguments.
+   * @param args Command line arguments.
    */
 
   public static void main(
@@ -40,8 +44,10 @@ public final class CameraLabMain
   {
     ExampleTimer.enableHighResolutionTimer();
 
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override public void run()
+    SwingUtilities.invokeLater(new Runnable()
+    {
+      @Override
+      public void run()
       {
         final CameraLabWindow w = new CameraLabWindow();
         w.pack();
@@ -49,10 +55,5 @@ public final class CameraLabMain
         w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       }
     });
-  }
-
-  private CameraLabMain()
-  {
-    throw new UnreachableCodeException();
   }
 }

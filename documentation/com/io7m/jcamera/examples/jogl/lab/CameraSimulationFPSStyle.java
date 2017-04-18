@@ -20,14 +20,13 @@ import com.io7m.jcamera.JCameraFPSStyleIntegratorType;
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleType;
-import com.io7m.jcamera.JCameraRotationCoefficients;
+import com.io7m.jcamera.JCameraRotationCoefficientsMutable;
 import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleGLListener;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleKeyListener;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleMouseAdapter;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleSimulationType;
 import com.io7m.jcamera.examples.jogl.ExampleRendererType;
-import com.io7m.jfunctional.ProcedureType;
 import com.io7m.jnull.NullCheck;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
@@ -43,26 +42,25 @@ import java.util.concurrent.atomic.AtomicReference;
 final class CameraSimulationFPSStyle implements
   CameraSimulationType
 {
-  private final JCameraRotationCoefficients                 coefficients;
-  private final GLEventListener                             gl_listener;
-  private final RowGroup                                    group;
-  private final KeyListener                                 key_listener;
-  private final ExampleFPSStyleMouseAdapter                 mouse_listener;
+  private final GLEventListener gl_listener;
+  private final RowGroup group;
+  private final KeyListener key_listener;
+  private final ExampleFPSStyleMouseAdapter mouse_listener;
   private final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region;
-  private final ExampleFPSStyleSimulationType               sim;
+  private final ExampleFPSStyleSimulationType sim;
 
-  private final CameraFloatSlider                           linear_acceleration;
-  private final CameraFloatSlider                           linear_drag;
-  private final CameraFloatSlider                           linear_maximum;
-  private final CameraVector3Field                          linear_pos;
-  private final CameraFloatSlider                           horizontal_drag;
-  private final CameraFloatSlider                           horizontal_acceleration;
-  private final CameraFloatSlider                           vertical_drag;
-  private final CameraFloatSlider                           vertical_acceleration;
-  private final CameraFloatSlider                           vertical_maximum;
-  private final CameraFloatSlider                           horizontal_maximum;
-  private final CameraFloatField                            vertical;
-  private final CameraFloatField                            horizontal;
+  private final CameraFloatSlider linear_acceleration;
+  private final CameraFloatSlider linear_drag;
+  private final CameraFloatSlider linear_maximum;
+  private final CameraVector3Field linear_pos;
+  private final CameraFloatSlider horizontal_drag;
+  private final CameraFloatSlider horizontal_acceleration;
+  private final CameraFloatSlider vertical_drag;
+  private final CameraFloatSlider vertical_acceleration;
+  private final CameraFloatSlider vertical_maximum;
+  private final CameraFloatSlider horizontal_maximum;
+  private final CameraFloatField vertical;
+  private final CameraFloatField horizontal;
 
   CameraSimulationFPSStyle(
     final ExampleFPSStyleSimulationType in_sim,
@@ -74,10 +72,10 @@ final class CameraSimulationFPSStyle implements
 
     this.mouse_region =
       new AtomicReference<>(
-        JCameraFPSStyleMouseRegion.newRegion(
+        JCameraFPSStyleMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          (float) in_window.getWidth(),
-          (float) in_window.getHeight()));
+          (double) in_window.getWidth(),
+          (double) in_window.getHeight()));
 
     this.key_listener =
       new ExampleFPSStyleKeyListener(
@@ -96,13 +94,14 @@ final class CameraSimulationFPSStyle implements
         this.mouse_region,
         in_renderer);
 
-    this.coefficients = new JCameraRotationCoefficients();
+    final JCameraRotationCoefficientsMutable rotations =
+      JCameraRotationCoefficientsMutable.create();
 
     this.mouse_listener =
       new ExampleFPSStyleMouseAdapter(
         this.mouse_region,
         in_sim,
-        this.coefficients);
+        rotations);
 
     this.group = new RowGroup();
 
@@ -113,129 +112,85 @@ final class CameraSimulationFPSStyle implements
     this.horizontal = new CameraFloatField();
     this.linear_pos = new CameraVector3Field("Position (w,a,s,d,q,e)");
 
-    this.linear_drag = new CameraFloatSlider("Linear drag", 0.000001f, 1.0f);
-    this.linear_drag.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorLinearSetDrag(x.floatValue());
-      }
-    });
+    this.linear_drag = new CameraFloatSlider("Linear drag", 0.000001, 1.0);
+    this.linear_drag.setOnChangeListener(x -> integrator.integratorLinearSetDrag(
+      (double) x.floatValue()));
     this.linear_drag.setCurrent(this.linear_drag.getMinimum());
 
     this.linear_acceleration =
-      new CameraFloatSlider("Linear acceleration", 0.01f, 3.0f);
-    this.linear_acceleration.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorLinearSetAcceleration(x.floatValue() / delta);
-      }
-    });
-    this.linear_acceleration
-      .setCurrent(this.linear_acceleration.getMaximum());
+      new CameraFloatSlider("Linear acceleration", 0.01, 3.0);
+    this.linear_acceleration.setOnChangeListener(x -> integrator.integratorLinearSetAcceleration(
+      (double) (x.floatValue() / delta)));
+    this.linear_acceleration.setCurrent(this.linear_acceleration.getMaximum());
 
     this.linear_maximum =
-      new CameraFloatSlider("Linear maximum speed", 0.001f, 5.0f);
-    this.linear_maximum.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorLinearSetMaximumSpeed(x.floatValue() / delta);
-      }
-    });
+      new CameraFloatSlider("Linear maximum speed", 0.001, 5.0);
+    this.linear_maximum.setOnChangeListener(x -> integrator.integratorLinearSetMaximumSpeed(
+      (double) (x.floatValue() / delta)));
     this.linear_maximum.setCurrent(this.linear_maximum.getMaximum());
 
     this.horizontal_drag =
-      new CameraFloatSlider("Horizontal drag", 0.000001f, 1.0f);
-    this.horizontal_drag.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorAngularSetDragHorizontal(x.floatValue());
-      }
-    });
+      new CameraFloatSlider("Horizontal drag", 0.000001, 1.0);
+    this.horizontal_drag.setOnChangeListener(x -> integrator.integratorAngularSetDragHorizontal(
+      (double) x.floatValue()));
     this.horizontal_drag.setCurrent(this.horizontal_drag.getMinimum());
 
     this.horizontal_acceleration =
-      new CameraFloatSlider("Horizontal acceleration", 0.01f, 1.0f);
+      new CameraFloatSlider("Horizontal acceleration", 0.01, 1.0);
     this.horizontal_acceleration
-      .setOnChangeListener(new ProcedureType<Float>() {
-        @Override public void call(
-          final Float x)
-        {
-          integrator.integratorAngularSetAccelerationHorizontal(x.floatValue() / delta);
-        }
-      });
-    this.horizontal_acceleration.setCurrent(this.horizontal_acceleration
-      .getMaximum());
+      .setOnChangeListener(x -> integrator.integratorAngularSetAccelerationHorizontal(
+        (double) (x.floatValue() / delta)));
+    this.horizontal_acceleration.setCurrent(this.horizontal_acceleration.getMaximum());
 
     this.horizontal_maximum =
-      new CameraFloatSlider("Horizontal maximum", 0.0001f, 0.01f);
-    this.horizontal_maximum.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorAngularSetMaximumSpeedHorizontal(x.floatValue() / delta);
-      }
-    });
+      new CameraFloatSlider("Horizontal maximum", 0.0001, 0.01);
+    this.horizontal_maximum.setOnChangeListener(x -> integrator.integratorAngularSetMaximumSpeedHorizontal(
+      (double) (x.floatValue() / delta)));
     this.horizontal_maximum.setCurrent(this.horizontal_maximum.getMaximum());
 
     this.vertical_drag =
-      new CameraFloatSlider("Vertical drag", 0.000001f, 1.0f);
-    this.vertical_drag.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorAngularSetDragVertical(x.floatValue());
-      }
-    });
+      new CameraFloatSlider("Vertical drag", 0.000001, 1.0);
+    this.vertical_drag.setOnChangeListener(x -> integrator.integratorAngularSetDragVertical(
+      (double) x.floatValue()));
     this.vertical_drag.setCurrent(this.vertical_drag.getMinimum());
 
     this.vertical_acceleration =
-      new CameraFloatSlider("Vertical acceleration", 0.01f, 1.0f);
+      new CameraFloatSlider("Vertical acceleration", 0.01, 1.0);
     this.vertical_acceleration
-      .setOnChangeListener(new ProcedureType<Float>() {
-        @Override public void call(
-          final Float x)
-        {
-          integrator.integratorAngularSetAccelerationVertical(x.floatValue() / delta);
-        }
-      });
-    this.vertical_acceleration.setCurrent(this.vertical_acceleration
-      .getMaximum());
+      .setOnChangeListener(x -> integrator.integratorAngularSetAccelerationVertical(
+        (double) (x.floatValue() / delta)));
+    this.vertical_acceleration.setCurrent(this.vertical_acceleration.getMaximum());
 
     this.vertical_maximum =
-      new CameraFloatSlider("Vertical maximum", 0.0001f, 0.01f);
-    this.vertical_maximum.setOnChangeListener(new ProcedureType<Float>() {
-      @Override public void call(
-        final Float x)
-      {
-        integrator.integratorAngularSetMaximumSpeedVertical(x.floatValue() / delta);
-      }
-    });
+      new CameraFloatSlider("Vertical maximum", 0.0001, 0.01);
+    this.vertical_maximum.setOnChangeListener(x -> integrator.integratorAngularSetMaximumSpeedVertical(
+      (double) (x.floatValue() / delta)));
     this.vertical_maximum.setCurrent(this.vertical_maximum.getMaximum());
   }
 
-  @Override public <A, E extends Exception> A acceptSimulationType(
+  @Override
+  public <A, E extends Exception> A acceptSimulationType(
     final CameraSimulationVisitorType<A, E> v)
     throws E
   {
     return v.fpsStyle(this);
   }
 
-  @Override public boolean cameraIsEnabled()
+  @Override
+  public boolean cameraIsEnabled()
   {
     return this.sim.cameraIsEnabled();
   }
 
-  @Override public void cameraSetEnabled(
+  @Override
+  public void cameraSetEnabled(
     final boolean b)
   {
     this.sim.cameraSetEnabled(b);
   }
 
-  @Override public void controlsAddToLayout(
+  @Override
+  public void controlsAddToLayout(
     final DesignGridLayout dg)
   {
     dg
@@ -261,7 +216,8 @@ final class CameraSimulationFPSStyle implements
     this.vertical_maximum.controlsAddToLayout(dg);
   }
 
-  @Override public void controlsHide()
+  @Override
+  public void controlsHide()
   {
     this.group.hide();
     this.linear_pos.controlsHide();
@@ -276,7 +232,8 @@ final class CameraSimulationFPSStyle implements
     this.vertical_maximum.controlsHide();
   }
 
-  @Override public void controlsShow()
+  @Override
+  public void controlsShow()
   {
     this.group.forceShow();
     this.linear_pos.controlsShow();
@@ -291,27 +248,31 @@ final class CameraSimulationFPSStyle implements
     this.vertical_maximum.controlsShow();
   }
 
-  @Override public GLEventListener getGLEventListener()
+  @Override
+  public GLEventListener getGLEventListener()
   {
     return this.gl_listener;
   }
 
-  @Override public KeyListener getKeyListener()
+  @Override
+  public KeyListener getKeyListener()
   {
     return this.key_listener;
   }
 
-  @Override public MouseListener getMouseListener()
+  @Override
+  public MouseListener getMouseListener()
   {
     return this.mouse_listener;
   }
 
-  @Override public void updatePeriodic()
+  @Override
+  public void updatePeriodic()
   {
     final JCameraFPSStyleType c = this.sim.getCamera();
 
     this.linear_pos.setValue(c.cameraGetPosition());
-    this.horizontal.setValue(c.cameraGetAngleAroundHorizontal());
-    this.vertical.setValue(c.cameraGetAngleAroundVertical());
+    this.horizontal.setValue((float) c.cameraGetAngleAroundHorizontal());
+    this.vertical.setValue((float) c.cameraGetAngleAroundVertical());
   }
 }

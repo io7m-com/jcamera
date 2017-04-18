@@ -31,14 +31,15 @@ import java.util.concurrent.ExecutorService;
 
 // CHECKSTYLE_JAVADOC:OFF
 
-@SuppressWarnings("synthetic-access") public final class ExampleSphericalKeyListener implements
+@SuppressWarnings("synthetic-access")
+public final class ExampleSphericalKeyListener implements
   KeyListener
 {
-  private final ExecutorService                background_workers;
-  private final JCameraSphericalInputType      input;
-  private final ExampleRendererType            renderer;
+  private final ExecutorService background_workers;
+  private final JCameraSphericalInputType input;
+  private final ExampleRendererType renderer;
   private final ExampleSphericalSimulationType sim;
-  private final GLWindow                       window;
+  private final GLWindow window;
 
   public ExampleSphericalKeyListener(
     final ExampleSphericalSimulationType in_sim,
@@ -53,12 +54,13 @@ import java.util.concurrent.ExecutorService;
     this.background_workers = in_background_workers;
   }
 
-  @Override public void keyPressed(
+  @Override
+  public void keyPressed(
     final @Nullable KeyEvent e)
   {
     assert e != null;
 
-    /**
+    /*
      * Ignore events that are the result of keyboard auto-repeat. This means
      * there's one single event when a key is pressed, and another when it is
      * released (as opposed to an endless stream of both when the key is held
@@ -71,83 +73,72 @@ import java.util.concurrent.ExecutorService;
 
     switch (e.getKeyCode()) {
 
-    /**
-     * Standard WASD camera controls.
-     */
+      /*
+       * Standard WASD camera controls.
+       */
 
-      case KeyEvent.VK_A:
-      {
+      case KeyEvent.VK_A: {
         this.input.setTargetMovingLeftKey(true);
         break;
       }
-      case KeyEvent.VK_W:
-      {
+      case KeyEvent.VK_W: {
         this.input.setTargetMovingForwardKey(true);
         break;
       }
-      case KeyEvent.VK_S:
-      {
+      case KeyEvent.VK_S: {
         this.input.setTargetMovingBackwardKey(true);
         break;
       }
-      case KeyEvent.VK_D:
-      {
+      case KeyEvent.VK_D: {
         this.input.setTargetMovingRightKey(true);
         break;
       }
 
-      case KeyEvent.VK_X:
-      {
+      case KeyEvent.VK_X: {
         this.input.setTargetMovingUp(true);
         break;
       }
-      case KeyEvent.VK_Z:
-      {
+      case KeyEvent.VK_Z: {
         this.input.setTargetMovingDown(true);
         break;
       }
 
-      case KeyEvent.VK_F:
-      {
+      case KeyEvent.VK_F: {
         this.input.setOrbitInclinePositive(true);
         break;
       }
-      case KeyEvent.VK_V:
-      {
+      case KeyEvent.VK_V: {
         this.input.setOrbitInclineNegative(true);
         break;
       }
 
-      case KeyEvent.VK_Q:
-      {
+      case KeyEvent.VK_Q: {
         this.input.setOrbitHeadingNegative(true);
         break;
       }
-      case KeyEvent.VK_E:
-      {
+      case KeyEvent.VK_E: {
         this.input.setOrbitHeadingPositive(true);
         break;
       }
 
-      case KeyEvent.VK_G:
-      {
+      case KeyEvent.VK_G: {
         this.input.setZoomingIn(true);
         break;
       }
-      case KeyEvent.VK_B:
-      {
+      case KeyEvent.VK_B: {
         this.input.setZoomingOut(true);
         break;
       }
     }
   }
 
-  @Override public void keyReleased(
+  @Override
+  public void keyReleased(
     final @Nullable KeyEvent e)
   {
     assert e != null;
 
-    /**
+    /*
      * Ignore events that are the result of keyboard auto-repeat. This means
      * there's one single event when a key is pressed, and another when it is
      * released (as opposed to an endless stream of both when the key is held
@@ -160,22 +151,20 @@ import java.util.concurrent.ExecutorService;
 
     switch (e.getKeyCode()) {
 
-    /**
-     * Pressing 'M' enables/disables the camera.
-     */
+      /*
+       * Pressing 'M' enables/disables the camera.
+       */
 
-      case KeyEvent.VK_M:
-      {
+      case KeyEvent.VK_M: {
         this.toggleCameraEnabled();
         break;
       }
 
-      /**
+      /*
        * Pressing 'P' makes the mouse cursor visible/invisible.
        */
 
-      case KeyEvent.VK_P:
-      {
+      case KeyEvent.VK_P: {
         System.out.printf(
           "Making pointer %s\n",
           this.window.isPointerVisible() ? "invisible" : "visible");
@@ -183,15 +172,16 @@ import java.util.concurrent.ExecutorService;
         break;
       }
 
-      /**
+      /*
        * Pressing enter switches between windowed and fullscreen mode. JOGL
        * requires that this be executed on a background thread.
        */
 
-      case KeyEvent.VK_ENTER:
-      {
-        this.background_workers.execute(new Runnable() {
-          @Override public void run()
+      case KeyEvent.VK_ENTER: {
+        this.background_workers.execute(new Runnable()
+        {
+          @Override
+          public void run()
           {
             final boolean mode =
               !ExampleSphericalKeyListener.this.window.isFullscreen();
@@ -201,72 +191,60 @@ import java.util.concurrent.ExecutorService;
         break;
       }
 
-      /**
+      /*
        * Standard WASD camera controls, with E and Q moving up and down,
        * respectively.
        */
 
-      case KeyEvent.VK_A:
-      {
+      case KeyEvent.VK_A: {
         this.input.setTargetMovingLeftKey(false);
         break;
       }
-      case KeyEvent.VK_W:
-      {
+      case KeyEvent.VK_W: {
         this.input.setTargetMovingForwardKey(false);
         break;
       }
-      case KeyEvent.VK_S:
-      {
+      case KeyEvent.VK_S: {
         this.input.setTargetMovingBackwardKey(false);
         break;
       }
-      case KeyEvent.VK_D:
-      {
+      case KeyEvent.VK_D: {
         this.input.setTargetMovingRightKey(false);
         break;
       }
 
-      case KeyEvent.VK_X:
-      {
+      case KeyEvent.VK_X: {
         this.input.setTargetMovingUp(false);
         break;
       }
-      case KeyEvent.VK_Z:
-      {
+      case KeyEvent.VK_Z: {
         this.input.setTargetMovingDown(false);
         break;
       }
 
-      case KeyEvent.VK_F:
-      {
+      case KeyEvent.VK_F: {
         this.input.setOrbitInclinePositive(false);
         break;
       }
-      case KeyEvent.VK_V:
-      {
+      case KeyEvent.VK_V: {
         this.input.setOrbitInclineNegative(false);
         break;
       }
 
-      case KeyEvent.VK_Q:
-      {
+      case KeyEvent.VK_Q: {
         this.input.setOrbitHeadingNegative(false);
         break;
       }
-      case KeyEvent.VK_E:
-      {
+      case KeyEvent.VK_E: {
         this.input.setOrbitHeadingPositive(false);
         break;
       }
 
-      case KeyEvent.VK_G:
-      {
+      case KeyEvent.VK_G: {
         this.input.setZoomingIn(false);
         break;
       }
-      case KeyEvent.VK_B:
-      {
+      case KeyEvent.VK_B: {
         this.input.setZoomingOut(false);
         break;
       }
@@ -284,8 +262,8 @@ import java.util.concurrent.ExecutorService;
       System.out.println("Enabling camera");
       this.window.confinePointer(true);
       this.renderer.sendWantWarpPointer();
-      this.input.setTargetMovingContinuousRight(0.0f);
-      this.input.setTargetMovingContinuousForward(0.0f);
+      this.input.setTargetMovingContinuousRight(0.0);
+      this.input.setTargetMovingContinuousForward(0.0);
     }
 
     this.sim.cameraSetEnabled(!enabled);

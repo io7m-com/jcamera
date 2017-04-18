@@ -29,9 +29,9 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
   private volatile boolean backward_cursor;
   private volatile boolean backward_key;
   private volatile boolean down;
-  private volatile float   forward_continuous;
+  private volatile double forward_continuous;
   private volatile boolean forward_cursor;
-  private volatile float   forward_factor;
+  private volatile double forward_factor;
   private volatile boolean forward_key;
   private volatile boolean left_cursor;
   private volatile boolean left_key;
@@ -39,9 +39,9 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
   private volatile boolean orbit_heading_positive;
   private volatile boolean orbit_incline_negative;
   private volatile boolean orbit_incline_positive;
-  private volatile float   right_continuous;
+  private volatile double right_continuous;
   private volatile boolean right_cursor;
-  private volatile float   right_factor;
+  private volatile double right_factor;
   private volatile boolean right_key;
   private volatile boolean up;
   private volatile boolean zoom_in;
@@ -49,8 +49,8 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
 
   private JCameraSphericalInput()
   {
-    this.forward_factor = 1.0f;
-    this.right_factor = 1.0f;
+    this.forward_factor = 1.0;
+    this.right_factor = 1.0;
   }
 
   /**
@@ -64,38 +64,38 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
 
   @Override
   public void addTargetMovingContinuousForward(
-    final float in_forward)
+    final double in_forward)
   {
     this.forward_continuous += in_forward;
   }
 
   @Override
   public void addTargetMovingContinuousRight(
-    final float in_right)
+    final double in_right)
   {
     this.right_continuous += in_right;
   }
 
   @Override
-  public float getForwardFactor()
+  public double getForwardFactor()
   {
     return this.forward_factor;
   }
 
   @Override
-  public float getRightFactor()
+  public double getRightFactor()
   {
     return this.right_factor;
   }
 
   @Override
-  public float getTargetMovingForwardContinuous()
+  public double getTargetMovingForwardContinuous()
   {
     return this.forward_continuous * this.forward_factor;
   }
 
   @Override
-  public float getTargetMovingRight()
+  public double getTargetMovingRight()
   {
     return this.right_continuous * this.right_factor;
   }
@@ -202,14 +202,14 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
 
   @Override
   public void setContinuousForwardFactor(
-    final float f)
+    final double f)
   {
     this.forward_factor = f;
   }
 
   @Override
   public void setContinuousRightwardFactor(
-    final float f)
+    final double f)
   {
     this.right_factor = f;
   }
@@ -258,14 +258,14 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
 
   @Override
   public void setTargetMovingContinuousForward(
-    final float f)
+    final double f)
   {
     this.forward_continuous = f;
   }
 
   @Override
   public void setTargetMovingContinuousRight(
-    final float f)
+    final double f)
   {
     this.right_continuous = f;
   }
@@ -313,18 +313,18 @@ public final class JCameraSphericalInput implements JCameraSphericalInputType
   }
 
   @Override
-  public float takeTargetMovingForward()
+  public double takeTargetMovingForward()
   {
-    final float r = this.getTargetMovingForwardContinuous();
-    this.forward_continuous = 0.0f;
+    final double r = this.getTargetMovingForwardContinuous();
+    this.forward_continuous = 0.0;
     return r;
   }
 
   @Override
-  public float takeTargetMovingRight()
+  public double takeTargetMovingRight()
   {
-    final float r = this.getTargetMovingRight();
-    this.right_continuous = 0.0f;
+    final double r = this.getTargetMovingRight();
+    this.right_continuous = 0.0;
     return r;
   }
 }

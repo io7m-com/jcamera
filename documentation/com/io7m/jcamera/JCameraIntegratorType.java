@@ -30,5 +30,5 @@ public interface JCameraIntegratorType
    */
 
   void integrate(
-    final float d);
+    final double d);
 }

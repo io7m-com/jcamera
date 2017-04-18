@@ -21,23 +21,24 @@ import javax.swing.JTextField;
 final class CameraFloatField extends JTextField
 {
   private static final long serialVersionUID = -2563049281161431288L;
-  private float             value;
+  private double value;
 
   CameraFloatField()
   {
     this.setEditable(false);
-    this.setValue(0.0f);
+    this.setValue(0.0);
   }
 
-  @SuppressWarnings("boxing") void setValue(
-    final float x)
+  double getValue()
+  {
+    return this.value;
+  }
+
+  @SuppressWarnings("boxing")
+  void setValue(
+    final double x)
   {
     this.value = x;
     this.setText(String.format("%.6f", this.value));
-  }
-
-  float getValue()
-  {
-    return this.value;
   }
 }

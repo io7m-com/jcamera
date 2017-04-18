@@ -36,7 +36,7 @@ public interface ExampleSphericalSimulationType
    * @return The simulation delta time
    */
 
-  float getDeltaTime();
+  double getDeltaTime();
 
   /**
    * @return A new camera snapshot
@@ -53,8 +53,7 @@ public interface ExampleSphericalSimulationType
   /**
    * Enable/disable the camera.
    *
-   * @param b
-   *          {@code true} if the camera should be enabled.
+   * @param b {@code true} if the camera should be enabled.
    */
 
   void cameraSetEnabled(

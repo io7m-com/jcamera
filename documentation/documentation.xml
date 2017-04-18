@@ -19,19 +19,20 @@
 <s:document
   xmlns:s="http://schemas.io7m.com/structural/2.1.0"
   xmlns:xi="http://www.w3.org/2001/XInclude">
-  <s:document-title>io7m-jcamera 0.4.0 Documentation</s:document-title>
+  <s:document-title>com.io7m.jcamera 0.5.0 Documentation
+  </s:document-title>
   <s:document-style>documentation.css</s:document-style>
   <s:document-contents/>
 
   <s:part>
     <s:part-title>Package Information</s:part-title>
-    <s:part-contents />
+    <s:part-contents/>
     <s:section>
       <s:section-title>Orientation</s:section-title>
       <s:subsection>
         <s:subsection-title>Overview</s:subsection-title>
         <s:paragraph>
-          The <s:term s:type="package">io7m-jcamera</s:term> package
+          The <s:term s:type="package">com.io7m.jcamera</s:term> package
           implements a set of cameras for use in 3D simulations.
         </s:paragraph>
       </s:subsection>
@@ -43,10 +44,12 @@
         <s:subsection-title>Source compilation</s:subsection-title>
         <s:paragraph>
           The project can be compiled and installed with
-          <s:link-external s:target="http://maven.apache.org">Maven</s:link-external>:
+          <s:link-external s:target="http://maven.apache.org">
+            Maven</s:link-external>:
         </s:paragraph>
         <s:paragraph>
-          <s:verbatim s:type="example"><![CDATA[$ mvn -C clean install]]></s:verbatim>
+          <s:verbatim s:type="example">
+            <![CDATA[$ mvn -C clean install]]></s:verbatim>
         </s:paragraph>
       </s:subsection>
 
@@ -54,25 +57,32 @@
         <s:subsection-title>Maven</s:subsection-title>
         <s:paragraph>
           Regular releases are made to the
-          <s:link-external s:target="http://search.maven.org/#search%7Cga%7C1%7Cio7m-jcamera">Central Repository</s:link-external>,
-          so it's possible to use the <s:term s:type="package">io7m-jcamera</s:term>
+          <s:link-external s:target="http://search.maven.org/#search%7Cga%7C1%7Ccom.io7m.jcamera">
+            Central Repository</s:link-external>,
+          so it's possible to use the
+          <s:term s:type="package">com.io7m.jcamera</s:term>
           package in your projects with the following Maven dependency:
         </s:paragraph>
         <s:paragraph>
           <s:verbatim s:type="example"><![CDATA[<dependency>
   <groupId>com.io7m.jcamera</groupId>
-  <artifactId>io7m-jcamera-core</artifactId>
-  <version>0.4.0</version>
+  <artifactId>com.io7m.jcamera-core</artifactId>
+  <version>0.5.0</version>
 </dependency>]]></s:verbatim>
         </s:paragraph>
         <s:paragraph>
-          All <s:link-external s:target="http://io7m.com">io7m.com</s:link-external>
+          All
+          <s:link-external s:target="http://io7m.com">io7m.com</s:link-external>
           packages use Semantic Versioning
           <s:footnote>
-            <s:link-external s:target="http://semver.org">http://semver.org</s:link-external>
-          </s:footnote>, which implies that it is always safe to use version ranges
-          with an exclusive upper bound equal to the next major version - the API of
-          the package will not change in a backwards-incompatible manner before the
+            <s:link-external s:target="http://semver.org">http://semver.org
+            </s:link-external>
+          </s:footnote>
+          , which implies that it is always safe to use version ranges
+          with an exclusive upper bound equal to the next major version - the
+          API of
+          the package will not change in a backwards-incompatible manner before
+          the
           next major version.
         </s:paragraph>
       </s:subsection>
@@ -88,7 +98,8 @@
     <s:section>
       <s:section-title>License</s:section-title>
       <s:paragraph>
-        All files distributed with the <s:term s:type="package">io7m-jcamera</s:term>
+        All files distributed with the
+        <s:term s:type="package">com.io7m.jcamera</s:term>
         package are placed under the following license:
         <s:verbatim s:type="license"><![CDATA[Copyright © 2016 <code@io7m.com> http://io7m.com
 

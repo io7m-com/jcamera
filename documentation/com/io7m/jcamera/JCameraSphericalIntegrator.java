@@ -80,7 +80,7 @@ public final class JCameraSphericalIntegrator
     {
       @Override
       public void integrate(
-        final float d)
+        final double d)
       {
         li.integrate(d);
         ai.integrate(d);
@@ -88,42 +88,42 @@ public final class JCameraSphericalIntegrator
 
       @Override
       public void integratorAngularOrbitHeadingSetAcceleration(
-        final float a)
+        final double a)
       {
         ai.integratorAngularOrbitHeadingSetAcceleration(a);
       }
 
       @Override
       public void integratorAngularOrbitHeadingSetDrag(
-        final float d)
+        final double d)
       {
         ai.integratorAngularOrbitHeadingSetDrag(d);
       }
 
       @Override
       public void integratorAngularOrbitHeadingSetMaximumSpeed(
-        final float s)
+        final double s)
       {
         ai.integratorAngularOrbitHeadingSetMaximumSpeed(s);
       }
 
       @Override
       public void integratorAngularOrbitInclineSetAcceleration(
-        final float a)
+        final double a)
       {
         ai.integratorAngularOrbitInclineSetAcceleration(a);
       }
 
       @Override
       public void integratorAngularOrbitInclineSetDrag(
-        final float d)
+        final double d)
       {
         ai.integratorAngularOrbitInclineSetDrag(d);
       }
 
       @Override
       public void integratorAngularOrbitInclineSetMaximumSpeed(
-        final float s)
+        final double s)
       {
         ai.integratorAngularOrbitInclineSetMaximumSpeed(s);
       }
@@ -142,42 +142,42 @@ public final class JCameraSphericalIntegrator
 
       @Override
       public void integratorLinearTargetSetAcceleration(
-        final float a)
+        final double a)
       {
         li.integratorLinearTargetSetAcceleration(a);
       }
 
       @Override
       public void integratorLinearTargetSetDrag(
-        final float f)
+        final double f)
       {
         li.integratorLinearTargetSetDrag(f);
       }
 
       @Override
       public void integratorLinearTargetSetMaximumSpeed(
-        final float s)
+        final double s)
       {
         li.integratorLinearTargetSetMaximumSpeed(s);
       }
 
       @Override
       public void integratorLinearZoomSetAcceleration(
-        final float a)
+        final double a)
       {
         li.integratorLinearZoomSetAcceleration(a);
       }
 
       @Override
       public void integratorLinearZoomSetDrag(
-        final float f)
+        final double f)
       {
         li.integratorLinearZoomSetDrag(f);
       }
 
       @Override
       public void integratorLinearZoomSetMaximumSpeed(
-        final float s)
+        final double s)
       {
         li.integratorLinearZoomSetMaximumSpeed(s);
       }

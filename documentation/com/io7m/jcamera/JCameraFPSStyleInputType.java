@@ -29,7 +29,7 @@ public interface JCameraFPSStyleInputType
    */
 
   void addRotationAroundHorizontal(
-    float r);
+    double r);
 
   /**
    * Add a rotation around the vertical axis.
@@ -38,13 +38,13 @@ public interface JCameraFPSStyleInputType
    */
 
   void addRotationAroundVertical(
-    float r);
+    double r);
 
   /**
    * @return The current horizontal rotation coefficient.
    */
 
-  float getRotationHorizontal();
+  double getRotationHorizontal();
 
   /**
    * Set the horizontal rotation.
@@ -53,13 +53,13 @@ public interface JCameraFPSStyleInputType
    */
 
   void setRotationHorizontal(
-    float r);
+    double r);
 
   /**
    * @return The current vertical rotation coefficient.
    */
 
-  float getRotationVertical();
+  double getRotationVertical();
 
   /**
    * Set the vertical rotation.
@@ -68,11 +68,10 @@ public interface JCameraFPSStyleInputType
    */
 
   void setRotationVertical(
-    float r);
+    double r);
 
   /**
-   * @return {@code true} if the user is telling the camera to move
-   * backward
+   * @return {@code true} if the user is telling the camera to move backward
    */
 
   boolean isMovingBackward();
@@ -168,7 +167,7 @@ public interface JCameraFPSStyleInputType
    */
 
   void setRotationHorizontalFactor(
-    float f);
+    double f);
 
   /**
    * Set the vertical rotation factor.
@@ -177,7 +176,7 @@ public interface JCameraFPSStyleInputType
    */
 
   void setRotationVerticalFactor(
-    float f);
+    double f);
 
   /**
    * Return {@link #getRotationHorizontal()}, setting the rotation to 0.0.
@@ -185,7 +184,7 @@ public interface JCameraFPSStyleInputType
    * @return The current horizontal rotation coefficient.
    */
 
-  float takeRotationHorizontal();
+  double takeRotationHorizontal();
 
   /**
    * Return {@link #getRotationVertical()}, setting the rotation to 0.0.
@@ -193,5 +192,5 @@ public interface JCameraFPSStyleInputType
    * @return The current vertical rotation coefficient.
    */
 
-  float takeRotationVertical();
+  double takeRotationVertical();
 }

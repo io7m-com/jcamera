@@ -5,13 +5,20 @@
     <a:email>contact@io7m.com</a:email>
   </a:author>
   <a:id>http://io7m.github.io/jcamera//releases.atom</a:id>
-  <a:title>io7m-jcamera Releases</a:title>
-  <a:updated>2016-05-06T00:00:00Z</a:updated>
+  <a:title>com.io7m.jcamera Releases</a:title>
+  <a:updated>2017-04-18T00:00:00</a:updated>
   <a:entry>
     <a:id>0</a:id>
-    <a:updated>2016-05-06T00:00:00Z</a:updated>
-    <a:published>2016-05-06T00:00:00Z</a:published>
-    <a:title>io7m-jcamera 0.4.0 released</a:title>
-    <a:content type="text"> io7m-jcamera 0.4.0 released </a:content>
+    <a:updated>2017-04-18T00:00:00</a:updated>
+    <a:published>2017-04-18T00:00:00</a:published>
+    <a:title>com.io7m.jcamera 0.5.0 released</a:title>
+    <a:content type="text"> com.io7m.jcamera 0.5.0 released </a:content>
+  </a:entry>
+  <a:entry>
+    <a:id>1</a:id>
+    <a:updated>2016-05-06T00:00:00</a:updated>
+    <a:published>2016-05-06T00:00:00</a:published>
+    <a:title>com.io7m.jcamera 0.4.0 released</a:title>
+    <a:content type="text"> com.io7m.jcamera 0.4.0 released </a:content>
   </a:entry>
 </a:feed>

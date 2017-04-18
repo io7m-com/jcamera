@@ -28,7 +28,7 @@ import com.io7m.jequality.annotations.EqualityReference;
 public final class JCameraSignallingClamp
 {
   private boolean clamped;
-  private float   value;
+  private double value;
 
   /**
    * Construct a new signalling clamp function.
@@ -49,9 +49,9 @@ public final class JCameraSignallingClamp
    */
 
   public void clamp(
-    final float x,
-    final float min,
-    final float max)
+    final double x,
+    final double min,
+    final double max)
   {
     this.value = x;
     this.clamped = false;
@@ -70,14 +70,14 @@ public final class JCameraSignallingClamp
    * @return The value resulting from the most recent clamp operation.
    */
 
-  public float getValue()
+  public double getValue()
   {
     return this.value;
   }
 
   /**
-   * @return {@code true} if the value passed to the most recent clamp
-   * operation was not in the inclusive range.
+   * @return {@code true} if the value passed to the most recent clamp operation
+   * was not in the inclusive range.
    */
 
   public boolean isClamped()

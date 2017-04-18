@@ -31,7 +31,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetAccelerationHorizontal(
-    final float a);
+    final double a);
 
   /**
    * Set the acceleration around the vertical axis to {@code a}.
@@ -40,7 +40,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetAccelerationVertical(
-    final float a);
+    final double a);
 
   /**
    * Set the drag around the horizontal axis to {@code a}.
@@ -49,7 +49,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetDragHorizontal(
-    final float d);
+    final double d);
 
   /**
    * Set the drag around the vertical axis to {@code a}.
@@ -58,7 +58,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetDragVertical(
-    final float d);
+    final double d);
 
   /**
    * Set the maximum rotation speed around the horizontal axis to
@@ -68,7 +68,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetMaximumSpeedHorizontal(
-    final float s);
+    final double s);
 
   /**
    * Set the maximum rotation speed around the vertical axis to {@code s}
@@ -78,7 +78,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetMaximumSpeedVertical(
-    final float s);
+    final double s);
 
   /**
    * @return The camera that will be affected by the integrator

@@ -33,8 +33,8 @@ public final class JCameraScalingFunctions
     SCALE_IDENTITY = new JCameraScalingFunctionType()
     {
       @Override
-      public float evaluate(
-        final float x)
+      public double evaluate(
+        final double x)
       {
         return x;
       }
@@ -43,10 +43,10 @@ public final class JCameraScalingFunctions
     SCALE_SQUARE_ROOT = new JCameraScalingFunctionType()
     {
       @Override
-      public float evaluate(
-        final float x)
+      public double evaluate(
+        final double x)
       {
-        return (float) Math.sqrt((double) x);
+        return Math.sqrt(x);
       }
     };
   }

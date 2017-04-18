@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>io7m-jcamera 0.4.0 Documentation: 2.2. First-person camera</title><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-layout.css"/><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-colour.css"/><link rel="stylesheet" type="text/css" href="documentation.css"/></head><body><div class="st200_body"><div class="brand">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>com.io7m.jcamera 0.5.0 Documentation
+  : 2.2. First-person camera</title><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-layout.css"/><link rel="stylesheet" type="text/css" href="jstructural-2.0.0-colour.css"/><link rel="stylesheet" type="text/css" href="documentation.css"/></head><body><div class="st200_body"><div class="brand">
   <div class="brand_left">
     <a href="http://io7m.com/">io7m</a>
   </div>
   <div class="brand_right">
-    <a href="http://io7m.github.io/jcamera/">io7m-jcamera</a> 0.4.0
+    <a href="http://io7m.github.io/jcamera/">com.io7m.jcamera</a>
+    0.5.0
   </div>
 </div><div class="st200_navbar st200_navbar_top"><table class="st200_navbar_table" summary="Navigation bar"><tr><td class="st200_navbar_prev_title_cell">2.1. Usage</td><td class="st200_navbar_up_title_cell">2. Usage</td><td class="st200_navbar_next_title_cell">2.3. Example sources</td></tr><tr><td class="st200_navbar_prev_file_cell"><a href="p2s1.xhtml#st200_p2s1">Previous</a></td><td class="st200_navbar_up_file_cell"><a href="p2.xhtml#st200_p2">Up</a></td><td class="st200_navbar_next_file_cell"><a href="p2s3.xhtml#st200_p2s3">Next</a></td></tr></table><hr class="st200_hr"/></div><div class="st200_section_container"><div class="st200_section_title_number"><a id="st200_p2s2" href="#st200_p2s2">2.2</a></div><div class="st200_section_title">First-person camera</div><ul class="st200_contents st200_section_contents_outer st200_section_contents"><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss1">2.2.1. Overview</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss2">2.2.2. FPS Simulation</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss3">2.2.3. Input</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss4">2.2.4. Rendering/Interpolation</a></li><li class="st200_contents_item st200_contents_item1 st200_contents_item_subsection"><a href="p2s2.xhtml#st200_p2s2ss5">2.2.5. Main</a></li></ul><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss1" href="#st200_p2s2ss1">2.2.1</a></div><div class="st200_subsection_title">Overview</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg1" href="#st200_p2s2ss1pg1">1</a></div><div class="st200_paragraph">
       In order to aid comprehension, and to follow good software engineering
@@ -14,36 +16,44 @@
       initialize an OpenGL window with JOGL, and register some keyboard and
       mouse listeners to supply input to a
       <span class="st200_term term">simulation</span>, which in turn periodically
-      produces new data (a <span class="st200_term term">view matrix</span>) for 
+      produces new data (a <span class="st200_term term">view matrix</span>) for
       a <span class="st200_term term">renderer</span>.
       The <span class="st200_term term">renderer</span> draws a simple static scene
       using the view matrix periodically produced by a camera from the
-      <span class="st200_term package">io7m-jcamera</span> package. The
-      <span class="st200_term term">simulation</span> runs at a fixed time step
+      <span class="st200_term package">com.io7m.jcamera</span>
+      package. The
+      <span class="st200_term term">simulation</span>
+      runs at a fixed time step
       to provide completely frame rate independent movement (see the article
-      <a class="st200_link_external" href="http://gafferongames.com/game-physics/fix-your-timestep/">"Fix Your Timestep!"</a>
+      <a class="st200_link_external" href="http://gafferongames.com/game-physics/fix-your-timestep/">
+        "Fix Your Timestep!"
+      </a>
       for details on why physical simulations should use fixed time steps).
-      The <span class="st200_term term">renderer</span>, however, runs at an arbitrary 
-      frame rate. On some systems the frame rate will be exactly equal to the 
-      screen's vertical refresh rate, whilst on others, the rate will be 
+      The <span class="st200_term term">renderer</span>, however, runs at an arbitrary
+      frame rate. On some systems the frame rate will be exactly equal to the
+      screen's vertical refresh rate, whilst on others, the rate will be
       thousands of times per second. The desire is to show that the system
       works equally well no matter what frame rate is used, so no attempt
       is made to enforce any particular rate. A rough graph of the data
       flow between components is as follows:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss1fo1" href="#st200_p2s2ss1fo1">2.2.1.1. Example data flow</a></div><img class="st200_image" alt="Example data flow" src="images/example_dataflow.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg2" href="#st200_p2s2ss1pg2">2</a></div><div class="st200_paragraph">
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss1fo1" href="#st200_p2s2ss1fo1">2.2.1.1. Example data flow</a></div><img class="st200_image" alt="Example data flow&#x0A;      " src="images/example_dataflow.png"/></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg2" href="#st200_p2s2ss1pg2">2</a></div><div class="st200_paragraph">
       JOGL works with an event-based model, where mouse and keyboard input
-      causes events to be delivered to mouse and keyboard <span class="st200_term term">listeners</span>.
+      causes events to be delivered to mouse and keyboard <span class="st200_term term">
+      listeners</span>.
       Additionally, OpenGL rendering typically occurs via an OpenGL
-      <span class="st200_term term">listener</span>: JOGL (or the GPU, or the operating system, 
-      whichever is responsible) indicates that it is time to render the scene, 
+      <span class="st200_term term">listener</span>: JOGL (or the GPU, or the
+      operating system,
+      whichever is responsible) indicates that it is time to render the scene,
       and the user's registered <span class="st200_term term">listener</span> is
       executed to actually perform the drawing. It's reasonable to assume that
       input handling and rendering occur on different threads by default, so
       the code here is careful to operate in a thread-safe manner.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg3" href="#st200_p2s2ss1pg3">3</a></div><div class="st200_paragraph">
       The interface exposed to JOGL by the example renderer is as follows
-      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">ExampleRendererType.java</a>]:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss1fo2" href="#st200_p2s2ss1fo2">2.2.1.2. Renderer interface</a></div><pre class="st200_verbatim">/*
+      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">
+      ExampleRendererType.java</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss1fo2" href="#st200_p2s2ss1fo2">2.2.1.2. Renderer interface</a></div><pre class="st200_verbatim">
+        /*
  * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -62,12 +72,12 @@
 package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraReadableSnapshotType;
-import com.io7m.jfunctional.OptionType;
-import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL3;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * The interface exposed by the renderer to JOGL.
@@ -78,12 +88,10 @@ public interface ExampleRendererType extends ExampleRendererControllerType
   /**
    * Initialize the scene, using the given window and OpenGL interface.
    *
-   * @param in_window
-   *          The window
-   * @param in_gl
-   *          The OpenGL interface
-   * @throws IOException
-   *           On I/O errors
+   * @param in_window The window
+   * @param in_gl     The OpenGL interface
+   *
+   * @throws IOException On I/O errors
    */
 
   void init(
@@ -94,47 +102,51 @@ public interface ExampleRendererType extends ExampleRendererControllerType
   /**
    * Draw the scene.
    *
-   * @param s
-   *          A camera snapshot
-   * @param target
-   *          An optional target to be drawn
+   * @param s      A camera snapshot
+   * @param target An optional target to be drawn
    */
 
   void draw(
     final JCameraReadableSnapshotType s,
-    final OptionType&lt;VectorReadable3FType&gt; target);
+    final Optional&lt;Vector3D&gt; target);
 
   /**
    * Indicate that the screen has been resized.
    *
-   * @param width
-   *          The new width
-   * @param height
-   *          The new height
+   * @param width  The new width
+   * @param height The new height
    */
 
   void reshape(
     int width,
     int height);
 }
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg4" href="#st200_p2s2ss1pg4">4</a></div><div class="st200_paragraph">
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg4" href="#st200_p2s2ss1pg4">4</a></div><div class="st200_paragraph">
       Little is needed in the way of explanation here. The renderer initializes
       the scene's resources when <span class="st200_term function">init</span> is
-      called (such as allocating memory on the GPU for mesh data, compiling shaders, etc).
-      The renderer draws the scene whenever <span class="st200_term function">draw</span> is called,
+      called (such as allocating memory on the GPU for mesh data, compiling
+      shaders, etc).
+      The renderer draws the scene whenever <span class="st200_term function">draw
+    </span> is called,
       and recalculates any internal resources that are dependent on the size
-      of the window (such as the scene's <span class="st200_term term">projection matrix</span>)
+      of the window (such as the scene's <span class="st200_term term">projection
+      matrix</span>)
       when <span class="st200_term function">reshape</span> is called.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss1pg5" href="#st200_p2s2ss1pg5">5</a></div><div class="st200_paragraph">
       The actual implementation of the renderer is of little interest here. It
       simply draws a hundred or so static quads from the perspective of whatever
       is the current view matrix. The implementation is given in
-      <a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRenderer.java">ExampleRenderer</a>
+      <a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRenderer.java">
+        ExampleRenderer
+      </a>
       and will not be referenced again.
     </div></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss2" href="#st200_p2s2ss2">2.2.2</a></div><div class="st200_subsection_title">FPS Simulation</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg1" href="#st200_p2s2ss2pg1">1</a></div><div class="st200_paragraph">
       The interface exposed to JOGL by the example simulation is as follows
-      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulationType.java">ExampleFPSStyleSimulationType.java</a>]:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo1" href="#st200_p2s2ss2fo1">2.2.2.1. Simulation interface</a></div><pre class="st200_verbatim">/*
+      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulationType.java">
+      ExampleFPSStyleSimulationType.java</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo1" href="#st200_p2s2ss2fo1">2.2.2.1. Simulation interface</a></div><pre class="st200_verbatim">
+        /*
  * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -172,8 +184,7 @@ public interface ExampleFPSStyleSimulationType
   /**
    * Enable/disable the camera.
    *
-   * @param b
-   *          {@code true} if the camera should be enabled.
+   * @param b {@code true} if the camera should be enabled.
    */
 
   void cameraSetEnabled(
@@ -209,17 +220,21 @@ public interface ExampleFPSStyleSimulationType
 
   JCameraFPSStyleSnapshot integrate();
 }
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg2" href="#st200_p2s2ss2pg2">2</a></div><div class="st200_paragraph">
-      Again, little is needed in the way of explanation. The simulation provides a
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg2" href="#st200_p2s2ss2pg2">2</a></div><div class="st200_paragraph">
+      Again, little is needed in the way of explanation. The simulation provides
+      a
       camera that can be enabled and disabled. If the camera is disabled,
       a simple fixed camera is used rather than having the camera be driven by
       keyboard and mouse input.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg3" href="#st200_p2s2ss2pg3">3</a></div><div class="st200_paragraph">
-      The simulation needs a way to periodically warp the mouse cursor to the 
-      center of the screen if the movable camera is enabled, so the renderer 
+      The simulation needs a way to periodically warp the mouse cursor to the
+      center of the screen if the movable camera is enabled, so the renderer
       exposes the following interface to the simulation
-      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">ExampleRendererControllerType.java</a>]:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo2" href="#st200_p2s2ss2fo2">2.2.2.2. Renderer control interface</a></div><pre class="st200_verbatim">/*
+      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">
+      ExampleRendererControllerType.java</a>]:
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo2" href="#st200_p2s2ss2fo2">2.2.2.2. Renderer control interface</a></div><pre class="st200_verbatim">
+        /*
  * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -250,11 +265,14 @@ public interface ExampleRendererControllerType
 
   void sendWantWarpPointer();
 }
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg4" href="#st200_p2s2ss2pg4">4</a></div><div class="st200_paragraph">
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg4" href="#st200_p2s2ss2pg4">4</a></div><div class="st200_paragraph">
       The actual implementation of the simulation is as follows
-      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java">ExampleFPSStyleSimulation.java</a>].
+      [<a class="st200_link_external" href="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java">
+      ExampleFPSStyleSimulation.java</a>].
       First:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo3" href="#st200_p2s2ss2fo3">2.2.2.3. Camera declarations and storage</a></div><pre class="st200_verbatim">  /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo3" href="#st200_p2s2ss2fo3">2.2.2.3. Camera declarations and storage</a></div><pre class="st200_verbatim">
+          /**
    * $example: Construct a new simulation.
    *
    * @param in_renderer The interface to the renderer
@@ -267,22 +285,25 @@ public interface ExampleRendererControllerType
     this.input = JCameraFPSStyleInput.newInput();
     this.camera = JCameraFPSStyle.newCamera();
     final JCameraFPSStyleType camera_fixed = JCameraFPSStyle.newCamera();
-    this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
+    this.fixed_snapshot = JCameraFPSStyleSnapshots.of(camera_fixed);
     this.camera_enabled = new AtomicBoolean(false);
 
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg5" href="#st200_p2s2ss2pg5">5</a></div><div class="st200_paragraph">
-      Then, an <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss6">integrator</a> is 
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg5" href="#st200_p2s2ss2pg5">5</a></div><div class="st200_paragraph">
+      Then, an <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss6">integrator</a> is
       created to drive the camera, and the integration
-      period required for a fixed time step of <span class="st200_term expression">60</span> 
+      period required for a fixed time step of
+      <span class="st200_term expression">60</span>
       frames per second is calculated:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo4" href="#st200_p2s2ss2fo4">2.2.2.4. Integrator</a></div><pre class="st200_verbatim">    /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo4" href="#st200_p2s2ss2fo4">2.2.2.4. Integrator</a></div><pre class="st200_verbatim">
+            /*
      * $example: Construct an integrator using the default implementations.
      */
 
     this.integrator =
       JCameraFPSStyleIntegrator.newIntegrator(this.camera, this.input);
 
-    /**
+    /*
      * Work out what fraction of a second the given simulation rate is going
      * to require.
      */
@@ -290,37 +311,41 @@ public interface ExampleRendererControllerType
     final float rate = 60.0f;
     this.integrator_time_seconds = 1.0f / rate;
 
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg6" href="#st200_p2s2ss2pg6">6</a></div><div class="st200_paragraph">
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg6" href="#st200_p2s2ss2pg6">6</a></div><div class="st200_paragraph">
       Finally, to give the camera somewhat more snappy and abrupt behaviour than
       the default settings, some new acceleration and drag values are configured
       for the camera:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo5" href="#st200_p2s2ss2fo5">2.2.2.5. Acceleration and Drag</a></div><pre class="st200_verbatim">    /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo5" href="#st200_p2s2ss2fo5">2.2.2.5. Acceleration and Drag</a></div><pre class="st200_verbatim">
+            /*
      * $example: Configure the integrator. Use a high drag factor to give
      * quite abrupt stops, and use high rotational acceleration.
      */
 
-    this.integrator.integratorAngularSetDragHorizontal(0.000000001f);
-    this.integrator.integratorAngularSetDragVertical(0.000000001f);
+    this.integrator.integratorAngularSetDragHorizontal(0.000000001);
+    this.integrator.integratorAngularSetDragVertical(0.000000001);
     this.integrator.integratorAngularSetAccelerationHorizontal(
-      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+      Math.PI / 12.0 / (double) this.integrator_time_seconds);
     this.integrator.integratorAngularSetAccelerationVertical(
-      (float) ((Math.PI / 12.0) / (double) this.integrator_time_seconds));
+      Math.PI / 12.0 / (double) this.integrator_time_seconds);
     this.integrator.integratorLinearSetAcceleration(
-      (float) (3.0 / (double) this.integrator_time_seconds));
-    this.integrator.integratorLinearSetMaximumSpeed(3.0f);
-    this.integrator.integratorLinearSetDrag(0.000000001f);
+      3.0 / (double) this.integrator_time_seconds);
+    this.integrator.integratorLinearSetMaximumSpeed(3.0);
+    this.integrator.integratorLinearSetDrag(0.000000001);
   }
 
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg7" href="#st200_p2s2ss2pg7">7</a></div><div class="st200_paragraph">
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss2pg7" href="#st200_p2s2ss2pg7">7</a></div><div class="st200_paragraph">
       The <span class="st200_term function">integrate</span> function is executed at a
       rate of <span class="st200_term expression">60</span> times per second, and
-      produces a new snapshot each time, which is passed to the renderer. 
-      The immutable nature of the snapshot means that it can be safely shared 
+      produces a new snapshot each time, which is passed to the renderer.
+      The immutable nature of the snapshot means that it can be safely shared
       across threads without any need for locks or other synchronization.
-      If the camera is actually enabled, the simulation also instructs the 
+      If the camera is actually enabled, the simulation also instructs the
       renderer to warp the mouse cursor back to the center of the screen. The
       rest of the functions complete the interface.
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo6" href="#st200_p2s2ss2fo6">2.2.2.6. Integrate</a></div><pre class="st200_verbatim">  /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss2fo6" href="#st200_p2s2ss2fo6">2.2.2.6. Integrate</a></div><pre class="st200_verbatim">
+          /**
    * $example: Integrate the camera.
    *
    * @return A new camera snapshot.
@@ -329,7 +354,7 @@ public interface ExampleRendererControllerType
   @Override
   public JCameraFPSStyleSnapshot integrate()
   {
-    /**
+    /*
      * If the camera is actually enabled, integrate and produce a snapshot,
      * and then tell the renderer/window system that it should warp the
      * pointer back to the center of the screen.
@@ -337,7 +362,8 @@ public interface ExampleRendererControllerType
 
     if (this.cameraIsEnabled()) {
       this.integrator.integrate(this.integrator_time_seconds);
-      final JCameraFPSStyleSnapshot snap = this.camera.cameraMakeSnapshot();
+      final JCameraFPSStyleSnapshot snap =
+        JCameraFPSStyleSnapshots.of(this.camera);
       this.renderer.sendWantWarpPointer();
       return snap;
     }
@@ -382,27 +408,34 @@ public interface ExampleRendererControllerType
     return this.camera;
   }
 }
-</pre></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss3" href="#st200_p2s2ss3">2.2.3</a></div><div class="st200_subsection_title">Input</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg1" href="#st200_p2s2ss3pg1">1</a></div><div class="st200_paragraph">
-      It's now necessary to supply the simulation with input. 
+
+      </pre></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss3" href="#st200_p2s2ss3">2.2.3</a></div><div class="st200_subsection_title">Input</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg1" href="#st200_p2s2ss3pg1">1</a></div><div class="st200_paragraph">
+      It's now necessary to supply the simulation with input.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg2" href="#st200_p2s2ss3pg2">2</a></div><div class="st200_paragraph">
       A <span class="st200_term type">KeyListener</span> is defined.
       Every time the user presses or releases a key, the simulation camera's
       input is notified accordingly.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg3" href="#st200_p2s2ss3pg3">3</a></div><div class="st200_paragraph">
       There is one main issue covered here: If the user has keyboard
-      auto-repeat enabled by their operating system, holding a key will result in
-      an endless stream of "key pressed" and "key released" events. The code here
-      is only interested in receiving the first "key pressed" and last "key released"
+      auto-repeat enabled by their operating system, holding a key will result
+      in
+      an endless stream of "key pressed" and "key released" events. The code
+      here
+      is only interested in receiving the first "key pressed" and last "key
+      released"
       event for each key, and JOGL's NEWT system marks each event as having been
-      produced by auto-repeat (or not). Therefore, the auto-repeat flag is checked
+      produced by auto-repeat (or not). Therefore, the auto-repeat flag is
+      checked
       for each event, and the event is discarded if the flag is set.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg4" href="#st200_p2s2ss3pg4">4</a></div><div class="st200_paragraph">
-      Additionally, a few extra definitions allow for showing/hiding the mouse 
-      cursor, and switching between windowed and full-screen mode. JOGL requires 
-      that the <span class="st200_term function">setFullscreen</span> function be called
+      Additionally, a few extra definitions allow for showing/hiding the mouse
+      cursor, and switching between windowed and full-screen mode. JOGL requires
+      that the <span class="st200_term function">setFullscreen</span> function be
+      called
       on a background thread, rather than the thread handling input and/or
       rendering for the current window.
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss3fo1" href="#st200_p2s2ss3fo1">2.2.3.1. Main (KeyListener)</a></div><pre class="st200_verbatim">/*
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss3fo1" href="#st200_p2s2ss3fo1">2.2.3.1. Main (KeyListener)</a></div><pre class="st200_verbatim">
+        /*
  * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -435,14 +468,15 @@ import java.util.concurrent.ExecutorService;
 
 // CHECKSTYLE_JAVADOC:OFF
 
-@SuppressWarnings("synthetic-access") public final class ExampleFPSStyleKeyListener implements
+@SuppressWarnings("synthetic-access")
+public final class ExampleFPSStyleKeyListener implements
   KeyListener
 {
   private final ExampleFPSStyleSimulationType sim;
-  private final ExecutorService               background_workers;
-  private final ExampleRendererType           renderer;
-  private final JCameraFPSStyleInputType      input;
-  private final GLWindow                      window;
+  private final ExecutorService background_workers;
+  private final ExampleRendererType renderer;
+  private final JCameraFPSStyleInputType input;
+  private final GLWindow window;
 
   public ExampleFPSStyleKeyListener(
     final ExampleFPSStyleSimulationType in_sim,
@@ -457,12 +491,13 @@ import java.util.concurrent.ExecutorService;
     this.window = in_window;
   }
 
-  @Override public void keyPressed(
+  @Override
+  public void keyPressed(
     final @Nullable KeyEvent e)
   {
     assert e != null;
 
-    /**
+    /*
      * Ignore events that are the result of keyboard auto-repeat. This means
      * there's one single event when a key is pressed, and another when it is
      * released (as opposed to an endless stream of both when the key is held
@@ -475,50 +510,45 @@ import java.util.concurrent.ExecutorService;
 
     switch (e.getKeyCode()) {
 
-    /**
-     * Standard WASD camera controls, with E and Q moving up and down,
-     * respectively.
-     */
+      /*
+       * Standard WASD camera controls, with E and Q moving up and down,
+       * respectively.
+       */
 
-      case KeyEvent.VK_A:
-      {
+      case KeyEvent.VK_A: {
         this.input.setMovingLeft(true);
         break;
       }
-      case KeyEvent.VK_W:
-      {
+      case KeyEvent.VK_W: {
         this.input.setMovingForward(true);
         break;
       }
-      case KeyEvent.VK_S:
-      {
+      case KeyEvent.VK_S: {
         this.input.setMovingBackward(true);
         break;
       }
-      case KeyEvent.VK_D:
-      {
+      case KeyEvent.VK_D: {
         this.input.setMovingRight(true);
         break;
       }
-      case KeyEvent.VK_E:
-      {
+      case KeyEvent.VK_E: {
         this.input.setMovingUp(true);
         break;
       }
-      case KeyEvent.VK_Q:
-      {
+      case KeyEvent.VK_Q: {
         this.input.setMovingDown(true);
         break;
       }
     }
   }
 
-  @Override public void keyReleased(
+  @Override
+  public void keyReleased(
     final @Nullable KeyEvent e)
   {
     assert e != null;
 
-    /**
+    /*
      * Ignore events that are the result of keyboard auto-repeat. This means
      * there's one single event when a key is pressed, and another when it is
      * released (as opposed to an endless stream of both when the key is held
@@ -531,22 +561,20 @@ import java.util.concurrent.ExecutorService;
 
     switch (e.getKeyCode()) {
 
-    /**
-     * Pressing 'M' enables/disables the camera.
-     */
+      /*
+       * Pressing 'M' enables/disables the camera.
+       */
 
-      case KeyEvent.VK_M:
-      {
+      case KeyEvent.VK_M: {
         this.toggleCameraEnabled();
         break;
       }
 
-      /**
+      /*
        * Pressing 'P' makes the mouse cursor visible/invisible.
        */
 
-      case KeyEvent.VK_P:
-      {
+      case KeyEvent.VK_P: {
         System.out.printf(
           "Making pointer %s\n",
           this.window.isPointerVisible() ? "invisible" : "visible");
@@ -554,15 +582,16 @@ import java.util.concurrent.ExecutorService;
         break;
       }
 
-      /**
+      /*
        * Pressing enter switches between windowed and fullscreen mode. JOGL
        * requires that this be executed on a background thread.
        */
 
-      case KeyEvent.VK_ENTER:
-      {
-        this.background_workers.execute(new Runnable() {
-          @Override public void run()
+      case KeyEvent.VK_ENTER: {
+        this.background_workers.execute(new Runnable()
+        {
+          @Override
+          public void run()
           {
             final boolean mode =
               !ExampleFPSStyleKeyListener.this.window.isFullscreen();
@@ -572,38 +601,32 @@ import java.util.concurrent.ExecutorService;
         break;
       }
 
-      /**
+      /*
        * Standard WASD camera controls, with E and Q moving up and down,
        * respectively.
        */
 
-      case KeyEvent.VK_A:
-      {
+      case KeyEvent.VK_A: {
         this.input.setMovingLeft(false);
         break;
       }
-      case KeyEvent.VK_W:
-      {
+      case KeyEvent.VK_W: {
         this.input.setMovingForward(false);
         break;
       }
-      case KeyEvent.VK_S:
-      {
+      case KeyEvent.VK_S: {
         this.input.setMovingBackward(false);
         break;
       }
-      case KeyEvent.VK_D:
-      {
+      case KeyEvent.VK_D: {
         this.input.setMovingRight(false);
         break;
       }
-      case KeyEvent.VK_E:
-      {
+      case KeyEvent.VK_E: {
         this.input.setMovingUp(false);
         break;
       }
-      case KeyEvent.VK_Q:
-      {
+      case KeyEvent.VK_Q: {
         this.input.setMovingDown(false);
         break;
       }
@@ -621,18 +644,21 @@ import java.util.concurrent.ExecutorService;
       System.out.println("Enabling camera");
       this.window.confinePointer(true);
       this.renderer.sendWantWarpPointer();
-      this.input.setRotationHorizontal(0.0F);
-      this.input.setRotationVertical(0.0F);
+      this.input.setRotationHorizontal(0.0);
+      this.input.setRotationVertical(0.0);
     }
 
     this.sim.cameraSetEnabled(!enabled);
   }
 }
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg5" href="#st200_p2s2ss3pg5">5</a></div><div class="st200_paragraph">
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss3pg5" href="#st200_p2s2ss3pg5">5</a></div><div class="st200_paragraph">
       A <span class="st200_term type">MouseAdapter</span> is defined.
-      Every time the user moves the mouse, the rotation coefficients are calculated
+      Every time the user moves the mouse, the rotation coefficients are
+      calculated
       and sent to the simulation camera's input:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss3fo2" href="#st200_p2s2ss3fo2">2.2.3.2. Main (MouseAdapter)</a></div><pre class="st200_verbatim">/*
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss3fo2" href="#st200_p2s2ss3fo2">2.2.3.2. Main (MouseAdapter)</a></div><pre class="st200_verbatim">
+        /*
  * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -652,7 +678,7 @@ package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraFPSStyleInputType;
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
-import com.io7m.jcamera.JCameraRotationCoefficients;
+import com.io7m.jcamera.JCameraRotationCoefficientsMutable;
 import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
@@ -668,14 +694,14 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
 {
   private final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; mouse_region;
-  private final JCameraFPSStyleInputType                    input;
-  private final ExampleFPSStyleSimulationType               sim;
-  private final JCameraRotationCoefficients                 rotations;
+  private final JCameraFPSStyleInputType input;
+  private final ExampleFPSStyleSimulationType sim;
+  private final JCameraRotationCoefficientsMutable rotations;
 
   public ExampleFPSStyleMouseAdapter(
     final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; in_mouse_region,
     final ExampleFPSStyleSimulationType in_sim,
-    final JCameraRotationCoefficients in_rotations)
+    final JCameraRotationCoefficientsMutable in_rotations)
   {
     this.mouse_region = in_mouse_region;
     this.input = in_sim.getInput();
@@ -683,35 +709,40 @@ public final class ExampleFPSStyleMouseAdapter extends MouseAdapter
     this.rotations = in_rotations;
   }
 
-  @Override public void mouseMoved(
+  @Override
+  public void mouseMoved(
     final @Nullable MouseEvent e)
   {
     assert e != null;
 
-    /**
+    /*
      * If the camera is enabled, get the rotation coefficients for the mouse
      * movement.
      */
 
     if (this.sim.cameraIsEnabled()) {
-      this.mouse_region.get().getCoefficients(
-        (float) e.getX(),
-        (float) e.getY(),
-        this.rotations);
-      this.input.addRotationAroundHorizontal(this.rotations.getHorizontal());
-      this.input.addRotationAroundVertical(this.rotations.getVertical());
+      this.rotations.from(
+        this.mouse_region.get().coefficients(
+          (double) e.getX(),
+          (double) e.getY()));
+      this.input.addRotationAroundHorizontal(this.rotations.horizontal());
+      this.input.addRotationAroundVertical(this.rotations.vertical());
     }
   }
 }
-</pre></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss4" href="#st200_p2s2ss4">2.2.4</a></div><div class="st200_subsection_title">Rendering/Interpolation</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss4pg1" href="#st200_p2s2ss4pg1">1</a></div><div class="st200_paragraph">
+
+      </pre></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss4" href="#st200_p2s2ss4">2.2.4</a></div><div class="st200_subsection_title">Rendering/Interpolation</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss4pg1" href="#st200_p2s2ss4pg1">1</a></div><div class="st200_paragraph">
       A <span class="st200_term type">GLEventListener</span> is added to the window.
       The listener will tell the renderer to draw the scene every time the
       OpenGL implementation requires a new frame.
     </div></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss4pg2" href="#st200_p2s2ss4pg2">2</a></div><div class="st200_paragraph">
-      The <span class="st200_term function">display</span> method linearly interpolates
-      between the most recently received camera snapshots in order to provide smooth
+      The <span class="st200_term function">display</span> method linearly
+      interpolates
+      between the most recently received camera snapshots in order to provide
+      smooth
       animation independent of the simulation and/or frame rate.
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss4fo1" href="#st200_p2s2ss4fo1">2.2.4.1. Main (GLEventListener)</a></div><pre class="st200_verbatim">/*
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss4fo1" href="#st200_p2s2ss4fo1">2.2.4.1. Main (GLEventListener)</a></div><pre class="st200_verbatim">
+        /*
  * Copyright © 2016 &lt;code@io7m.com&gt; http://io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
@@ -731,11 +762,9 @@ package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
+import com.io7m.jcamera.JCameraFPSStyleSnapshots;
 import com.io7m.jcamera.JCameraScreenOrigin;
-import com.io7m.jfunctional.Option;
-import com.io7m.jfunctional.OptionType;
 import com.io7m.jnull.Nullable;
-import com.io7m.jtensors.VectorReadable3FType;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.DebugGL3;
 import com.jogamp.opengl.GL;
@@ -744,6 +773,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -755,14 +785,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public final class ExampleFPSStyleGLListener implements GLEventListener
 {
-  private final GLWindow                                    window;
-  private final ExampleFPSStyleSimulationType               sim;
+  private final GLWindow window;
+  private final ExampleFPSStyleSimulationType sim;
   private final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; mouse_region;
-  private final ExampleRendererType                         renderer;
-  private       long                                        time_then;
-  private       double                                      time_accum;
-  private       JCameraFPSStyleSnapshot                     snap_curr;
-  private       JCameraFPSStyleSnapshot                     snap_prev;
+  private final ExampleRendererType renderer;
+  private long time_then;
+  private double time_accum;
+  private JCameraFPSStyleSnapshot snap_curr;
+  private JCameraFPSStyleSnapshot snap_prev;
 
   public ExampleFPSStyleGLListener(
     final GLWindow in_window,
@@ -816,7 +846,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   {
     assert drawable != null;
 
-    /**
+    /*
      * Integrate the camera as many times as necessary for each rendering
      * frame interval.
      */
@@ -834,7 +864,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
       this.time_accum -= (double) sim_delta;
     }
 
-    /**
+    /*
      * Determine how far the current time is between the current camera state
      * and the next, and use that value to interpolate between the two saved
      * states.
@@ -842,21 +872,20 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
 
     final float alpha = (float) (this.time_accum / (double) sim_delta);
     final JCameraFPSStyleSnapshot snap_interpolated =
-      JCameraFPSStyleSnapshot.interpolate(
+      JCameraFPSStyleSnapshots.interpolate(
         this.snap_prev,
         this.snap_curr,
-        alpha);
+        (double) alpha);
 
     final GL3 g = new DebugGL3(drawable.getGL().getGL3());
     assert g != null;
     g.glClear(GL.GL_COLOR_BUFFER_BIT);
 
-    /**
+    /*
      * Draw the scene!
      */
 
-    final OptionType&lt;VectorReadable3FType&gt; none = Option.none();
-    this.renderer.draw(snap_interpolated, none);
+    this.renderer.draw(snap_interpolated, Optional.empty());
   }
 
   @Override
@@ -867,31 +896,36 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     final int width,
     final int height)
   {
-    this.mouse_region.set(JCameraFPSStyleMouseRegion.newRegion(
+    this.mouse_region.set(JCameraFPSStyleMouseRegion.of(
       JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-      (float) width,
-      (float) height));
+      (double) width,
+      (double) height));
     this.renderer.reshape(width, height);
   }
 }
-</pre></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss5" href="#st200_p2s2ss5">2.2.5</a></div><div class="st200_subsection_title">Main</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg1" href="#st200_p2s2ss5pg1">1</a></div><div class="st200_paragraph">
+
+      </pre></div></div><div class="st200_subsection_container"><div class="st200_subsection_title_number"><a id="st200_p2s2ss5" href="#st200_p2s2ss5">2.2.5</a></div><div class="st200_subsection_title">Main</div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg1" href="#st200_p2s2ss5pg1">1</a></div><div class="st200_paragraph">
       All that remains is to have JOGL tell the renderer when to render, and
       to supply the simulation with input in order to move and orient the
       camera according to mouse and keyboard input. The main program constructs
       a new renderer:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo1" href="#st200_p2s2ss5fo1">2.2.5.1. Main (Renderer)</a></div><pre class="st200_verbatim">    /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo1" href="#st200_p2s2ss5fo1">2.2.5.1. Main (Renderer)</a></div><pre class="st200_verbatim">
+            /*
      * $example: Construct a new renderer.
      */
 
     final ExampleRendererType renderer = new ExampleRenderer();
 
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg2" href="#st200_p2s2ss5pg2">2</a></div><div class="st200_paragraph">
-      Then, a new simulation is constructed, and is passed a reference to the renderer
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg2" href="#st200_p2s2ss5pg2">2</a></div><div class="st200_paragraph">
+      Then, a new simulation is constructed, and is passed a reference to the
+      renderer
       (the type of the simulation constructor is declared such that it only sees
       a <a class="st200_link" href="p2s2.xhtml#st200_p2s2ss2pg3">small subset</a> of
       the interface exposed by the renderer). The simulation camera's input is
       also retrieved:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo2" href="#st200_p2s2ss5fo2">2.2.5.2. Main (Simulation)</a></div><pre class="st200_verbatim">    /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo2" href="#st200_p2s2ss5fo2">2.2.5.2. Main (Simulation)</a></div><pre class="st200_verbatim">
+            /*
      * $example: Construct a new simulation and produce an initial snapshot of
      * the camera for later use.
      */
@@ -900,30 +934,37 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
       new ExampleFPSStyleSimulation(renderer);
     final JCameraFPSStyleSnapshot snap = sim.integrate();
 
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg3" href="#st200_p2s2ss5pg3">3</a></div><div class="st200_paragraph">
-      Some storage is allocated, and a 
-      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss5pg7">mouse region</a> is
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg3" href="#st200_p2s2ss5pg3">3</a></div><div class="st200_paragraph">
+      Some storage is allocated, and a
+      <a class="st200_link" href="p3s2.xhtml#st200_p3s2ss5pg7">mouse region</a>
+      is
       created to map mouse movements to rotational coefficients:
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo3" href="#st200_p2s2ss5fo3">2.2.5.3. Main (Mouse region and coefficients)</a></div><pre class="st200_verbatim">    /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo3" href="#st200_p2s2ss5fo3">2.2.5.3. Main (Mouse region and coefficients)
+      </a></div><pre class="st200_verbatim">
+            /*
      * $example: Declare a structure to hold mouse rotation coefficients, and
      * a mouse region configured with an origin that matches that of JOGL's
      * windowing system.
      */
 
-    final JCameraRotationCoefficients rotations =
-      new JCameraRotationCoefficients();
+    final JCameraRotationCoefficientsMutable rotations =
+      JCameraRotationCoefficientsMutable.create();
     final AtomicReference&lt;JCameraFPSStyleMouseRegion&gt; mouse_region =
       new AtomicReference&lt;&gt;(
-        JCameraFPSStyleMouseRegion.newRegion(
+        JCameraFPSStyleMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640.0F,
-          480.0F));
+          640.0,
+          480.0));
 
-</pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg4" href="#st200_p2s2ss5pg4">4</a></div><div class="st200_paragraph">
-      An OpenGL window is created, an <span class="st200_term type">Animator</span>
+
+      </pre></div><div class="st200_paragraph_container"><div class="st200_paragraph_number"><a id="st200_p2s2ss5pg4" href="#st200_p2s2ss5pg4">4</a></div><div class="st200_paragraph">
+      An OpenGL window is created, an
+      <span class="st200_term type">Animator</span>
       is constructed that will tell the window to refresh frequently, and
       the previously defined listeners are attached to the window.
-    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo4" href="#st200_p2s2ss5fo4">2.2.5.4. Main (Window and animator)</a></div><pre class="st200_verbatim">    /**
+    </div></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo4" href="#st200_p2s2ss5fo4">2.2.5.4. Main (Window and animator)</a></div><pre class="st200_verbatim">
+            /*
      * $example: Initialize JOGL and open a window, construct an animator to
      * regularly refresh the screen, and assign GL event listener, mouse
      * listener, and keyboard listener.
@@ -956,12 +997,14 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
       renderer,
       window));
 
-    /**
+    /*
      * Close the program when the window closes.
      */
 
-    window.addWindowListener(new WindowAdapter() {
-      @Override public void windowDestroyed(
+    window.addWindowListener(new WindowAdapter()
+    {
+      @Override
+      public void windowDestroyed(
         final @Nullable WindowEvent e)
       {
         System.out.println("Stopping animator");
@@ -975,11 +1018,12 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
       WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
-    /**
+    /*
      * Start everything running.
      */
 
     anim.start();
   }
 }
-</pre></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo5" href="#st200_p2s2ss5fo5">2.2.5.5. Example screenshot</a></div><img class="st200_image" alt="Example screenshot" src="images/example.png"/></div></div></div><div class="st200_navbar st200_navbar_bottom"><hr class="st200_hr"/><table class="st200_navbar_table" summary="Navigation bar"><tr><td class="st200_navbar_prev_file_cell"><a href="p2s1.xhtml#st200_p2s1">Previous</a></td><td class="st200_navbar_up_file_cell"><a href="p2.xhtml#st200_p2">Up</a></td><td class="st200_navbar_next_file_cell"><a href="p2s3.xhtml#st200_p2s3">Next</a></td></tr><tr><td class="st200_navbar_prev_title_cell">2.1. Usage</td><td class="st200_navbar_up_title_cell">2. Usage</td><td class="st200_navbar_next_title_cell">2.3. Example sources</td></tr></table></div></div></body></html>
+
+      </pre></div><div class="st200_formal_item"><div class="st200_formal_item_title"><a id="st200_p2s2ss5fo5" href="#st200_p2s2ss5fo5">2.2.5.5. Example screenshot</a></div><img class="st200_image" alt="Example screenshot" src="images/example.png"/></div></div></div><div class="st200_navbar st200_navbar_bottom"><hr class="st200_hr"/><table class="st200_navbar_table" summary="Navigation bar"><tr><td class="st200_navbar_prev_file_cell"><a href="p2s1.xhtml#st200_p2s1">Previous</a></td><td class="st200_navbar_up_file_cell"><a href="p2.xhtml#st200_p2">Up</a></td><td class="st200_navbar_next_file_cell"><a href="p2s3.xhtml#st200_p2s3">Next</a></td></tr><tr><td class="st200_navbar_prev_title_cell">2.1. Usage</td><td class="st200_navbar_up_title_cell">2. Usage</td><td class="st200_navbar_next_title_cell">2.3. Example sources</td></tr></table></div></div></body></html>

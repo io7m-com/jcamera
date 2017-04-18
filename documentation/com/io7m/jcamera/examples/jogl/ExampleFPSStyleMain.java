@@ -18,7 +18,7 @@ package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
-import com.io7m.jcamera.JCameraRotationCoefficients;
+import com.io7m.jcamera.JCameraRotationCoefficientsMutable;
 import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jnull.Nullable;
@@ -49,8 +49,7 @@ public final class ExampleFPSStyleMain
   /**
    * Main function.
    *
-   * @param args
-   *          Command line arguments.
+   * @param args Command line arguments.
    */
 
   public static void main(
@@ -60,13 +59,13 @@ public final class ExampleFPSStyleMain
     final ExecutorService background_workers =
       NullCheck.notNull(Executors.newFixedThreadPool(1));
 
-    /**
+    /*
      * $example: Construct a new renderer.
      */
 
     final ExampleRendererType renderer = new ExampleRenderer();
 
-    /**
+    /*
      * $example: Construct a new simulation and produce an initial snapshot of
      * the camera for later use.
      */
@@ -75,22 +74,22 @@ public final class ExampleFPSStyleMain
       new ExampleFPSStyleSimulation(renderer);
     final JCameraFPSStyleSnapshot snap = sim.integrate();
 
-    /**
+    /*
      * $example: Declare a structure to hold mouse rotation coefficients, and
      * a mouse region configured with an origin that matches that of JOGL's
      * windowing system.
      */
 
-    final JCameraRotationCoefficients rotations =
-      new JCameraRotationCoefficients();
+    final JCameraRotationCoefficientsMutable rotations =
+      JCameraRotationCoefficientsMutable.create();
     final AtomicReference<JCameraFPSStyleMouseRegion> mouse_region =
       new AtomicReference<>(
-        JCameraFPSStyleMouseRegion.newRegion(
+        JCameraFPSStyleMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-          640.0F,
-          480.0F));
+          640.0,
+          480.0));
 
-    /**
+    /*
      * $example: Initialize JOGL and open a window, construct an animator to
      * regularly refresh the screen, and assign GL event listener, mouse
      * listener, and keyboard listener.
@@ -123,12 +122,14 @@ public final class ExampleFPSStyleMain
       renderer,
       window));
 
-    /**
+    /*
      * Close the program when the window closes.
      */
 
-    window.addWindowListener(new WindowAdapter() {
-      @Override public void windowDestroyed(
+    window.addWindowListener(new WindowAdapter()
+    {
+      @Override
+      public void windowDestroyed(
         final @Nullable WindowEvent e)
       {
         System.out.println("Stopping animator");
@@ -142,7 +143,7 @@ public final class ExampleFPSStyleMain
       WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
     window.setVisible(true);
 
-    /**
+    /*
      * Start everything running.
      */
 

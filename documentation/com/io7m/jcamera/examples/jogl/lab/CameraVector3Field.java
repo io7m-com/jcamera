@@ -16,20 +16,19 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import javax.swing.JLabel;
-
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import net.java.dev.designgridlayout.DesignGridLayout;
 import net.java.dev.designgridlayout.RowGroup;
 
-import com.io7m.jtensors.VectorReadable3FType;
+import javax.swing.JLabel;
 
 final class CameraVector3Field implements CameraUIControlsType
 {
   private final CameraFloatField x;
   private final CameraFloatField y;
   private final CameraFloatField z;
-  private final RowGroup         group;
-  private final String           title;
+  private final RowGroup group;
+  private final String title;
 
   CameraVector3Field(
     final String in_title)
@@ -42,14 +41,15 @@ final class CameraVector3Field implements CameraUIControlsType
   }
 
   void setValue(
-    final VectorReadable3FType v)
+    final Vector3D v)
   {
-    this.x.setValue(v.getXF());
-    this.y.setValue(v.getYF());
-    this.z.setValue(v.getZF());
+    this.x.setValue(v.x());
+    this.y.setValue(v.y());
+    this.z.setValue(v.z());
   }
 
-  @Override public void controlsAddToLayout(
+  @Override
+  public void controlsAddToLayout(
     final DesignGridLayout dg)
   {
     dg
@@ -61,12 +61,14 @@ final class CameraVector3Field implements CameraUIControlsType
       .add(this.z);
   }
 
-  @Override public void controlsHide()
+  @Override
+  public void controlsHide()
   {
     this.group.hide();
   }
 
-  @Override public void controlsShow()
+  @Override
+  public void controlsShow()
   {
     this.group.forceShow();
   }

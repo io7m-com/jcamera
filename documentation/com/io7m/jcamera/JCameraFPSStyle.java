@@ -18,49 +18,44 @@ package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityStructural;
 import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 import com.io7m.jranges.RangeCheck;
-import com.io7m.jtensors.Matrix4x4FType;
-import com.io7m.jtensors.VectorI3F;
-import com.io7m.jtensors.VectorM3F;
-import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.jtensors.parameterized.PMatrix4x4FType;
+import com.io7m.jtensors.core.parameterized.matrices.PMatrix4x4D;
+import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
+import com.io7m.jtensors.core.unparameterized.vectors.Vectors3D;
 
 /**
  * The default implementation of {@link JCameraFPSStyleType}.
  */
 
 @EqualityStructural
-public final class JCameraFPSStyle implements
-  JCameraFPSStyleType
+public final class JCameraFPSStyle implements JCameraFPSStyleType
 {
   private final JCameraSignallingClamp clamp;
-  private final VectorM3F              derived_forward;
-  private final VectorM3F              derived_right;
-  private final VectorM3F              derived_up;
-  private final VectorM3F              input_position;
-  private final VectorM3F              temporary;
-  private       boolean                clamp_horizontal;
-  private       float                  clamp_horizontal_max;
-  private       float                  clamp_horizontal_min;
-  private       boolean                derived_current;
-  private       float                  input_angle_around_horizontal;
-  private       float                  input_angle_around_vertical;
+  private Vector3D derived_forward;
+  private Vector3D derived_right;
+  private Vector3D derived_up;
+  private Vector3D input_position;
+  private boolean clamp_horizontal;
+  private double clamp_horizontal_max;
+  private double clamp_horizontal_min;
+  private boolean derived_current;
+  private double input_angle_around_horizontal;
+  private double input_angle_around_vertical;
 
   private JCameraFPSStyle()
   {
-    this.input_position = new VectorM3F();
-    this.input_angle_around_horizontal = 0.0f;
-    this.input_angle_around_vertical = (float) Math.PI / 2.0f;
+    this.input_position = Vectors3D.zero();
+    this.input_angle_around_horizontal = 0.0;
+    this.input_angle_around_vertical = Math.PI / 2.0;
 
     this.derived_current = false;
-    this.derived_up = new VectorM3F();
-    this.derived_right = new VectorM3F();
-    this.derived_forward = new VectorM3F();
-    this.temporary = new VectorM3F();
+    this.derived_up = Vectors3D.zero();
+    this.derived_right = Vectors3D.zero();
+    this.derived_forward = Vectors3D.zero();
 
     this.clamp_horizontal = true;
-    this.clamp_horizontal_max = (float) (Math.PI / 64.0) * 31.0f;
+    this.clamp_horizontal_max = Math.PI / 64.0 * 31.0;
     this.clamp_horizontal_min = -this.clamp_horizontal_max;
 
     this.clamp = new JCameraSignallingClamp();
@@ -95,84 +90,67 @@ public final class JCameraFPSStyle implements
   public void cameraClampHorizontalDisable()
   {
     this.clamp_horizontal = false;
-    this.clamp_horizontal_max = Float.MAX_VALUE;
-    this.clamp_horizontal_min = -Float.MAX_VALUE;
+    this.clamp_horizontal_max = Double.MAX_VALUE;
+    this.clamp_horizontal_min = -Double.MAX_VALUE;
   }
 
   @Override
   public void cameraClampHorizontalEnable(
-    final float min,
-    final float max)
+    final double min,
+    final double max)
   {
     RangeCheck.checkGreaterDouble(
-      (double) max, "Maximum clamp",
-      (double) min, "Minimum clamp");
+      max, "Maximum clamp",
+      min, "Minimum clamp");
     this.clamp_horizontal = true;
     this.clamp_horizontal_max = max;
     this.clamp_horizontal_min = min;
   }
 
   @Override
-  public float cameraGetAngleAroundHorizontal()
+  public double cameraGetAngleAroundHorizontal()
   {
     return this.input_angle_around_horizontal;
   }
 
   @Override
-  public float cameraGetAngleAroundVertical()
+  public double cameraGetAngleAroundVertical()
   {
     return this.input_angle_around_vertical;
   }
 
   @Override
-  public VectorReadable3FType cameraGetForward()
+  public Vector3D cameraGetForward()
   {
     this.deriveVectors();
     return this.derived_forward;
   }
 
   @Override
-  public VectorReadable3FType cameraGetPosition()
+  public Vector3D cameraGetPosition()
   {
     return this.input_position;
   }
 
   @Override
-  public VectorReadable3FType cameraGetRight()
+  public Vector3D cameraGetRight()
   {
     this.deriveVectors();
     return this.derived_right;
   }
 
   @Override
-  public VectorReadable3FType cameraGetUp()
+  public Vector3D cameraGetUp()
   {
     this.deriveVectors();
     return this.derived_up;
   }
 
   @Override
-  public JCameraFPSStyleSnapshot cameraMakeSnapshot()
+  public Matrix4x4D cameraMakeViewMatrix()
   {
     this.deriveVectors();
-    return new JCameraFPSStyleSnapshot(
-      new VectorI3F(this.derived_forward),
-      new VectorI3F(this.derived_right),
-      new VectorI3F(this.derived_up),
-      this.input_angle_around_horizontal,
-      this.input_angle_around_vertical,
-      new VectorI3F(this.input_position));
-  }
-
-  @Override
-  public void cameraMakeViewMatrix(
-    final JCameraContext ctx,
-    final Matrix4x4FType m)
-  {
-    this.deriveVectors();
-    JCameraViewMatrix.makeViewMatrix(
-      ctx,
-      m,
+    return JCameraViewMatrix.makeViewMatrix(
       this.cameraGetPosition(),
       this.cameraGetRight(),
       this.cameraGetUp(),
@@ -180,14 +158,10 @@ public final class JCameraFPSStyle implements
   }
 
   @Override
-  public <T0, T1> void cameraMakeViewPMatrix(
-    final JCameraContext ctx,
-    final PMatrix4x4FType<T0, T1> m)
+  public <T0, T1> PMatrix4x4D<T0, T1> cameraMakeViewPMatrix()
   {
     this.deriveVectors();
-    JCameraViewMatrix.makeViewPMatrix(
-      ctx,
-      m,
+    return JCameraViewMatrix.makeViewPMatrix(
       this.cameraGetPosition(),
       this.cameraGetRight(),
       this.cameraGetUp(),
@@ -196,34 +170,40 @@ public final class JCameraFPSStyle implements
 
   @Override
   public void cameraMoveForward(
-    final float u)
+    final double u)
   {
     this.deriveVectors();
-    VectorM3F.scale(this.derived_forward, (double) u, this.temporary);
-    VectorM3F.addInPlace(this.input_position, this.temporary);
+    this.input_position =
+      Vectors3D.add(
+        this.input_position,
+        Vectors3D.scale(this.derived_forward, u));
   }
 
   @Override
   public void cameraMoveRight(
-    final float u)
+    final double u)
   {
     this.deriveVectors();
-    VectorM3F.scale(this.derived_right, (double) u, this.temporary);
-    VectorM3F.addInPlace(this.input_position, this.temporary);
+    this.input_position =
+      Vectors3D.add(
+        this.input_position,
+        Vectors3D.scale(this.derived_right, u));
   }
 
   @Override
   public void cameraMoveUp(
-    final float u)
+    final double u)
   {
     this.deriveVectors();
-    VectorM3F.scale(this.derived_up, (double) u, this.temporary);
-    VectorM3F.addInPlace(this.input_position, this.temporary);
+    this.input_position =
+      Vectors3D.add(
+        this.input_position,
+        Vectors3D.scale(this.derived_up, u));
   }
 
   @Override
   public boolean cameraRotateAroundHorizontal(
-    final float r)
+    final double r)
   {
     this.derived_current = false;
     this.input_angle_around_horizontal += r;
@@ -232,7 +212,7 @@ public final class JCameraFPSStyle implements
 
   @Override
   public void cameraRotateAroundVertical(
-    final float r)
+    final double r)
   {
     this.derived_current = false;
     this.input_angle_around_vertical += r;
@@ -240,7 +220,7 @@ public final class JCameraFPSStyle implements
 
   @Override
   public void cameraSetAngleAroundHorizontal(
-    final float h)
+    final double h)
   {
     this.derived_current = false;
     this.input_angle_around_horizontal = h;
@@ -249,7 +229,7 @@ public final class JCameraFPSStyle implements
 
   @Override
   public void cameraSetAngleAroundVertical(
-    final float v)
+    final double v)
   {
     this.input_angle_around_vertical = v;
   }
@@ -262,9 +242,9 @@ public final class JCameraFPSStyle implements
 
   @Override
   public void cameraSetPosition(
-    final VectorReadable3FType v)
+    final Vector3D v)
   {
-    VectorM3F.copy(NullCheck.notNull(v, "Input"), this.input_position);
+    this.input_position = NullCheck.notNull(v, "Input");
   }
 
   /**
@@ -276,12 +256,12 @@ public final class JCameraFPSStyle implements
    */
 
   @Override
-  public void cameraSetPosition3f(
-    final float x,
-    final float y,
-    final float z)
+  public void cameraSetPosition3(
+    final double x,
+    final double y,
+    final double z)
   {
-    this.input_position.set3F(x, y, z);
+    this.input_position = Vector3D.of(x, y, z);
   }
 
   private boolean clampHorizontal()
@@ -306,86 +286,80 @@ public final class JCameraFPSStyle implements
   private void deriveVectors()
   {
     if (!this.derived_current) {
-      final float v = this.input_angle_around_vertical;
-      final float h = this.input_angle_around_horizontal;
+      final double v = this.input_angle_around_vertical;
+      final double h = this.input_angle_around_horizontal;
 
       {
-        final float x = (float) (Math.cos((double) h) * Math.cos((double) v));
-        final float y = (float) Math.sin((double) h);
-        final float z = (float) (Math.cos((double) h) * Math.sin((double) v));
-        this.derived_forward.set3F(x, y, -z);
-        VectorM3F.normalizeInPlace(this.derived_forward);
+        final double x = Math.cos(h) * Math.cos(v);
+        final double y = Math.sin(h);
+        final double z = Math.cos(h) * Math.sin(v);
+        this.derived_forward = Vectors3D.normalize(Vector3D.of(x, y, -z));
       }
 
       {
         final double po2 = Math.PI / 2.0;
-        final double vr = (double) v - po2;
-        final float x = (float) (Math.cos((double) h) * Math.cos(vr));
-        final float y = 0.0f;
-        final float z = (float) (Math.cos((double) h) * Math.sin(vr));
-        this.derived_right.set3F(x, y, -z);
-        VectorM3F.normalizeInPlace(this.derived_right);
+        final double vr = v - po2;
+        final double x = Math.cos(h) * Math.cos(vr);
+        final double y = 0.0;
+        final double z = Math.cos(h) * Math.sin(vr);
+        this.derived_right = Vectors3D.normalize(Vector3D.of(x, y, -z));
       }
 
-      VectorM3F.crossProduct(
-        this.derived_right,
-        this.derived_forward,
-        this.derived_up);
-
+      this.derived_up =
+        Vectors3D.crossProduct(this.derived_right, this.derived_forward);
       this.derived_current = true;
     }
   }
 
   @Override
-  public boolean equals(
-    final @Nullable Object obj)
+  public boolean equals(final Object o)
   {
-    if (this == obj) {
+    if (this == o) {
       return true;
     }
-    if (obj == null) {
+    if (o == null || this.getClass() != o.getClass()) {
       return false;
     }
-    if (this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final JCameraFPSStyle other = (JCameraFPSStyle) obj;
-    return (this.clamp_horizontal == other.clamp_horizontal)
-      && (Float.floatToIntBits(this.clamp_horizontal_max) == Float
-      .floatToIntBits(other.clamp_horizontal_max))
-      && (Float.floatToIntBits(this.clamp_horizontal_min) == Float
-      .floatToIntBits(other.clamp_horizontal_min))
-      && (Float.floatToIntBits(this.input_angle_around_horizontal) == Float
-      .floatToIntBits(other.input_angle_around_horizontal))
-      && (Float.floatToIntBits(this.input_angle_around_vertical) == Float
-      .floatToIntBits(other.input_angle_around_vertical))
-      && this.input_position.equals(other.input_position);
+
+    final JCameraFPSStyle that = (JCameraFPSStyle) o;
+    return this.clamp_horizontal == that.clamp_horizontal
+      && Double.compare(
+      that.clamp_horizontal_max,
+      this.clamp_horizontal_max) == 0
+      && Double.compare(
+      that.clamp_horizontal_min,
+      this.clamp_horizontal_min) == 0
+      && Double.compare(
+      that.input_angle_around_horizontal,
+      this.input_angle_around_horizontal) == 0
+      && Double.compare(
+      that.input_angle_around_vertical,
+      this.input_angle_around_vertical) == 0
+      && this.input_position.equals(that.input_position);
   }
 
   @Override
   public int hashCode()
   {
-    final int prime = 31;
-    int result = 1;
-    result = (prime * result) + (this.clamp_horizontal ? 1231 : 1237);
-    result =
-      (prime * result) + Float.floatToIntBits(this.clamp_horizontal_max);
-    result =
-      (prime * result) + Float.floatToIntBits(this.clamp_horizontal_min);
-    result =
-      (prime * result)
-        + Float.floatToIntBits(this.input_angle_around_horizontal);
-    result =
-      (prime * result)
-        + Float.floatToIntBits(this.input_angle_around_vertical);
-    result = (prime * result) + this.input_position.hashCode();
+    int result;
+    long temp;
+    result = this.input_position.hashCode();
+    result = 31 * result + (this.clamp_horizontal ? 1 : 0);
+    temp = Double.doubleToLongBits(this.clamp_horizontal_max);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(this.clamp_horizontal_min);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(this.input_angle_around_horizontal);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(this.input_angle_around_vertical);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
     return result;
   }
 
   @Override
   public String toString()
   {
-    final StringBuilder b = new StringBuilder();
+    final StringBuilder b = new StringBuilder(128);
     b.append("[JCameraFPSStyle input_angle_around_horizontal=");
     b.append(this.input_angle_around_horizontal);
     b.append(" input_angle_around_vertical=");
@@ -393,8 +367,6 @@ public final class JCameraFPSStyle implements
     b.append(" input_position=");
     b.append(this.input_position);
     b.append("]");
-    final String r = b.toString();
-    assert r != null;
-    return r;
+    return b.toString();
   }
 }

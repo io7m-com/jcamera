@@ -16,13 +16,15 @@
 
 package com.io7m.jcamera;
 
-import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 
 /**
  * <p> The type of <i>first-person shooter</i> style flying cameras that allow
- * for: </p> <ul> <li>Rotation around a local X axis</li> <li>Rotation around a
- * global Y axis</li> <li>Movement <i>up</i> and <i>down</i> on the global Y
- * axis</li> <li>Movement <i>left</i> and <i>right</i> on the local X axis</li>
+ * for: </p>
+ *
+ * <ul> <li>Rotation around a local X axis</li> <li>Rotation around a global Y
+ * axis</li> <li>Movement <i>up</i> and <i>down</i> on the global Y axis</li>
+ * <li>Movement <i>left</i> and <i>right</i> on the local X axis</li>
  * <li>Movement <i>forward</i> and <i>backward</i> based on the current
  * orientation on the global Y and local X axes</li> </ul>
  */
@@ -34,7 +36,7 @@ public interface JCameraFPSStyleType extends
   /**
    * Do not clamp rotations around the horizontal axis.
    *
-   * @see #cameraClampHorizontalEnable(float, float)
+   * @see #cameraClampHorizontalEnable(double, double)
    */
 
   void cameraClampHorizontalDisable();
@@ -48,51 +50,61 @@ public interface JCameraFPSStyleType extends
    */
 
   void cameraClampHorizontalEnable(
-    final float min,
-    final float max);
+    double min,
+    double max);
 
   /**
-   * <p> Move the camera <i>forward</i> {@code u} units iff {@code u}
+   * <p>Move the camera <i>forward</i> {@code u} units iff {@code u}
    * is positive, or <i>backward</i> {@code u} units iff {@code u} is
-   * negative. </p> <p> The <i>forward</i> direction, in this case, means the
-   * current view direction. </p>
+   * negative.</p>
+   *
+   * <p>The <i>forward</i> direction, in this case, means the
+   * current view direction.</p>
    *
    * @param u The units to move
    */
 
   void cameraMoveForward(
-    float u);
+    double u);
 
   /**
-   * <p> Move the camera <i>right</i> {@code u} units iff {@code u} is
+   * <p>Move the camera <i>right</i> {@code u} units iff {@code u} is
    * positive, or <i>left</i> {@code u} units iff {@code u} is
-   * negative. </p> <p> The <i>right</i> direction, in this case, means the
+   * negative.</p>
+   *
+   * <p>The <i>right</i> direction, in this case, means the
    * direction perpendicular to the current view direction, {@code -π / 2}
-   * radians around the global Y axis. </p>
+   * radians around the global Y axis.</p>
    *
    * @param u The units to move
    */
 
   void cameraMoveRight(
-    float u);
+    double u);
 
   /**
    * <p> Move the camera <i>up</i> {@code u} units iff {@code u} is
    * positive, or <i>down</i> {@code u} units iff {@code u} is
-   * negative. </p> <p> The <i>up</i> direction, in this case, means the
-   * direction towards positive infinity on the global Y axis. </p>
+   * negative.</p>
+   *
+   * <p>The <i>up</i> direction, in this case, means the
+   * direction towards positive infinity on the global Y axis.</p>
    *
    * @param u The units to move
    */
 
   void cameraMoveUp(
-    float u);
+    double u);
 
   /**
-   * <p> Rotate by {@code r} radians around the local X axis. </p> <p> Note
+   * <p>Rotate by {@code r} radians around the local X axis.</p>
+   *
+   * <p>Note
    * that by convention, when looking towards negative infinity on an axis, a
    * positive rotation value results in a counter-clockwise rotation on the
-   * axis. </p> <p> A human analogy would be that a positive value passed to
+   * axis.</p>
+   *
+   * <p>A human analogy would be that a positive value passed to
    * this function causes the camera to look <i>up</i> towards the sky. A
    * negative value causes the camera to look <i>down</i> towards the ground.
    * </p>
@@ -101,25 +113,30 @@ public interface JCameraFPSStyleType extends
    *
    * @return {@code true} if the rotation has been clamped
    *
-   * @see #cameraClampHorizontalEnable(float, float)
+   * @see #cameraClampHorizontalEnable(double, double)
    */
 
   boolean cameraRotateAroundHorizontal(
-    float r);
+    double r);
 
   /**
-   * <p> Rotate by {@code r} radians around the global Y axis. </p> <p>
+   * <p> Rotate by {@code r} radians around the global Y axis.</p>
+   *
+   * <p>
    * Note that by convention, when looking towards negative infinity on an axis,
    * a positive rotation value results in a counter-clockwise rotation on the
-   * axis. </p> <p> A human analogy would be that a positive value passed to
+   * axis.</p>
+   *
+   * <p>A human analogy would be that a positive value passed to
    * this function causes the camera to turn <i>left</i>, while a negative value
-   * causes the camera to look <i>right</i>. </p>
+   * causes the camera to look <i>right</i>.
+   * </p>
    *
    * @param r The radians to rotate
    */
 
   void cameraRotateAroundVertical(
-    float r);
+    double r);
 
   /**
    * Set the angle around the horizontal axis to {@code h}.
@@ -128,7 +145,7 @@ public interface JCameraFPSStyleType extends
    */
 
   void cameraSetAngleAroundHorizontal(
-    final float h);
+    double h);
 
   /**
    * Set the angle around the vertical axis to {@code v}.
@@ -137,7 +154,7 @@ public interface JCameraFPSStyleType extends
    */
 
   void cameraSetAngleAroundVertical(
-    final float v);
+    double v);
 
   /**
    * Set the position of the camera.
@@ -146,7 +163,7 @@ public interface JCameraFPSStyleType extends
    */
 
   void cameraSetPosition(
-    final VectorReadable3FType v);
+    Vector3D v);
 
   /**
    * Set the position of the camera.
@@ -156,8 +173,8 @@ public interface JCameraFPSStyleType extends
    * @param z The z coordinate.
    */
 
-  void cameraSetPosition3f(
-    final float x,
-    final float y,
-    final float z);
+  void cameraSetPosition3(
+    double x,
+    double y,
+    double z);
 }

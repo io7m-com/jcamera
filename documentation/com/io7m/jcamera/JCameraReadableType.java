@@ -16,8 +16,8 @@
 
 package com.io7m.jcamera;
 
-import com.io7m.jtensors.Matrix4x4FType;
-import com.io7m.jtensors.parameterized.PMatrix4x4FType;
+import com.io7m.jtensors.core.parameterized.matrices.PMatrix4x4D;
+import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
 
 /**
  * The type of (readable) cameras.
@@ -26,28 +26,21 @@ import com.io7m.jtensors.parameterized.PMatrix4x4FType;
 public interface JCameraReadableType
 {
   /**
-   * Construct a view matrix for the camera, using preallocated storage in
-   * {@code ctx} and writing the result to {@code m}.
+   * Construct a view matrix for the camera.
    *
-   * @param ctx Preallocated storage
-   * @param m   The output matrix
+   * @return A view matrix for the camera
    */
 
-  void cameraMakeViewMatrix(
-    final JCameraContext ctx,
-    final Matrix4x4FType m);
+  Matrix4x4D cameraMakeViewMatrix();
 
   /**
-   * Construct a view matrix for the camera, using preallocated storage in
-   * {@code ctx} and writing the result to {@code m}.
+   * Construct a view matrix for the camera.
    *
-   * @param ctx  Preallocated storage
-   * @param m    The output matrix
    * @param <T0> The source coordinate system
    * @param <T1> The target coordiante system
+   *
+   * @return A view matrix for the camera
    */
 
-  <T0, T1> void cameraMakeViewPMatrix(
-    final JCameraContext ctx,
-    final PMatrix4x4FType<T0, T1> m);
+  <T0, T1> PMatrix4x4D<T0, T1> cameraMakeViewPMatrix();
 }

@@ -16,9 +16,8 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
-import com.io7m.jtensors.Matrix4x4FType;
+import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
 import com.io7m.junreachable.UnreachableCodeException;
 
 /**
@@ -27,31 +26,40 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 public final class ProjectionMatrix
 {
+  private ProjectionMatrix()
+  {
+    throw new UnreachableCodeException();
+  }
+
   /**
-   * <p> Calculate a matrix that produces a perspective projection. The
-   * {@code (x_min, y_min, z_near)} and {@code (x_max, y_max, z_near)}
-   * parameters specify the points on the near clipping plane that are mapped to
-   * the lower-left and upper-right corners of the window, respectively,
-   * assuming that the eye is located at {@code (0, 0, 0)}. The
-   * {@code z_far} parameter specifies the location of the far clipping
-   * plane. </p> <p> Note that iff {@code z_far &gt;= Double
-   * .POSITIVE_INFINITY}, the function produces an "infinite projection
-   * matrix", suitable for use in code that deals with shadow volumes. </p> <p>
-   * See
-   * <a href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
-   * Gems</a>. </p>
+   * <p>Calculate a matrix that produces a perspective projection. The {@code
+   * (x_min, y_min, z_near)} and {@code (x_max, y_max, z_near)} parameters
+   * specify the points on the near clipping plane that are mapped to the
+   * lower-left and upper-right corners of the window, respectively, assuming
+   * that the eye is located at {@code (0, 0, 0)}. The {@code z_far} parameter
+   * specifies the location of the far clipping plane.</p>
    *
-   * @param x_min  The minimum X clip plane.
-   * @param x_max  The maximum X clip plane.
-   * @param y_min  The minimum Y clip plane.
-   * @param y_max  The maximum Y clip plane.
-   * @param z_near The near Z clip plane.
-   * @param z_far  The far Z clip plane.
-   * @param matrix The matrix to which values will be written.
+   * <p>Note that iff {@code z_far &gt;= Double.POSITIVE_INFINITY}, the function
+   * produces an "infinite projection matrix", suitable for use in code that
+   * deals with shadow volumes.</p>
+   *
+   * <p>The function assumes a right-handed coordinate system.</p>
+   *
+   * <p>See
+   * <a href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
+   * Gems</a></p>
+   *
+   * @param x_min  The minimum X clip plane
+   * @param x_max  The maximum X clip plane
+   * @param y_min  The minimum Y clip plane
+   * @param y_max  The maximum Y clip plane
+   * @param z_near The near Z clip plane
+   * @param z_far  The far Z clip plane
+   *
+   * @return A frustum projection matrix
    */
 
-  public static void makeFrustumProjection(
-    final Matrix4x4FType matrix,
+  public static Matrix4x4D frustumProjectionRH(
     final double x_min,
     final double x_max,
     final double y_min,
@@ -59,7 +67,6 @@ public final class ProjectionMatrix
     final double z_near,
     final double z_far)
   {
-    NullCheck.notNull(matrix, "Matrix");
     RangeCheck.checkGreaterEqualDouble(
       z_near,
       "Near Z",
@@ -67,58 +74,45 @@ public final class ProjectionMatrix
       "Minimum Z distance");
     RangeCheck.checkLessDouble(z_near, "Near Z", z_far, "Far Z");
 
-    final double r0c0 = (2.0 * z_near) / (x_max - x_min);
-    final double r0c2 = (x_max + x_min) / (x_max - x_min);
-    final double r1c1 = (2.0 * z_near) / (y_max - y_min);
-    final double r1c2 = (y_max + y_min) / (y_max - y_min);
-
     final double r2c2;
     final double r2c3;
-
     if (z_far >= Double.POSITIVE_INFINITY) {
       r2c2 = -1.0;
       r2c3 = -2.0 * z_near;
     } else {
       r2c2 = -((z_far + z_near) / (z_far - z_near));
-      r2c3 = -((2.0 * z_far * z_near) / (z_far - z_near));
+      r2c3 = -(2.0 * z_far * z_near / (z_far - z_near));
     }
 
-    matrix.setR0C0F((float) r0c0);
-    matrix.setR0C1F(0.0f);
-    matrix.setR0C2F((float) r0c2);
-    matrix.setR0C3F(0.0f);
+    final double r0c0 = 2.0 * z_near / (x_max - x_min);
+    final double r0c2 = (x_max + x_min) / (x_max - x_min);
+    final double r1c1 = 2.0 * z_near / (y_max - y_min);
+    final double r1c2 = (y_max + y_min) / (y_max - y_min);
 
-    matrix.setR1C0F(0.0f);
-    matrix.setR1C1F((float) r1c1);
-    matrix.setR1C2F((float) r1c2);
-    matrix.setR1C3F(0.0f);
-
-    matrix.setR2C0F(0.0f);
-    matrix.setR2C1F(0.0f);
-    matrix.setR2C2F((float) r2c2);
-    matrix.setR2C3F((float) r2c3);
-
-    matrix.setR3C0F(0.0f);
-    matrix.setR3C1F(0.0f);
-    matrix.setR3C2F(-1.0f);
-    matrix.setR3C3F(0.0f);
+    return Matrix4x4D.of(
+      r0c0, 0.0, r0c2, 0.0,
+      0.0, r1c1, r1c2, 0.0,
+      0.0, 0.0, r2c2, r2c3,
+      0.0, 0.0, -1.0, 0.0);
   }
 
   /**
-   * Calculate a projection matrix that produces an orthographic projection
-   * based on the given clipping plane coordinates.
+   * <p>Calculate a projection matrix that produces an orthographic projection
+   * based on the given clipping plane coordinates.</p>
    *
-   * @param x_min  The left clipping plane coordinate.
-   * @param x_max  The right clipping plane coordinate.
-   * @param y_min  The bottom clipping plane coordinate.
-   * @param y_max  The top clipping plane coordinate.
-   * @param z_near The near clipping plane coordinate.
-   * @param z_far  The far clipping plane coordinate.
-   * @param matrix The matrix to which values will be written.
+   * <p>The function assumes a right-handed coordinate system.</p>
+   *
+   * @param x_min  The left clipping plane coordinate
+   * @param x_max  The right clipping plane coordinate
+   * @param y_min  The bottom clipping plane coordinate
+   * @param y_max  The top clipping plane coordinate
+   * @param z_near The near clipping plane coordinate
+   * @param z_far  The far clipping plane coordinate
+   *
+   * @return An orthographic projection matrix
    */
 
-  public static void makeOrthographicProjection(
-    final Matrix4x4FType matrix,
+  public static Matrix4x4D orthographicProjectionRH(
     final double x_min,
     final double x_max,
     final double y_min,
@@ -126,8 +120,6 @@ public final class ProjectionMatrix
     final double z_near,
     final double z_far)
   {
-    NullCheck.notNull(matrix, "Matrix");
-
     final double rml = x_max - x_min;
     final double rpl = x_max + x_min;
     final double tmb = y_max - y_min;
@@ -135,82 +127,57 @@ public final class ProjectionMatrix
     final double fmn = z_far - z_near;
     final double fpn = z_far + z_near;
 
-    final float r0c0 = (float) (2.0 / rml);
-    final float r0c3 = (float) -(rpl / rml);
-    final float r1c1 = (float) (2.0 / tmb);
-    final float r1c3 = (float) -(tpb / tmb);
-    final float r2c2 = (float) (-2.0 / fmn);
-    final float r2c3 = (float) -(fpn / fmn);
+    final double r0c0 = 2.0 / rml;
+    final double r0c3 = -(rpl / rml);
+    final double r1c1 = 2.0 / tmb;
+    final double r1c3 = -(tpb / tmb);
+    final double r2c2 = -2.0 / fmn;
+    final double r2c3 = -(fpn / fmn);
 
-    matrix.setR0C0F(r0c0);
-    matrix.setR0C1F(0.0f);
-    matrix.setR0C2F(0.0f);
-    matrix.setR0C3F(r0c3);
-
-    matrix.setR1C0F(0.0f);
-    matrix.setR1C1F(r1c1);
-    matrix.setR1C2F(0.0f);
-    matrix.setR1C3F(r1c3);
-
-    matrix.setR2C0F(0.0f);
-    matrix.setR2C1F(0.0f);
-    matrix.setR2C2F(r2c2);
-    matrix.setR2C3F(r2c3);
-
-    matrix.setR3C0F(0.0f);
-    matrix.setR3C1F(0.0f);
-    matrix.setR3C2F(0.0f);
-    matrix.setR3C3F(1.0f);
+    return Matrix4x4D.of(
+      r0c0, 0.0, 0.0, r0c3,
+      0.0, r1c1, 0.0, r1c3,
+      0.0, 0.0, r2c2, r2c3,
+      0.0, 0.0, 0.0, 1.0);
   }
 
   /**
-   * <p> Calculate a matrix that will produce a perspective projection based on
+   * <p>Calculate a matrix that will produce a perspective projection based on
    * the given view frustum parameters, the aspect ratio of the viewport and a
-   * given horizontal field of view in radians. Note that
-   * {@code fov_radians} represents the full horizontal field of view: the
-   * angle at the base of the triangle formed by the frustum on the
-   * {@code x/z} plane. </p> <p> Note that iff {@code z_far &gt;=
-   * Double.POSITIVE_INFINITY}, the function produces an "infinite
-   * projection matrix", suitable for use in code that deals with shadow
-   * volumes. </p> <p> See
-   * <a href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
-   * Gems</a>. </p>
+   * given horizontal field of view in radians. Note that {@code fov_radians}
+   * represents the full horizontal field of view: the angle at the base of the
+   * triangle formed by the frustum on the {@code x/z} plane.</p>
    *
-   * @param z_near         The near clipping plane coordinate.
-   * @param z_far          The far clipping plane coordinate.
+   * <p>Note that iff {@code z_far &gt;= Double.POSITIVE_INFINITY}, the
+   * function produces an "infinite projection matrix", suitable for use in code
+   * that deals with shadow volumes.</p>
+   *
+   * <p>The function assumes a right-handed coordinate system.</p>
+   *
+   * <p>See
+   * <a href="http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html">GPU
+   * Gems</a></p>
+   *
+   * @param z_near         The near clipping plane coordinate
+   * @param z_far          The far clipping plane coordinate
    * @param aspect         The aspect ratio of the viewport; the width divided
    *                       by the height. For example, an aspect ratio of 2.0
-   *                       indicates a viewport twice as wide as it is high.
-   * @param horizontal_fov The horizontal field of view in radians.
-   * @param matrix         The matrix to which values will be written.
+   *                       indicates a viewport twice as wide as it is high
+   * @param horizontal_fov The horizontal field of view in radians
+   *
+   * @return A perspective projection matrix
    */
 
-  public static void makePerspectiveProjection(
-    final Matrix4x4FType matrix,
+  public static Matrix4x4D perspectiveProjectionRH(
     final double z_near,
     final double z_far,
     final double aspect,
     final double horizontal_fov)
   {
-    NullCheck.notNull(matrix, "matrix");
-
-    final double x_max = z_near * Math.tan(horizontal_fov / 2.0);
+    final double x_max = z_near * StrictMath.tan(horizontal_fov / 2.0);
     final double x_min = -x_max;
     final double y_max = x_max / aspect;
     final double y_min = -y_max;
-
-    ProjectionMatrix.makeFrustumProjection(
-      matrix,
-      x_min,
-      x_max,
-      y_min,
-      y_max,
-      z_near,
-      z_far);
-  }
-
-  private ProjectionMatrix()
-  {
-    throw new UnreachableCodeException();
+    return frustumProjectionRH(x_min, x_max, y_min, y_max, z_near, z_far);
   }
 }

@@ -36,8 +36,7 @@ public interface ExampleFPSStyleSimulationType
   /**
    * Enable/disable the camera.
    *
-   * @param b
-   *          {@code true} if the camera should be enabled.
+   * @param b {@code true} if the camera should be enabled.
    */
 
   void cameraSetEnabled(

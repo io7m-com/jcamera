@@ -17,12 +17,12 @@
 package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraReadableSnapshotType;
-import com.io7m.jfunctional.OptionType;
-import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL3;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * The interface exposed by the renderer to JOGL.
@@ -33,12 +33,10 @@ public interface ExampleRendererType extends ExampleRendererControllerType
   /**
    * Initialize the scene, using the given window and OpenGL interface.
    *
-   * @param in_window
-   *          The window
-   * @param in_gl
-   *          The OpenGL interface
-   * @throws IOException
-   *           On I/O errors
+   * @param in_window The window
+   * @param in_gl     The OpenGL interface
+   *
+   * @throws IOException On I/O errors
    */
 
   void init(
@@ -49,23 +47,19 @@ public interface ExampleRendererType extends ExampleRendererControllerType
   /**
    * Draw the scene.
    *
-   * @param s
-   *          A camera snapshot
-   * @param target
-   *          An optional target to be drawn
+   * @param s      A camera snapshot
+   * @param target An optional target to be drawn
    */
 
   void draw(
     final JCameraReadableSnapshotType s,
-    final OptionType<VectorReadable3FType> target);
+    final Optional<Vector3D> target);
 
   /**
    * Indicate that the screen has been resized.
    *
-   * @param width
-   *          The new width
-   * @param height
-   *          The new height
+   * @param width  The new width
+   * @param height The new height
    */
 
   void reshape(

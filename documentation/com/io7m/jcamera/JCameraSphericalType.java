@@ -16,7 +16,7 @@
 
 package com.io7m.jcamera;
 
-import com.io7m.jtensors.VectorReadable3FType;
+import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 
 /**
  * <p> The type of <i>spherical</i> style flying cameras that point towards a
@@ -32,7 +32,7 @@ public interface JCameraSphericalType extends
   /**
    * Do not clamp rotations around the horizontal axis.
    *
-   * @see #cameraClampInclineEnable(float, float)
+   * @see #cameraClampInclineEnable(double, double)
    */
 
   void cameraClampInclineDisable();
@@ -46,13 +46,13 @@ public interface JCameraSphericalType extends
    */
 
   void cameraClampInclineEnable(
-    final float min,
-    final float max);
+    final double min,
+    final double max);
 
   /**
    * Do not clamp the length of the radius.
    *
-   * @see #cameraClampRadiusEnable(float, float)
+   * @see #cameraClampRadiusEnable(double, double)
    */
 
   void cameraClampRadiusDisable();
@@ -65,8 +65,8 @@ public interface JCameraSphericalType extends
    */
 
   void cameraClampRadiusEnable(
-    final float min,
-    final float max);
+    final double min,
+    final double max);
 
   /**
    * <p> Move the target point of the camera <i>forward</i> {@code u} units
@@ -79,7 +79,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraMoveTargetForwardOnXZ(
-    float u);
+    double u);
 
   /**
    * <p> Move the target point of the camera <i>right</i> {@code u} units
@@ -92,7 +92,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraMoveTargetRight(
-    float u);
+    double u);
 
   /**
    * <p> Move the target point of the camera <i>up</i> {@code u} units iff
@@ -104,25 +104,25 @@ public interface JCameraSphericalType extends
    */
 
   void cameraMoveTargetUp(
-    float u);
+    double u);
 
   /**
    * @param r The radians to rotate
    */
 
   void cameraOrbitHeading(
-    float r);
+    double r);
 
   /**
    * @param r The radians to orbit
    *
    * @return {@code true} if the rotation has been clamped
    *
-   * @see #cameraClampInclineEnable(float, float)
+   * @see #cameraClampInclineEnable(double, double)
    */
 
   boolean cameraOrbitIncline(
-    float r);
+    double r);
 
   /**
    * Set the heading angle to {@code a}.
@@ -131,7 +131,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetAngleHeading(
-    final float a);
+    final double a);
 
   /**
    * Set the incline angle to {@code a}.
@@ -140,7 +140,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetAngleIncline(
-    final float a);
+    final double a);
 
   /**
    * Set the position of the target point of camera.
@@ -149,7 +149,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetTargetPosition(
-    final VectorReadable3FType v);
+    final Vector3D v);
 
   /**
    * Set the position of the target point of camera.
@@ -159,10 +159,10 @@ public interface JCameraSphericalType extends
    * @param z The z coordinate.
    */
 
-  void cameraSetTargetPosition3f(
-    final float x,
-    final float y,
-    final float z);
+  void cameraSetTargetPosition3(
+    final double x,
+    final double y,
+    final double z);
 
   /**
    * Set the zoom (or <i>radius</i>) of the camera to {@code r}.
@@ -171,7 +171,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetZoom(
-    float r);
+    double r);
 
   /**
    * Zoom in the camera by reducing the radius of the sphere.
@@ -180,11 +180,11 @@ public interface JCameraSphericalType extends
    *
    * @return {@code true} if the radius has been clamped
    *
-   * @see #cameraClampRadiusEnable(float, float)
+   * @see #cameraClampRadiusEnable(double, double)
    */
 
   boolean cameraZoomIn(
-    float r);
+    double r);
 
   /**
    * Zoom out the camera by increasing the radius of the sphere.
@@ -193,9 +193,9 @@ public interface JCameraSphericalType extends
    *
    * @return {@code true} if the radius has been clamped
    *
-   * @see #cameraClampRadiusEnable(float, float)
+   * @see #cameraClampRadiusEnable(double, double)
    */
 
   boolean cameraZoomOut(
-    float r);
+    double r);
 }

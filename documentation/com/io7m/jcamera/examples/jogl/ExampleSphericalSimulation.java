@@ -24,6 +24,7 @@ import com.io7m.jcamera.JCameraSphericalIntegrator;
 import com.io7m.jcamera.JCameraSphericalIntegratorType;
 import com.io7m.jcamera.JCameraSphericalLinearIntegratorZoomScaled;
 import com.io7m.jcamera.JCameraSphericalSnapshot;
+import com.io7m.jcamera.JCameraSphericalSnapshots;
 import com.io7m.jcamera.JCameraSphericalType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -36,12 +37,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class ExampleSphericalSimulation implements
   ExampleSphericalSimulationType
 {
-  private final JCameraSphericalType           camera;
-  private final AtomicBoolean                  camera_enabled;
-  private final JCameraSphericalSnapshot       fixed_snapshot;
-  private final JCameraSphericalInputType      input;
+  private final JCameraSphericalType camera;
+  private final AtomicBoolean camera_enabled;
+  private final JCameraSphericalSnapshot fixed_snapshot;
+  private final JCameraSphericalInputType input;
   private final JCameraSphericalIntegratorType integrator;
-  private final float                          integrator_time_seconds;
+  private final double integrator_time_seconds;
 
   /**
    * $example: Construct a new simulation.
@@ -52,7 +53,7 @@ public final class ExampleSphericalSimulation implements
     this.input = JCameraSphericalInput.newInput();
     this.camera = JCameraSpherical.newCamera();
     final JCameraSphericalType camera_fixed = JCameraSpherical.newCamera();
-    this.fixed_snapshot = camera_fixed.cameraMakeSnapshot();
+    this.fixed_snapshot = JCameraSphericalSnapshots.of(camera_fixed);
     this.camera_enabled = new AtomicBoolean(false);
 
     /**
@@ -74,34 +75,34 @@ public final class ExampleSphericalSimulation implements
      * to require.
      */
 
-    final float rate = 60.0f;
-    this.integrator_time_seconds = 1.0f / rate;
+    final double rate = 60.0;
+    this.integrator_time_seconds = 1.0 / rate;
 
     /**
      * $example: Configure the integrator. Use a high drag factor to give
      * quite abrupt stops, and use high rotational acceleration.
      */
 
-    this.input.setContinuousForwardFactor(1.0f);
-    this.input.setContinuousRightwardFactor(1.0f);
+    this.input.setContinuousForwardFactor(1.0);
+    this.input.setContinuousRightwardFactor(1.0);
 
-    this.integrator.integratorAngularOrbitHeadingSetDrag(0.000000001f);
-    this.integrator.integratorAngularOrbitInclineSetDrag(0.000000001f);
+    this.integrator.integratorAngularOrbitHeadingSetDrag(0.000000001);
+    this.integrator.integratorAngularOrbitInclineSetDrag(0.000000001);
 
     this.integrator.integratorAngularOrbitHeadingSetAcceleration(
-      1.0f / this.integrator_time_seconds);
+      1.0 / this.integrator_time_seconds);
     this.integrator.integratorAngularOrbitInclineSetAcceleration(
-      1.0f / this.integrator_time_seconds);
+      1.0 / this.integrator_time_seconds);
 
     this.integrator.integratorLinearTargetSetAcceleration(
-      (float) (3.0 / (double) this.integrator_time_seconds));
-    this.integrator.integratorLinearTargetSetMaximumSpeed(3.0f);
-    this.integrator.integratorLinearTargetSetDrag(0.000000001f);
+      3.0 / this.integrator_time_seconds);
+    this.integrator.integratorLinearTargetSetMaximumSpeed(3.0);
+    this.integrator.integratorLinearTargetSetDrag(0.000000001);
 
     this.integrator.integratorLinearZoomSetAcceleration(
-      (float) (3.0 / (double) this.integrator_time_seconds));
-    this.integrator.integratorLinearZoomSetMaximumSpeed(3.0f);
-    this.integrator.integratorLinearZoomSetDrag(0.000000001f);
+      3.0 / this.integrator_time_seconds);
+    this.integrator.integratorLinearZoomSetMaximumSpeed(3.0);
+    this.integrator.integratorLinearZoomSetDrag(0.000000001);
   }
 
   /**
@@ -110,7 +111,8 @@ public final class ExampleSphericalSimulation implements
    * @return A new camera snapshot.
    */
 
-  @Override public JCameraSphericalSnapshot integrate()
+  @Override
+  public JCameraSphericalSnapshot integrate()
   {
     /**
      * If the camera is actually enabled, integrate and produce a snapshot.
@@ -118,35 +120,41 @@ public final class ExampleSphericalSimulation implements
 
     if (this.cameraIsEnabled()) {
       this.integrator.integrate(this.integrator_time_seconds);
-      final JCameraSphericalSnapshot snap = this.camera.cameraMakeSnapshot();
+      final JCameraSphericalSnapshot snap =
+        JCameraSphericalSnapshots.of(this.camera);
       return snap;
     }
 
     return this.fixed_snapshot;
   }
 
-  @Override public boolean cameraIsEnabled()
+  @Override
+  public boolean cameraIsEnabled()
   {
     return this.camera_enabled.get();
   }
 
-  @Override public void cameraSetEnabled(
+  @Override
+  public void cameraSetEnabled(
     final boolean b)
   {
     this.camera_enabled.set(b);
   }
 
-  @Override public JCameraSphericalType getCamera()
+  @Override
+  public JCameraSphericalType getCamera()
   {
     return this.camera;
   }
 
-  @Override public float getDeltaTime()
+  @Override
+  public double getDeltaTime()
   {
     return this.integrator_time_seconds;
   }
 
-  @Override public JCameraSphericalInputType getInput()
+  @Override
+  public JCameraSphericalInputType getInput()
   {
     return this.input;
   }

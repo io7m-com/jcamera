@@ -17,9 +17,9 @@
   -->
 
 <s:section
-  xml:id="usage.files"
   xmlns:s="http://schemas.io7m.com/structural/2.1.0"
-  xmlns:xi="http://www.w3.org/2001/XInclude">
+  xml:id="usage.files"
+>
   <s:section-title>Example sources</s:section-title>
   <s:section-contents/>
   <s:paragraph>
@@ -28,29 +28,121 @@
   <s:formal-item s:kind="listings">
     <s:formal-item-title>Source files</s:formal-item-title>
     <s:list-unordered>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleGLListener.java">ExampleFPSStyleGLListener.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleKeyListener.java">ExampleFPSStyleKeyListener.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java">ExampleFPSStyleMain.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleMouseAdapter.java">ExampleFPSStyleMouseAdapter.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java">ExampleFPSStyleSimulation.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulationType.java">ExampleFPSStyleSimulationType.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRenderer.java">ExampleRenderer.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">ExampleRendererControllerType.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">ExampleRendererType.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalGLListener.java">ExampleSphericalGLListener.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalKeyListener.java">ExampleSphericalKeyListener.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalListener.java">ExampleSphericalListener.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalMain.java">ExampleSphericalMain.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalSimulation.java">ExampleSphericalSimulation.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalSimulationType.java">ExampleSphericalSimulationType.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleTimer.java">ExampleTimer.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ProjectionMatrix.java">ProjectionMatrix.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ShaderUtilities.java">ShaderUtilities.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/ViewSpaceType.java">ViewSpaceType.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/WorldSpaceType.java">WorldSpaceType.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/package-info.java">package-info.java</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.f">basic.f</s:link-external></s:list-item>
-      <s:list-item><s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.v">basic.v</s:link-external></s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleGLListener.java">
+          ExampleFPSStyleGLListener.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleKeyListener.java">
+          ExampleFPSStyleKeyListener.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java">
+          ExampleFPSStyleMain.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleMouseAdapter.java">
+          ExampleFPSStyleMouseAdapter.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java">
+          ExampleFPSStyleSimulation.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulationType.java">
+          ExampleFPSStyleSimulationType.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRenderer.java">
+          ExampleRenderer.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererControllerType.java">
+          ExampleRendererControllerType.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleRendererType.java">
+          ExampleRendererType.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalGLListener.java">
+          ExampleSphericalGLListener.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalKeyListener.java">
+          ExampleSphericalKeyListener.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalListener.java">
+          ExampleSphericalListener.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalMain.java">
+          ExampleSphericalMain.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalSimulation.java">
+          ExampleSphericalSimulation.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleSphericalSimulationType.java">
+          ExampleSphericalSimulationType.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ExampleTimer.java">
+          ExampleTimer.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ProjectionMatrix.java">
+          ProjectionMatrix.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ShaderUtilities.java">
+          ShaderUtilities.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/ViewSpaceType.java">
+          ViewSpaceType.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/WorldSpaceType.java">
+          WorldSpaceType.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/package-info.java">
+          package-info.java
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.f">
+          basic.f
+        </s:link-external>
+      </s:list-item>
+      <s:list-item>
+        <s:link-external s:target="com/io7m/jcamera/examples/jogl/basic.v">
+          basic.v
+        </s:link-external>
+      </s:list-item>
     </s:list-unordered>
   </s:formal-item>
 </s:section>

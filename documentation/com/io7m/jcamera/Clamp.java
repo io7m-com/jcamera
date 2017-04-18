@@ -27,10 +27,10 @@ final class Clamp
     throw new UnreachableCodeException();
   }
 
-  static float clamp(
-    final float x,
-    final float min,
-    final float max)
+  static double clamp(
+    final double x,
+    final double min,
+    final double max)
   {
     return Math.max(Math.min(x, max), min);
   }
