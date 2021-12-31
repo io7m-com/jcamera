@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <description>Universal 3D camera functions (JOGL example)</description>
-  <url>http://io7m.github.io/jcamera/</url>
+  <url>https://www.io7m.com/software/jcamera/</url>
   <name>${project.artifactId}</name>
 
   <properties>

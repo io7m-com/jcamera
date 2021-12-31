@@ -18,9 +18,17 @@
  * Camera implementations.
  */
 
-@Export
-@Version("1.0.0")
-package com.io7m.jcamera;
+module com.io7m.jcamera.core
+{
+  requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
+  requires static org.immutables.value;
 
-import org.osgi.annotation.bundle.Export;
-import org.osgi.annotation.versioning.Version;
+  requires com.io7m.jequality.core;
+  requires com.io7m.jinterp.core;
+  requires com.io7m.jranges.core;
+  requires com.io7m.jtensors.core;
+  requires com.io7m.junreachable.core;
+
+  exports com.io7m.jcamera;
+}
