@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -18,6 +18,8 @@ package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.junreachable.UnreachableCodeException;
+
+import java.util.Objects;
 
 /**
  * Aggregation of the {@link JCameraFPSStyleAngularIntegratorType} and {@link
@@ -51,7 +53,7 @@ public final class JCameraFPSStyleIntegrator
     final JCameraFPSStyleLinearIntegratorType li =
       JCameraFPSStyleLinearIntegrator.newIntegrator(in_camera, in_input);
 
-    return JCameraFPSStyleIntegrator.newIntegratorWith(ai, li);
+    return newIntegratorWith(ai, li);
   }
 
   /**
@@ -76,90 +78,104 @@ public final class JCameraFPSStyleIntegrator
         "Angular integrator input does not match linear integrator input");
     }
 
-    return new JCameraFPSStyleIntegratorType()
+    return new DelegatingIntegrator(li, ai);
+  }
+
+  private static final class DelegatingIntegrator
+    implements JCameraFPSStyleIntegratorType
+  {
+    private final JCameraFPSStyleLinearIntegratorType linear;
+    private final JCameraFPSStyleAngularIntegratorType angular;
+
+    DelegatingIntegrator(
+      final JCameraFPSStyleLinearIntegratorType inLinear,
+      final JCameraFPSStyleAngularIntegratorType inAngular)
     {
-      @Override
-      public void integrate(
-        final double d)
-      {
-        li.integrate(d);
-        ai.integrate(d);
-      }
+      this.linear = Objects.requireNonNull(inLinear, "inLinear");
+      this.angular = Objects.requireNonNull(inAngular, "inAngular");
+    }
 
-      @Override
-      public void integratorAngularSetAccelerationHorizontal(
-        final double a)
-      {
-        ai.integratorAngularSetAccelerationHorizontal(a);
-      }
+    @Override
+    public void integrate(
+      final double d)
+    {
+      this.linear.integrate(d);
+      this.angular.integrate(d);
+    }
 
-      @Override
-      public void integratorAngularSetAccelerationVertical(
-        final double a)
-      {
-        ai.integratorAngularSetAccelerationVertical(a);
-      }
+    @Override
+    public void integratorAngularSetAccelerationHorizontal(
+      final double a)
+    {
+      this.angular.integratorAngularSetAccelerationHorizontal(a);
+    }
 
-      @Override
-      public void integratorAngularSetDragHorizontal(
-        final double d)
-      {
-        ai.integratorAngularSetDragHorizontal(d);
-      }
+    @Override
+    public void integratorAngularSetAccelerationVertical(
+      final double a)
+    {
+      this.angular.integratorAngularSetAccelerationVertical(a);
+    }
 
-      @Override
-      public void integratorAngularSetDragVertical(
-        final double d)
-      {
-        ai.integratorAngularSetDragVertical(d);
-      }
+    @Override
+    public void integratorAngularSetDragHorizontal(
+      final double d)
+    {
+      this.angular.integratorAngularSetDragHorizontal(d);
+    }
 
-      @Override
-      public void integratorAngularSetMaximumSpeedHorizontal(
-        final double s)
-      {
-        ai.integratorAngularSetMaximumSpeedHorizontal(s);
-      }
+    @Override
+    public void integratorAngularSetDragVertical(
+      final double d)
+    {
+      this.angular.integratorAngularSetDragVertical(d);
+    }
 
-      @Override
-      public void integratorAngularSetMaximumSpeedVertical(
-        final double s)
-      {
-        ai.integratorAngularSetMaximumSpeedVertical(s);
-      }
+    @Override
+    public void integratorAngularSetMaximumSpeedHorizontal(
+      final double s)
+    {
+      this.angular.integratorAngularSetMaximumSpeedHorizontal(s);
+    }
 
-      @Override
-      public JCameraFPSStyleReadableType integratorGetCamera()
-      {
-        return li.integratorGetCamera();
-      }
+    @Override
+    public void integratorAngularSetMaximumSpeedVertical(
+      final double s)
+    {
+      this.angular.integratorAngularSetMaximumSpeedVertical(s);
+    }
 
-      @Override
-      public JCameraFPSStyleInputType integratorGetInput()
-      {
-        return ai.integratorGetInput();
-      }
+    @Override
+    public JCameraFPSStyleReadableType integratorGetCamera()
+    {
+      return this.linear.integratorGetCamera();
+    }
 
-      @Override
-      public void integratorLinearSetAcceleration(
-        final double a)
-      {
-        li.integratorLinearSetAcceleration(a);
-      }
+    @Override
+    public JCameraFPSStyleInputType integratorGetInput()
+    {
+      return this.angular.integratorGetInput();
+    }
 
-      @Override
-      public void integratorLinearSetDrag(
-        final double f)
-      {
-        li.integratorLinearSetDrag(f);
-      }
+    @Override
+    public void integratorLinearSetAcceleration(
+      final double a)
+    {
+      this.linear.integratorLinearSetAcceleration(a);
+    }
 
-      @Override
-      public void integratorLinearSetMaximumSpeed(
-        final double s)
-      {
-        li.integratorLinearSetMaximumSpeed(s);
-      }
-    };
+    @Override
+    public void integratorLinearSetDrag(
+      final double f)
+    {
+      this.linear.integratorLinearSetDrag(f);
+    }
+
+    @Override
+    public void integratorLinearSetMaximumSpeed(
+      final double s)
+    {
+      this.linear.integratorLinearSetMaximumSpeed(s);
+    }
   }
 }

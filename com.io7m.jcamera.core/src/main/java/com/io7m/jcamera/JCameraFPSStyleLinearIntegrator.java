@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -17,8 +17,9 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
+
+import java.util.Objects;
 
 /**
  * The default implementation of {@link JCameraFPSStyleLinearIntegratorType}.
@@ -41,8 +42,8 @@ public final class JCameraFPSStyleLinearIntegrator implements
     final JCameraFPSStyleType in_camera,
     final JCameraFPSStyleInputType in_input)
   {
-    this.camera = NullCheck.notNull(in_camera, "Camera");
-    this.input = NullCheck.notNull(in_input, "Input");
+    this.camera = Objects.requireNonNull(in_camera, "Camera");
+    this.input = Objects.requireNonNull(in_input, "Input");
     this.maximum_speed = 3.0;
     this.speed_forward = 0.0;
     this.speed_right = 0.0;

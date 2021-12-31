@@ -39,9 +39,9 @@ public final class ProjectionMatrix
    * that the eye is located at {@code (0, 0, 0)}. The {@code z_far} parameter
    * specifies the location of the far clipping plane.</p>
    *
-   * <p>Note that iff {@code z_far &gt;= Double.POSITIVE_INFINITY}, the function
-   * produces an "infinite projection matrix", suitable for use in code that
-   * deals with shadow volumes.</p>
+   * <p>Note that iff {@code z_far &gt;= Double.POSITIVE_INFINITY}, the
+   * function produces an "infinite projection matrix", suitable for use in code
+   * that deals with shadow volumes.</p>
    *
    * <p>The function assumes a right-handed coordinate system.</p>
    *

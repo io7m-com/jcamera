@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -20,8 +20,6 @@ import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
 import com.io7m.jcamera.JCameraSphericalSnapshot;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 import com.io7m.junreachable.UnreachableCodeException;
 import com.jogamp.nativewindow.WindowClosingProtocol;
 import com.jogamp.newt.event.WindowAdapter;
@@ -31,6 +29,7 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
@@ -57,7 +56,7 @@ public final class ExampleSphericalMain
   {
     ExampleTimer.enableHighResolutionTimer();
     final ExecutorService background_workers =
-      NullCheck.notNull(Executors.newFixedThreadPool(1));
+      Objects.requireNonNull(Executors.newFixedThreadPool(1));
 
     /*
      * $example: Construct a new renderer.
@@ -137,7 +136,7 @@ public final class ExampleSphericalMain
     {
       @Override
       public void windowDestroyed(
-        final @Nullable WindowEvent e)
+        final WindowEvent e)
       {
         System.out.println("Stopping animator");
         anim.stop();

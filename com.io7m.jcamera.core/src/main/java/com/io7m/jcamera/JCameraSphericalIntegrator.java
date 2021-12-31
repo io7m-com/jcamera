@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -18,6 +18,8 @@ package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
 import com.io7m.junreachable.UnreachableCodeException;
+
+import java.util.Objects;
 
 /**
  * Aggregation of the {@link JCameraSphericalAngularIntegratorType} and {@link
@@ -51,7 +53,7 @@ public final class JCameraSphericalIntegrator
     final JCameraSphericalLinearIntegratorType li =
       JCameraSphericalLinearIntegrator.newIntegrator(in_camera, in_input);
 
-    return JCameraSphericalIntegrator.newIntegratorWith(ai, li);
+    return newIntegratorWith(ai, li);
   }
 
   /**
@@ -76,111 +78,127 @@ public final class JCameraSphericalIntegrator
         "Angular integrator input does not match linear integrator input");
     }
 
-    return new JCameraSphericalIntegratorType()
+    return new DelegatingIntegrator(li, ai);
+  }
+
+  private static final class DelegatingIntegrator
+    implements JCameraSphericalIntegratorType
+  {
+    private final JCameraSphericalLinearIntegratorType linear;
+    private final JCameraSphericalAngularIntegratorType angular;
+
+    DelegatingIntegrator(
+      final JCameraSphericalLinearIntegratorType inLinear,
+      final JCameraSphericalAngularIntegratorType inAngular)
     {
-      @Override
-      public void integrate(
-        final double d)
-      {
-        li.integrate(d);
-        ai.integrate(d);
-      }
+      this.linear =
+        Objects.requireNonNull(inLinear, "inLinear");
+      this.angular =
+        Objects.requireNonNull(inAngular, "inAngular");
+    }
 
-      @Override
-      public void integratorAngularOrbitHeadingSetAcceleration(
-        final double a)
-      {
-        ai.integratorAngularOrbitHeadingSetAcceleration(a);
-      }
+    @Override
+    public void integrate(
+      final double d)
+    {
+      this.linear.integrate(d);
+      this.angular.integrate(d);
+    }
 
-      @Override
-      public void integratorAngularOrbitHeadingSetDrag(
-        final double d)
-      {
-        ai.integratorAngularOrbitHeadingSetDrag(d);
-      }
+    @Override
+    public void integratorAngularOrbitHeadingSetAcceleration(
+      final double a)
+    {
+      this.angular.integratorAngularOrbitHeadingSetAcceleration(a);
+    }
 
-      @Override
-      public void integratorAngularOrbitHeadingSetMaximumSpeed(
-        final double s)
-      {
-        ai.integratorAngularOrbitHeadingSetMaximumSpeed(s);
-      }
+    @Override
+    public void integratorAngularOrbitHeadingSetDrag(
+      final double d)
+    {
+      this.angular.integratorAngularOrbitHeadingSetDrag(d);
+    }
 
-      @Override
-      public void integratorAngularOrbitInclineSetAcceleration(
-        final double a)
-      {
-        ai.integratorAngularOrbitInclineSetAcceleration(a);
-      }
+    @Override
+    public void integratorAngularOrbitHeadingSetMaximumSpeed(
+      final double s)
+    {
+      this.angular.integratorAngularOrbitHeadingSetMaximumSpeed(s);
+    }
 
-      @Override
-      public void integratorAngularOrbitInclineSetDrag(
-        final double d)
-      {
-        ai.integratorAngularOrbitInclineSetDrag(d);
-      }
+    @Override
+    public void integratorAngularOrbitInclineSetAcceleration(
+      final double a)
+    {
+      this.angular.integratorAngularOrbitInclineSetAcceleration(a);
+    }
 
-      @Override
-      public void integratorAngularOrbitInclineSetMaximumSpeed(
-        final double s)
-      {
-        ai.integratorAngularOrbitInclineSetMaximumSpeed(s);
-      }
+    @Override
+    public void integratorAngularOrbitInclineSetDrag(
+      final double d)
+    {
+      this.angular.integratorAngularOrbitInclineSetDrag(d);
+    }
 
-      @Override
-      public JCameraSphericalReadableType integratorGetCamera()
-      {
-        return li.integratorGetCamera();
-      }
+    @Override
+    public void integratorAngularOrbitInclineSetMaximumSpeed(
+      final double s)
+    {
+      this.angular.integratorAngularOrbitInclineSetMaximumSpeed(s);
+    }
 
-      @Override
-      public JCameraSphericalInputType integratorGetInput()
-      {
-        return ai.integratorGetInput();
-      }
+    @Override
+    public JCameraSphericalReadableType integratorGetCamera()
+    {
+      return this.linear.integratorGetCamera();
+    }
 
-      @Override
-      public void integratorLinearTargetSetAcceleration(
-        final double a)
-      {
-        li.integratorLinearTargetSetAcceleration(a);
-      }
+    @Override
+    public JCameraSphericalInputType integratorGetInput()
+    {
+      return this.angular.integratorGetInput();
+    }
 
-      @Override
-      public void integratorLinearTargetSetDrag(
-        final double f)
-      {
-        li.integratorLinearTargetSetDrag(f);
-      }
+    @Override
+    public void integratorLinearTargetSetAcceleration(
+      final double a)
+    {
+      this.linear.integratorLinearTargetSetAcceleration(a);
+    }
 
-      @Override
-      public void integratorLinearTargetSetMaximumSpeed(
-        final double s)
-      {
-        li.integratorLinearTargetSetMaximumSpeed(s);
-      }
+    @Override
+    public void integratorLinearTargetSetDrag(
+      final double f)
+    {
+      this.linear.integratorLinearTargetSetDrag(f);
+    }
 
-      @Override
-      public void integratorLinearZoomSetAcceleration(
-        final double a)
-      {
-        li.integratorLinearZoomSetAcceleration(a);
-      }
+    @Override
+    public void integratorLinearTargetSetMaximumSpeed(
+      final double s)
+    {
+      this.linear.integratorLinearTargetSetMaximumSpeed(s);
+    }
 
-      @Override
-      public void integratorLinearZoomSetDrag(
-        final double f)
-      {
-        li.integratorLinearZoomSetDrag(f);
-      }
+    @Override
+    public void integratorLinearZoomSetAcceleration(
+      final double a)
+    {
+      this.linear.integratorLinearZoomSetAcceleration(a);
+    }
 
-      @Override
-      public void integratorLinearZoomSetMaximumSpeed(
-        final double s)
-      {
-        li.integratorLinearZoomSetMaximumSpeed(s);
-      }
-    };
+    @Override
+    public void integratorLinearZoomSetDrag(
+      final double f)
+    {
+      this.linear.integratorLinearZoomSetDrag(f);
+    }
+
+    @Override
+    public void integratorLinearZoomSetMaximumSpeed(
+      final double s)
+    {
+      this.linear.integratorLinearZoomSetMaximumSpeed(s);
+    }
   }
 }

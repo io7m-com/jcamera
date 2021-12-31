@@ -17,8 +17,9 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
+
+import java.util.Objects;
 
 /**
  * The default implementation of {@link JCameraSphericalLinearIntegratorType}.
@@ -45,8 +46,8 @@ public final class JCameraSphericalLinearIntegrator implements
     final JCameraSphericalType in_camera,
     final JCameraSphericalInputType in_input)
   {
-    this.camera = NullCheck.notNull(in_camera, "Camera");
-    this.input = NullCheck.notNull(in_input, "Input");
+    this.camera = Objects.requireNonNull(in_camera, "Camera");
+    this.input = Objects.requireNonNull(in_input, "Input");
 
     this.speed_forward = 0.0;
     this.speed_right = 0.0;

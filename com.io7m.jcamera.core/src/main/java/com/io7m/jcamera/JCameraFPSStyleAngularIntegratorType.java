@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -31,7 +31,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetAccelerationHorizontal(
-    final double a);
+    double a);
 
   /**
    * Set the acceleration around the vertical axis to {@code a}.
@@ -40,7 +40,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetAccelerationVertical(
-    final double a);
+    double a);
 
   /**
    * Set the drag around the horizontal axis to {@code a}.
@@ -49,7 +49,7 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetDragHorizontal(
-    final double d);
+    double d);
 
   /**
    * Set the drag around the vertical axis to {@code a}.
@@ -58,27 +58,25 @@ public interface JCameraFPSStyleAngularIntegratorType extends
    */
 
   void integratorAngularSetDragVertical(
-    final double d);
+    double d);
 
   /**
-   * Set the maximum rotation speed around the horizontal axis to
-   * {@code s}.
+   * Set the maximum rotation speed around the horizontal axis to {@code s}.
    *
    * @param s The maximum rotation speed.
    */
 
   void integratorAngularSetMaximumSpeedHorizontal(
-    final double s);
+    double s);
 
   /**
-   * Set the maximum rotation speed around the vertical axis to {@code s}
-   * .
+   * Set the maximum rotation speed around the vertical axis to {@code s} .
    *
    * @param s The maximum rotation speed.
    */
 
   void integratorAngularSetMaximumSpeedVertical(
-    final double s);
+    double s);
 
   /**
    * @return The camera that will be affected by the integrator

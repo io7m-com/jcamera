@@ -167,8 +167,8 @@ final class CameraSimulationSpherical implements
       new AtomicReference<>(
         JCameraSphericalMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          (double) in_window.getWidth(),
-          (double) in_window.getHeight()));
+          in_window.getWidth(),
+          in_window.getHeight()));
 
     this.key_listener =
       new ExampleSphericalKeyListener(

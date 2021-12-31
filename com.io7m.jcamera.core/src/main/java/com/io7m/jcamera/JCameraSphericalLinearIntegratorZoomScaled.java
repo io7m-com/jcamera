@@ -17,8 +17,9 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
+
+import java.util.Objects;
 
 /**
  * An implementation of {@link JCameraSphericalLinearIntegratorType} that scales
@@ -50,10 +51,14 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
     final JCameraScalingFunctionType in_drag_scale,
     final JCameraScalingFunctionType in_linear_scale)
   {
-    this.camera = NullCheck.notNull(in_camera, "Camera");
-    this.input = NullCheck.notNull(in_input, "Input");
-    this.drag_scale = NullCheck.notNull(in_drag_scale, "Drag scale");
-    this.linear_scale = NullCheck.notNull(in_linear_scale, "Linear scale");
+    this.camera = Objects.requireNonNull(in_camera, "Camera");
+    this.input = Objects.requireNonNull(in_input, "Input");
+    this.drag_scale = Objects.requireNonNull(
+      in_drag_scale,
+      "Drag scale");
+    this.linear_scale = Objects.requireNonNull(
+      in_linear_scale,
+      "Linear scale");
 
     this.speed_forward = 0.0;
     this.speed_right = 0.0;
@@ -171,7 +176,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
         * time;
 
     this.camera.cameraMoveTargetForwardOnXZ(s * time);
-    return JCameraSphericalLinearIntegratorZoomScaled.applyDrag(
+    return applyDrag(
       s,
       this.target_drag,
       time);
@@ -206,7 +211,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
         * time;
 
     this.camera.cameraMoveTargetRight(s * time);
-    return JCameraSphericalLinearIntegratorZoomScaled.applyDrag(
+    return applyDrag(
       s,
       this.target_drag,
       time);
@@ -229,7 +234,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
     s = Clamp.clamp(s, -this.target_maximum_speed, this.target_maximum_speed);
 
     this.camera.cameraMoveTargetUp(s * time);
-    return JCameraSphericalLinearIntegratorZoomScaled.applyDrag(
+    return applyDrag(
       s,
       this.target_drag,
       time);
@@ -252,7 +257,7 @@ public final class JCameraSphericalLinearIntegratorZoomScaled implements
     s = Clamp.clamp(s, -this.zoom_maximum_speed, this.zoom_maximum_speed);
 
     this.camera.cameraZoomIn(s * time);
-    return JCameraSphericalLinearIntegratorZoomScaled.applyDrag(
+    return applyDrag(
       s,
       this.zoom_drag,
       time);

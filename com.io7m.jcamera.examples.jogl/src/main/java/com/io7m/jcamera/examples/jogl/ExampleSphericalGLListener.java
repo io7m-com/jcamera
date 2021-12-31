@@ -20,7 +20,6 @@ import com.io7m.jcamera.JCameraScreenOrigin;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
 import com.io7m.jcamera.JCameraSphericalSnapshot;
 import com.io7m.jcamera.JCameraSphericalSnapshots;
-import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.DebugGL3;
@@ -68,7 +67,7 @@ public final class ExampleSphericalGLListener implements GLEventListener
 
   @Override
   public void init(
-    final @Nullable GLAutoDrawable drawable)
+    final GLAutoDrawable drawable)
   {
     try {
       assert drawable != null;
@@ -86,14 +85,14 @@ public final class ExampleSphericalGLListener implements GLEventListener
 
   @Override
   public void dispose(
-    final @Nullable GLAutoDrawable drawable)
+    final GLAutoDrawable drawable)
   {
     // Nothing.
   }
 
   @Override
   public void display(
-    final @Nullable GLAutoDrawable drawable)
+    final GLAutoDrawable drawable)
   {
     assert drawable != null;
 
@@ -142,7 +141,7 @@ public final class ExampleSphericalGLListener implements GLEventListener
 
   @Override
   public void reshape(
-    final @Nullable GLAutoDrawable drawable,
+    final GLAutoDrawable drawable,
     final int x,
     final int y,
     final int width,
@@ -150,8 +149,8 @@ public final class ExampleSphericalGLListener implements GLEventListener
   {
     this.mouse_region.set(JCameraSphericalMouseRegion.of(
       JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-      (double) width,
-      (double) height));
+      width,
+      height));
     this.renderer.reshape(width, height);
   }
 }

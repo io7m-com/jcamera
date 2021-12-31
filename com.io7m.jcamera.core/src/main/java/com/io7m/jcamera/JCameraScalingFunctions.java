@@ -62,7 +62,7 @@ public final class JCameraScalingFunctions
 
   public static JCameraScalingFunctionType scaleIdentity()
   {
-    return JCameraScalingFunctions.SCALE_IDENTITY;
+    return SCALE_IDENTITY;
   }
 
   /**
@@ -71,6 +71,6 @@ public final class JCameraScalingFunctions
 
   public static JCameraScalingFunctionType scaleSquareRoot()
   {
-    return JCameraScalingFunctions.SCALE_SQUARE_ROOT;
+    return SCALE_SQUARE_ROOT;
   }
 }

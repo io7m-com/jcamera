@@ -16,9 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl.lab;
 
-import com.io7m.jfunctional.ProcedureType;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 import net.java.dev.designgridlayout.DesignGridLayout;
 import net.java.dev.designgridlayout.RowGroup;
 
@@ -26,9 +23,11 @@ import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-final class CameraFloatSlider implements
-  CameraUIControlsType
+final class CameraFloatSlider
+  implements CameraUIControlsType
 {
   private final JTextField field;
   private final RowGroup group;
@@ -37,14 +36,16 @@ final class CameraFloatSlider implements
   private final double minimum;
   private final JSlider slider;
   private double current;
-  private @Nullable ProcedureType<Double> on_change;
+  private Consumer<Double> on_change;
 
   CameraFloatSlider(
     final String in_label,
     final double in_minimum,
     final double in_maximum)
   {
-    this.label = new JLabel(NullCheck.notNull(in_label, "ForwardLabel"));
+    this.label = new JLabel(Objects.requireNonNull(
+      in_label,
+      "ForwardLabel"));
     this.group = new RowGroup();
 
     this.maximum = in_maximum;
@@ -84,9 +85,9 @@ final class CameraFloatSlider implements
   }
 
   public void setOnChangeListener(
-    final ProcedureType<Double> p)
+    final Consumer<Double> p)
   {
-    this.on_change = NullCheck.notNull(p, "Procedure");
+    this.on_change = Objects.requireNonNull(p, "Procedure");
   }
 
   @Override
@@ -155,10 +156,10 @@ final class CameraFloatSlider implements
 
   private void callListener()
   {
-    final ProcedureType<Double> proc = this.on_change;
+    final Consumer<Double> proc = this.on_change;
     if (proc != null) {
       final double x = this.current;
-      proc.call(Double.valueOf(x));
+      proc.accept(Double.valueOf(x));
     }
   }
 }

@@ -18,6 +18,4 @@
  * JOGL examples.
  */
 
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jcamera.examples.jogl;
-

@@ -18,8 +18,6 @@ package com.io7m.jcamera.examples.jogl.lab;
 
 import com.io7m.jcamera.examples.jogl.ExampleRenderer;
 import com.io7m.jcamera.examples.jogl.ExampleRendererType;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 import com.jogamp.newt.awt.NewtCanvasAWT;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -44,6 +42,7 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -55,9 +54,13 @@ final class CameraLabWindow extends JFrame
 
   static {
     BORDER_INACTIVE =
-      NullCheck.notNull(BorderFactory.createLineBorder(Color.GRAY, 3));
+      Objects.requireNonNull(BorderFactory.createLineBorder(
+        Color.GRAY,
+        3));
     BORDER_ACTIVE =
-      NullCheck.notNull(BorderFactory.createLineBorder(Color.RED, 3));
+      Objects.requireNonNull(BorderFactory.createLineBorder(
+        Color.RED,
+        3));
   }
 
   static {
@@ -71,7 +74,7 @@ final class CameraLabWindow extends JFrame
     this.setJMenuBar(menu(this));
 
     final ExecutorService background_workers =
-      NullCheck.notNull(Executors.newFixedThreadPool(1));
+      Objects.requireNonNull(Executors.newFixedThreadPool(1));
 
     final GLProfile profile = GLProfile.get(GLProfile.GL3);
     final GLCapabilities caps = new GLCapabilities(profile);
@@ -129,7 +132,7 @@ final class CameraLabWindow extends JFrame
     private final JComboBox<String> selector;
     private final Map<String, CameraSimulationType> simulations;
     private final GLWindow window;
-    private @Nullable CameraSimulationType current;
+    private CameraSimulationType current;
 
     Panel(
       final ExecutorService in_background_workers,
@@ -137,7 +140,7 @@ final class CameraLabWindow extends JFrame
       final JPanel in_canvas_panel,
       final GLWindow in_window)
     {
-      this.window = NullCheck.notNull(in_window, "Window");
+      this.window = Objects.requireNonNull(in_window, "Window");
 
       this.simulations =
         CameraSimulations.newSimulations(
@@ -185,7 +188,7 @@ final class CameraLabWindow extends JFrame
       {
         @Override
         public void display(
-          final @Nullable GLAutoDrawable drawable)
+          final GLAutoDrawable drawable)
         {
           final CameraSimulationType c = Panel.this.current;
           if ((c != null) && c.cameraIsEnabled()) {
@@ -198,21 +201,21 @@ final class CameraLabWindow extends JFrame
 
         @Override
         public void dispose(
-          final @Nullable GLAutoDrawable drawable)
+          final GLAutoDrawable drawable)
         {
           // Nothing
         }
 
         @Override
         public void init(
-          final @Nullable GLAutoDrawable drawable)
+          final GLAutoDrawable drawable)
         {
           // Nothing
         }
 
         @Override
         public void reshape(
-          final @Nullable GLAutoDrawable drawable,
+          final GLAutoDrawable drawable,
           final int x,
           final int y,
           final int width,
@@ -230,7 +233,7 @@ final class CameraLabWindow extends JFrame
     {
       final CameraSimulationType old_current = this.current;
       final CameraSimulationType new_current =
-        NullCheck.notNull(this.simulations.get(name));
+        Objects.requireNonNull(this.simulations.get(name));
 
       if (old_current != null) {
         this.window.removeKeyListener(old_current.getKeyListener());

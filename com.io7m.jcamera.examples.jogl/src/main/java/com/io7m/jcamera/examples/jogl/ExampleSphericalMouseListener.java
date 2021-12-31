@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -18,7 +18,6 @@ package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraSphericalInputType;
 import com.io7m.jcamera.JCameraSphericalMouseRegion;
-import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2I;
 import com.jogamp.newt.Window;
@@ -58,39 +57,23 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
 
   @Override
   public void mouseMoved(
-    final @Nullable MouseEvent e)
+    final MouseEvent e)
   {
     assert e != null;
 
     this.position_normalized =
-      this.mouse_region.get().position((double) e.getX(), (double) e.getY());
+      this.mouse_region.get().position(e.getX(), e.getY());
 
-    if (this.position_normalized.x() <= -0.98) {
-      this.input.setTargetMovingLeftCursor(true);
-    } else {
-      this.input.setTargetMovingLeftCursor(false);
-    }
-    if (this.position_normalized.x() >= 0.98) {
-      this.input.setTargetMovingRightCursor(true);
-    } else {
-      this.input.setTargetMovingRightCursor(false);
-    }
+    this.input.setTargetMovingLeftCursor(this.position_normalized.x() <= -0.98);
+    this.input.setTargetMovingRightCursor(this.position_normalized.x() >= 0.98);
 
-    if (this.position_normalized.y() <= -0.98) {
-      this.input.setTargetMovingBackwardCursor(true);
-    } else {
-      this.input.setTargetMovingBackwardCursor(false);
-    }
-    if (this.position_normalized.y() >= 0.98) {
-      this.input.setTargetMovingForwardCursor(true);
-    } else {
-      this.input.setTargetMovingForwardCursor(false);
-    }
+    this.input.setTargetMovingBackwardCursor(this.position_normalized.y() <= -0.98);
+    this.input.setTargetMovingForwardCursor(this.position_normalized.y() >= 0.98);
   }
 
   @Override
   public void mousePressed(
-    final @Nullable MouseEvent e)
+    final MouseEvent e)
   {
     assert e != null;
     if (e.isButtonDown(2)) {
@@ -103,7 +86,7 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
 
   @Override
   public void mouseReleased(
-    final @Nullable MouseEvent e)
+    final MouseEvent e)
   {
     assert e != null;
     if (e.isButtonDown(2)) {
@@ -113,12 +96,12 @@ public final class ExampleSphericalMouseListener extends MouseAdapter
 
   @Override
   public void mouseDragged(
-    final @Nullable MouseEvent e)
+    final MouseEvent e)
   {
     assert e != null;
     if (e.isButtonDown(2)) {
       this.position_normalized =
-        this.mouse_region.get().position((double) e.getX(), (double) e.getY());
+        this.mouse_region.get().position(e.getX(), e.getY());
 
       final double px = -this.position_normalized.x();
       final double py = -this.position_normalized.y();

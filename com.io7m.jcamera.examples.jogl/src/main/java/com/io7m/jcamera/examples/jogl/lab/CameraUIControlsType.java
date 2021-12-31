@@ -21,7 +21,7 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 interface CameraUIControlsType
 {
   void controlsAddToLayout(
-    final DesignGridLayout dg);
+    DesignGridLayout dg);
 
   void controlsHide();
 

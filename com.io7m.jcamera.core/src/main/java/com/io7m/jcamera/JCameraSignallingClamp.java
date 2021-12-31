@@ -40,8 +40,7 @@ public final class JCameraSignallingClamp
   }
 
   /**
-   * Clamp the value {@code x} to the given inclusive range {@code [min,
-   * max]}.
+   * Clamp the value {@code x} to the given inclusive range {@code [min, max]}.
    *
    * @param x   The value
    * @param min The minimum value

@@ -31,5 +31,5 @@ public interface JCameraScalingFunctionType
    */
 
   double evaluate(
-    final double x);
+    double x);
 }

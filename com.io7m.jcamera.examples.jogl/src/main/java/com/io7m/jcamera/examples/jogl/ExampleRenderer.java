@@ -17,8 +17,6 @@
 package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraReadableSnapshotType;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jnull.Nullable;
 import com.io7m.jtensors.core.unparameterized.matrices.Matrices4x4D;
 import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
@@ -43,6 +41,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -98,14 +97,14 @@ public final class ExampleRenderer implements ExampleRendererType
   private final MatrixByteBuffered4x4Type mproj;
   private final FloatBuffer mproj_fbuffer;
 
-  private @Nullable GL3 gl;
+  private GL3 gl;
   private int indices;
   private int mesh_lying;
   private int mesh_upright;
   private int program;
-  private @Nullable Texture texture;
+  private Texture texture;
   private AtomicBoolean want_warp;
-  private @Nullable Window window;
+  private Window window;
   private int program_uv;
   private Matrix4x4D view;
   private Matrix4x4D projection;
@@ -268,7 +267,9 @@ public final class ExampleRenderer implements ExampleRendererType
     InputStream f_stream = null;
     try {
       f_stream = ExampleRenderer.class.getResourceAsStream("ground.jpg");
-      return NullCheck.notNull(TextureIO.newTexture(f_stream, false, ".jpg"));
+      return Objects.requireNonNull(
+        TextureIO.newTexture(f_stream, false, ".jpg")
+      );
     } finally {
       if (f_stream != null) {
         f_stream.close();
@@ -295,7 +296,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g
       .glBufferData(
         GL.GL_ELEMENT_ARRAY_BUFFER,
-        (long) (6 * 4),
+        6 * 4,
         data,
         GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -362,7 +363,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      (long) VERTICES_TOTAL_SIZE_BYTES,
+      VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -433,7 +434,7 @@ public final class ExampleRenderer implements ExampleRendererType
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, id);
     g.glBufferData(
       GL.GL_ARRAY_BUFFER,
-      (long) VERTICES_TOTAL_SIZE_BYTES,
+      VERTICES_TOTAL_SIZE_BYTES,
       data,
       GL.GL_STATIC_DRAW);
     g.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -524,7 +525,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         VERTEX_SIZE,
-        (long) VERTEX_POSITION_OFFSET);
+        VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -538,7 +539,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         VERTEX_SIZE,
-        (long) VERTEX_COLOR_OFFSET);
+        VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -595,7 +596,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         VERTEX_SIZE,
-        (long) VERTEX_POSITION_OFFSET);
+        VERTEX_POSITION_OFFSET);
     }
 
     {
@@ -609,7 +610,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         VERTEX_SIZE,
-        (long) VERTEX_UV_OFFSET);
+        VERTEX_UV_OFFSET);
     }
 
     {
@@ -694,7 +695,7 @@ public final class ExampleRenderer implements ExampleRendererType
         GL.GL_FLOAT,
         false,
         VERTEX_SIZE,
-        (long) VERTEX_COLOR_OFFSET);
+        VERTEX_COLOR_OFFSET);
     }
 
     {
@@ -727,9 +728,9 @@ public final class ExampleRenderer implements ExampleRendererType
     final GL3 in_gl)
     throws IOException
   {
-    final GL3 g = NullCheck.notNull(in_gl, "GL");
+    final GL3 g = Objects.requireNonNull(in_gl, "GL");
     this.gl = g;
-    this.window = NullCheck.notNull(in_window, "Drawable");
+    this.window = Objects.requireNonNull(in_window, "Drawable");
     this.program = makeProgram(g, "basic.v", "basic.f");
     this.program_uv = makeProgram(g, "basic.v", "basic_uv.f");
     this.mesh_upright = makeUprightQuadMesh(g);
@@ -744,8 +745,8 @@ public final class ExampleRenderer implements ExampleRendererType
     final int width,
     final int height)
   {
-    final double fw = (double) width;
-    final double fh = (double) height;
+    final double fw = width;
+    final double fh = height;
 
     this.projection =
       ProjectionMatrix.perspectiveProjectionRH(

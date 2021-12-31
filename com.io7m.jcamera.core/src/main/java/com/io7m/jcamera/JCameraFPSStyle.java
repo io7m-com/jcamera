@@ -17,12 +17,13 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityStructural;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jtensors.core.parameterized.matrices.PMatrix4x4D;
 import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vectors3D;
+
+import java.util.Objects;
 
 /**
  * The default implementation of {@link JCameraFPSStyleType}.
@@ -244,7 +245,7 @@ public final class JCameraFPSStyle implements JCameraFPSStyleType
   public void cameraSetPosition(
     final Vector3D v)
   {
-    this.input_position = NullCheck.notNull(v, "Input");
+    this.input_position = Objects.requireNonNull(v, "Input");
   }
 
   /**

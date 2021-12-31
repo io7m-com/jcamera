@@ -20,7 +20,6 @@ import com.io7m.jcamera.JCameraFPSStyleMouseRegion;
 import com.io7m.jcamera.JCameraFPSStyleSnapshot;
 import com.io7m.jcamera.JCameraFPSStyleSnapshots;
 import com.io7m.jcamera.JCameraScreenOrigin;
-import com.io7m.jnull.Nullable;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.DebugGL3;
 import com.jogamp.opengl.GL;
@@ -73,7 +72,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
 
   @Override
   public void init(
-    final @Nullable GLAutoDrawable drawable)
+    final GLAutoDrawable drawable)
   {
     try {
       assert drawable != null;
@@ -91,14 +90,14 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
 
   @Override
   public void dispose(
-    final @Nullable GLAutoDrawable drawable)
+    final GLAutoDrawable drawable)
   {
     // Nothing.
   }
 
   @Override
   public void display(
-    final @Nullable GLAutoDrawable drawable)
+    final GLAutoDrawable drawable)
   {
     assert drawable != null;
 
@@ -117,7 +116,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
     while (this.time_accum >= (double) sim_delta) {
       this.snap_prev = this.snap_curr;
       this.snap_curr = this.sim.integrate();
-      this.time_accum -= (double) sim_delta;
+      this.time_accum -= sim_delta;
     }
 
     /*
@@ -131,7 +130,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
       JCameraFPSStyleSnapshots.interpolate(
         this.snap_prev,
         this.snap_curr,
-        (double) alpha);
+        alpha);
 
     final GL3 g = new DebugGL3(drawable.getGL().getGL3());
     assert g != null;
@@ -146,7 +145,7 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
 
   @Override
   public void reshape(
-    final @Nullable GLAutoDrawable drawable,
+    final GLAutoDrawable drawable,
     final int x,
     final int y,
     final int width,
@@ -154,8 +153,8 @@ public final class ExampleFPSStyleGLListener implements GLEventListener
   {
     this.mouse_region.set(JCameraFPSStyleMouseRegion.of(
       JCameraScreenOrigin.SCREEN_ORIGIN_TOP_LEFT,
-      (double) width,
-      (double) height));
+      width,
+      height));
     this.renderer.reshape(width, height);
   }
 }

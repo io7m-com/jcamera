@@ -23,7 +23,7 @@ import com.jogamp.opengl.GLEventListener;
 interface CameraSimulationType extends CameraUIControlsType
 {
   <A, E extends Exception> A acceptSimulationType(
-    final CameraSimulationVisitorType<A, E> v)
+    CameraSimulationVisitorType<A, E> v)
     throws E;
 
   GLEventListener getGLEventListener();

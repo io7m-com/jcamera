@@ -69,8 +69,7 @@ public interface JCameraFPSStyleType extends
 
   /**
    * <p>Move the camera <i>right</i> {@code u} units iff {@code u} is
-   * positive, or <i>left</i> {@code u} units iff {@code u} is
-   * negative.</p>
+   * positive, or <i>left</i> {@code u} units iff {@code u} is negative.</p>
    *
    * <p>The <i>right</i> direction, in this case, means the
    * direction perpendicular to the current view direction, {@code -π / 2}
@@ -84,8 +83,7 @@ public interface JCameraFPSStyleType extends
 
   /**
    * <p> Move the camera <i>up</i> {@code u} units iff {@code u} is
-   * positive, or <i>down</i> {@code u} units iff {@code u} is
-   * negative.</p>
+   * positive, or <i>down</i> {@code u} units iff {@code u} is negative.</p>
    *
    * <p>The <i>up</i> direction, in this case, means the
    * direction towards positive infinity on the global Y axis.</p>

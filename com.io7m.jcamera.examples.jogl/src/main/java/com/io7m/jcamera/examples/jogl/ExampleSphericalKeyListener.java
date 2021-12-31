@@ -17,7 +17,6 @@
 package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraSphericalInputType;
-import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
@@ -56,7 +55,7 @@ public final class ExampleSphericalKeyListener implements
 
   @Override
   public void keyPressed(
-    final @Nullable KeyEvent e)
+    final KeyEvent e)
   {
     assert e != null;
 
@@ -134,7 +133,7 @@ public final class ExampleSphericalKeyListener implements
 
   @Override
   public void keyReleased(
-    final @Nullable KeyEvent e)
+    final KeyEvent e)
   {
     assert e != null;
 

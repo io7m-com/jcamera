@@ -52,8 +52,8 @@ public interface ExampleRendererType extends ExampleRendererControllerType
    */
 
   void draw(
-    final JCameraReadableSnapshotType s,
-    final Optional<Vector3D> target);
+    JCameraReadableSnapshotType s,
+    Optional<Vector3D> target);
 
   /**
    * Indicate that the screen has been resized.
