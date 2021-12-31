@@ -29,7 +29,7 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>0.5.0</io7m.api.previousVersion>
+    <io7m.api.previousVersion>0.6.0-SNAPSHOT</io7m.api.previousVersion>
     <junit.version>5.8.2</junit.version>
     <io7m.org.immutables.value.version>2.9.0-rc1</io7m.org.immutables.value.version>
   </properties>
