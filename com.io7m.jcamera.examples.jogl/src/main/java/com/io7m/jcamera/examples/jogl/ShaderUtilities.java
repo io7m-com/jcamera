@@ -1,10 +1,10 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,7 +16,6 @@
 
 package com.io7m.jcamera.examples.jogl;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.io.BufferedReader;
@@ -25,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 final class ShaderUtilities
 {
@@ -44,10 +44,10 @@ final class ShaderUtilities
   static boolean isEmpty(
     final List<String> lines)
   {
-    NullCheck.notNull(lines, "Lines");
+    Objects.requireNonNull(lines, "Lines");
 
     for (final String line : lines) {
-      NullCheck.notNull(line, "Line");
+      Objects.requireNonNull(line, "Line");
       if (!line.matches("^\\s*$")) {
         return false;
       }
@@ -72,7 +72,7 @@ final class ShaderUtilities
     final InputStream stream)
     throws IOException
   {
-    NullCheck.notNull(stream, "Input stream");
+    Objects.requireNonNull(stream, "Input stream");
 
     final BufferedReader reader =
       new BufferedReader(new InputStreamReader(stream));

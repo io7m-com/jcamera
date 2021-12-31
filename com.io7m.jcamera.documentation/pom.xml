@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
@@ -8,25 +9,18 @@
   <parent>
     <groupId>com.io7m.jcamera</groupId>
     <artifactId>com.io7m.jcamera</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
   </parent>
   <artifactId>com.io7m.jcamera.documentation</artifactId>
 
   <packaging>jar</packaging>
   <description>Universal 3D camera functions (Documentation)</description>
-  <url>http://io7m.github.io/jcamera/</url>
+  <url>https://www.io7m.com/software/jcamera/</url>
   <name>${project.artifactId}</name>
 
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
   </properties>
-
-  <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}
-    </developerConnection>
-  </scm>
 
   <dependencies>
     <dependency>
@@ -39,50 +33,31 @@
       <artifactId>com.io7m.jcamera.examples.jogl</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.io7m.primogenitor</groupId>
+      <artifactId>com.io7m.primogenitor.support</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.bundle</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-
-      <!-- Unpack sources into documentation directory -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack-sources</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>com.io7m.jcamera.core</artifactId>
-                  <classifier>sources</classifier>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
-                  <includes>**\/*.java</includes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>com.io7m.jcamera.examples.jogl</artifactId>
-                  <classifier>sources</classifier>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
-                  <includes>**\/*.java</includes>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- Copy documentation resources into build directory -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -107,39 +82,110 @@
         </executions>
       </plugin>
 
-      <!-- Produce documentation examples -->
+      <!-- Unpack sources of dependencies -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+
+          <!-- Unpack sources into JavaDoc sources. -->
+          <execution>
+            <id>unpack-sources-javadoc</id>
+            <phase>package</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <excludes>module-info.java</excludes>
+              <includeGroupIds>${project.groupId}</includeGroupIds>
+              <classifier>sources</classifier>
+              <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+              <outputDirectory>${project.build.directory}/javadoc-sources</outputDirectory>
+            </configuration>
+          </execution>
+
+          <!-- Also unpack sources into documentation. -->
+          <execution>
+            <id>unpack-sources-documentation</id>
+            <phase>package</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <excludes>module-info.java</excludes>
+              <includeGroupIds>${project.groupId}</includeGroupIds>
+              <classifier>sources</classifier>
+              <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+              <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>make-classpath</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build-classpath</goal>
+            </goals>
+            <configuration>
+              <outputFile>${project.build.directory}/javadoc-classpath</outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Javadoc handling -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
+          <!-- Generate split example code -->
           <execution>
             <id>make-example-sim</id>
-            <phase>prepare-package</phase>
+            <phase>package</phase>
             <goals>
               <goal>java</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.jcamera.documentation.ExampleSplit</mainClass>
+              <mainClass>com.io7m.jcamera.documentation.ExampleSplitMain</mainClass>
               <arguments>
-                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java</argument>
+                <argument>${project.build.directory}/javadoc-sources/com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java</argument>
                 <argument>${project.build.directory}/documentation/</argument>
                 <argument>example-fps-sim-</argument>
               </arguments>
             </configuration>
           </execution>
 
+          <!-- Generate split example code -->
           <execution>
             <id>make-example-main</id>
-            <phase>prepare-package</phase>
+            <phase>package</phase>
             <goals>
               <goal>java</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.jcamera.documentation.ExampleSplit</mainClass>
+              <mainClass>com.io7m.jcamera.documentation.ExampleSplitMain</mainClass>
               <arguments>
-                <argument>${project.build.directory}/documentation/com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java</argument>
+                <argument>${project.build.directory}/javadoc-sources/com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java</argument>
                 <argument>${project.build.directory}/documentation/</argument>
                 <argument>example-fps-main-</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <!-- Generate JavaDoc -->
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <mainClass>com.io7m.primogenitor.support.TrivialJavadoc</mainClass>
+              <arguments>
+                <argument>${project.build.directory}/javadoc-sources</argument>
+                <argument>${project.build.directory}/javadoc-classpath</argument>
+                <argument>${project.build.directory}/documentation/apidocs</argument>
+                <argument>${project.build.directory}/javadoc-log.txt</argument>
+                <argument>${project.build.directory}/javadoc-options</argument>
               </arguments>
             </configuration>
           </execution>
@@ -153,7 +199,7 @@
         <executions>
           <execution>
             <id>make-documentation-single</id>
-            <phase>prepare-package</phase>
+            <phase>package</phase>
             <goals>
               <goal>transform</goal>
             </goals>
@@ -166,7 +212,7 @@
           </execution>
           <execution>
             <id>make-documentation-multi</id>
-            <phase>prepare-package</phase>
+            <phase>package</phase>
             <goals>
               <goal>transform</goal>
             </goals>
@@ -175,55 +221,6 @@
               <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
               <brandFile>${project.build.directory}/documentation/brand.xml</brandFile>
               <pagination>XHTML_MULTI</pagination>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Javadoc handling -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <!-- Produce javadoc jar for Central -->
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <bottom><![CDATA[Copyright &#169; {currentYear} &lt;code@io7m.com&gt; http://io7m.com]]></bottom>
-              <archive>
-                <manifestEntries>
-                  <Specification-Title>${project.name}</Specification-Title>
-                  <Specification-Version>${project.version}</Specification-Version>
-                  <Specification-Vendor>io7m.com</Specification-Vendor>
-                  <Implementation-Title>${project.name}</Implementation-Title>
-                  <Implementation-Version>${project.version}</Implementation-Version>
-                  <Implementation-Vendor>io7m.com</Implementation-Vendor>
-                  <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
-                  <Built-By>io7m</Built-By>
-                </manifestEntries>
-              </archive>
-            </configuration>
-          </execution>
-          <!-- Produce aggregate dependency javadocs -->
-          <execution>
-            <id>javadoc-aggregate</id>
-            <phase>package</phase>
-            <goals>
-              <goal>javadoc</goal>
-            </goals>
-            <configuration>
-              <bottom><![CDATA[Copyright &#169; {currentYear} &lt;code@io7m.com&gt; http://io7m.com]]></bottom>
-              <outputDirectory>${project.build.directory}/apidocs</outputDirectory>
-              <includeDependencySources>true</includeDependencySources>
-              <includeTransitiveDependencySources>true
-              </includeTransitiveDependencySources>
-              <dependencySourceIncludes>
-                <dependencySourceSet>com.io7m.jcamera*</dependencySourceSet>
-              </dependencySourceIncludes>
             </configuration>
           </execution>
         </executions>
@@ -252,7 +249,7 @@
         </executions>
       </plugin>
 
-      <!-- Unpack the documentation archive to the parent's generated site staging directory. -->
+      <!-- Unpack the documentation archive to the parent's generated site minisite directory. -->
       <!-- This is arguably abusive, but there appears to be no other way to achieve it. -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -269,7 +266,7 @@
               <verbose>true</verbose>
               <fileset>
                 <directory>${project.build.directory}/${project.name}-${project.version}.zip/${project.name}-${project.version}/</directory>
-                <outputDirectory>${project.parent.build.directory}/staging/documentation/</outputDirectory>
+                <outputDirectory>${project.parent.build.directory}/minisite/documentation/</outputDirectory>
               </fileset>
             </configuration>
           </execution>

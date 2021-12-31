@@ -1,10 +1,10 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -31,7 +31,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitHeadingSetAcceleration(
-    final double a);
+    double a);
 
   /**
    * Set the drag for heading orbiting to {@code a}.
@@ -40,7 +40,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitHeadingSetDrag(
-    final double d);
+    double d);
 
   /**
    * Set the maximum rotation speed for heading orbiting to {@code s} .
@@ -49,7 +49,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitHeadingSetMaximumSpeed(
-    final double s);
+    double s);
 
   /**
    * Set the acceleration for incline orbiting to {@code a}.
@@ -58,7 +58,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitInclineSetAcceleration(
-    final double a);
+    double a);
 
   /**
    * Set the drag for incline orbiting to {@code a}.
@@ -67,7 +67,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitInclineSetDrag(
-    final double d);
+    double d);
 
   /**
    * Set the maximum rotation speed for incline orbiting to {@code s}.
@@ -76,7 +76,7 @@ public interface JCameraSphericalAngularIntegratorType extends
    */
 
   void integratorAngularOrbitInclineSetMaximumSpeed(
-    final double s);
+    double s);
 
   /**
    * @return The camera that will be affected by the integrator

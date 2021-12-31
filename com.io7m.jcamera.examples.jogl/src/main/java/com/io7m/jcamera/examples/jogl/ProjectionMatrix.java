@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -39,9 +39,9 @@ public final class ProjectionMatrix
    * that the eye is located at {@code (0, 0, 0)}. The {@code z_far} parameter
    * specifies the location of the far clipping plane.</p>
    *
-   * <p>Note that iff {@code z_far &gt;= Double.POSITIVE_INFINITY}, the function
-   * produces an "infinite projection matrix", suitable for use in code that
-   * deals with shadow volumes.</p>
+   * <p>Note that iff {@code z_far &gt;= Double.POSITIVE_INFINITY}, the
+   * function produces an "infinite projection matrix", suitable for use in code
+   * that deals with shadow volumes.</p>
    *
    * <p>The function assumes a right-handed coordinate system.</p>
    *

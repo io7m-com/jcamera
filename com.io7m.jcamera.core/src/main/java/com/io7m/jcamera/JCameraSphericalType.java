@@ -1,10 +1,10 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -46,8 +46,8 @@ public interface JCameraSphericalType extends
    */
 
   void cameraClampInclineEnable(
-    final double min,
-    final double max);
+    double min,
+    double max);
 
   /**
    * Do not clamp the length of the radius.
@@ -65,15 +65,15 @@ public interface JCameraSphericalType extends
    */
 
   void cameraClampRadiusEnable(
-    final double min,
-    final double max);
+    double min,
+    double max);
 
   /**
    * <p> Move the target point of the camera <i>forward</i> {@code u} units
-   * iff {@code u} is positive, or <i>backward</i> {@code u} units iff
-   * {@code u} is negative. </p> <p> The <i>forward</i> direction, in this
-   * case, means the current view direction projected onto the X/Z plane. This
-   * means that the camera will not move along the Y axis. </p>
+   * iff {@code u} is positive, or <i>backward</i> {@code u} units iff {@code u}
+   * is negative. </p> <p> The <i>forward</i> direction, in this case, means the
+   * current view direction projected onto the X/Z plane. This means that the
+   * camera will not move along the Y axis. </p>
    *
    * @param u The units to move
    */
@@ -83,10 +83,10 @@ public interface JCameraSphericalType extends
 
   /**
    * <p> Move the target point of the camera <i>right</i> {@code u} units
-   * iff {@code u} is positive, or <i>left</i> {@code u} units iff
-   * {@code u} is negative. </p> <p> The <i>right</i> direction, in this
-   * case, means the direction perpendicular to the current view direction,
-   * {@code -π / 2} radians around the global Y axis. </p>
+   * iff {@code u} is positive, or <i>left</i> {@code u} units iff {@code u} is
+   * negative. </p> <p> The <i>right</i> direction, in this case, means the
+   * direction perpendicular to the current view direction, {@code -π / 2}
+   * radians around the global Y axis. </p>
    *
    * @param u The units to move
    */
@@ -96,9 +96,9 @@ public interface JCameraSphericalType extends
 
   /**
    * <p> Move the target point of the camera <i>up</i> {@code u} units iff
-   * {@code u} is positive, or <i>down</i> {@code u} units iff
-   * {@code u} is negative. </p> <p> The <i>up</i> direction, in this case,
-   * means the direction towards positive infinity on the global Y axis. </p>
+   * {@code u} is positive, or <i>down</i> {@code u} units iff {@code u} is
+   * negative. </p> <p> The <i>up</i> direction, in this case, means the
+   * direction towards positive infinity on the global Y axis. </p>
    *
    * @param u The units to move
    */
@@ -131,7 +131,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetAngleHeading(
-    final double a);
+    double a);
 
   /**
    * Set the incline angle to {@code a}.
@@ -140,7 +140,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetAngleIncline(
-    final double a);
+    double a);
 
   /**
    * Set the position of the target point of camera.
@@ -149,7 +149,7 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetTargetPosition(
-    final Vector3D v);
+    Vector3D v);
 
   /**
    * Set the position of the target point of camera.
@@ -160,9 +160,9 @@ public interface JCameraSphericalType extends
    */
 
   void cameraSetTargetPosition3(
-    final double x,
-    final double y,
-    final double z);
+    double x,
+    double y,
+    double z);
 
   /**
    * Set the zoom (or <i>radius</i>) of the camera to {@code r}.

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -167,8 +167,8 @@ final class CameraSimulationSpherical implements
       new AtomicReference<>(
         JCameraSphericalMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          (double) in_window.getWidth(),
-          (double) in_window.getHeight()));
+          in_window.getWidth(),
+          in_window.getHeight()));
 
     this.key_listener =
       new ExampleSphericalKeyListener(

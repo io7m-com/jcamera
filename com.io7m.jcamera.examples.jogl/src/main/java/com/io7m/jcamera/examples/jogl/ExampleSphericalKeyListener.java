@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,7 +17,6 @@
 package com.io7m.jcamera.examples.jogl;
 
 import com.io7m.jcamera.JCameraSphericalInputType;
-import com.io7m.jnull.Nullable;
 import com.jogamp.newt.event.InputEvent;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
@@ -56,7 +55,7 @@ public final class ExampleSphericalKeyListener implements
 
   @Override
   public void keyPressed(
-    final @Nullable KeyEvent e)
+    final KeyEvent e)
   {
     assert e != null;
 
@@ -134,7 +133,7 @@ public final class ExampleSphericalKeyListener implements
 
   @Override
   public void keyReleased(
-    final @Nullable KeyEvent e)
+    final KeyEvent e)
   {
     assert e != null;
 

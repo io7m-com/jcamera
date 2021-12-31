@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,12 +17,13 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityStructural;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jtensors.core.parameterized.matrices.PMatrix4x4D;
 import com.io7m.jtensors.core.unparameterized.matrices.Matrix4x4D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vectors3D;
+
+import java.util.Objects;
 
 /**
  * The default implementation of {@link JCameraSphericalType}.
@@ -265,7 +266,7 @@ public final class JCameraSpherical implements
     this.deriveVectors();
     this.input_target_position =
       Vectors3D.addScaled(
-        this.input_target_position, JCameraSpherical.AXIS_Y, u);
+        this.input_target_position, AXIS_Y, u);
     this.derived_current = false;
   }
 
@@ -307,7 +308,9 @@ public final class JCameraSpherical implements
   public void cameraSetTargetPosition(
     final Vector3D v)
   {
-    this.input_target_position = NullCheck.notNull(v, "Position");
+    this.input_target_position = Objects.requireNonNull(
+      v,
+      "Position");
     this.derived_current = false;
   }
 

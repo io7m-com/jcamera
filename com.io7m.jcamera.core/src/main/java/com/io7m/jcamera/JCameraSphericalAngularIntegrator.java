@@ -1,10 +1,10 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -17,8 +17,9 @@
 package com.io7m.jcamera;
 
 import com.io7m.jequality.annotations.EqualityReference;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jranges.RangeCheck;
+
+import java.util.Objects;
 
 /**
  * The default implementation of {@link JCameraSphericalAngularIntegratorType}
@@ -44,8 +45,8 @@ public final class JCameraSphericalAngularIntegrator implements
     final JCameraSphericalType in_camera,
     final JCameraSphericalInputType in_input)
   {
-    this.camera = NullCheck.notNull(in_camera, "Camera");
-    this.input = NullCheck.notNull(in_input, "Input");
+    this.camera = Objects.requireNonNull(in_camera, "Camera");
+    this.input = Objects.requireNonNull(in_input, "Input");
 
     this.maximum_speed_heading = 2.0 * Math.PI;
     this.maximum_speed_incline = 2.0 * Math.PI;
@@ -106,7 +107,7 @@ public final class JCameraSphericalAngularIntegrator implements
     s = Clamp.clamp(s, -this.maximum_speed_heading, this.maximum_speed_heading);
 
     this.camera.cameraOrbitHeading(s * time);
-    return JCameraSphericalAngularIntegrator.applyDrag(
+    return applyDrag(
       s,
       this.drag_heading,
       time);
@@ -140,7 +141,7 @@ public final class JCameraSphericalAngularIntegrator implements
       return 0.0;
     }
 
-    return JCameraSphericalAngularIntegrator.applyDrag(
+    return applyDrag(
       s,
       this.drag_incline,
       time);

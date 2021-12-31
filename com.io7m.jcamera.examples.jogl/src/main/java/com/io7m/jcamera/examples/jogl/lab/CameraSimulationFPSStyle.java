@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -27,7 +27,6 @@ import com.io7m.jcamera.examples.jogl.ExampleFPSStyleKeyListener;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleMouseAdapter;
 import com.io7m.jcamera.examples.jogl.ExampleFPSStyleSimulationType;
 import com.io7m.jcamera.examples.jogl.ExampleRendererType;
-import com.io7m.jnull.NullCheck;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
@@ -36,6 +35,7 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 import net.java.dev.designgridlayout.RowGroup;
 
 import javax.swing.JLabel;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -68,14 +68,14 @@ final class CameraSimulationFPSStyle implements
     final ExampleRendererType in_renderer,
     final GLWindow in_window)
   {
-    this.sim = NullCheck.notNull(in_sim);
+    this.sim = Objects.requireNonNull(in_sim);
 
     this.mouse_region =
       new AtomicReference<>(
         JCameraFPSStyleMouseRegion.of(
           JCameraScreenOrigin.SCREEN_ORIGIN_BOTTOM_LEFT,
-          (double) in_window.getWidth(),
-          (double) in_window.getHeight()));
+          in_window.getWidth(),
+          in_window.getHeight()));
 
     this.key_listener =
       new ExampleFPSStyleKeyListener(
@@ -114,57 +114,57 @@ final class CameraSimulationFPSStyle implements
 
     this.linear_drag = new CameraFloatSlider("Linear drag", 0.000001, 1.0);
     this.linear_drag.setOnChangeListener(x -> integrator.integratorLinearSetDrag(
-      (double) x.floatValue()));
+      x.floatValue()));
     this.linear_drag.setCurrent(this.linear_drag.getMinimum());
 
     this.linear_acceleration =
       new CameraFloatSlider("Linear acceleration", 0.01, 3.0);
     this.linear_acceleration.setOnChangeListener(x -> integrator.integratorLinearSetAcceleration(
-      (double) (x.floatValue() / delta)));
+      x.floatValue() / delta));
     this.linear_acceleration.setCurrent(this.linear_acceleration.getMaximum());
 
     this.linear_maximum =
       new CameraFloatSlider("Linear maximum speed", 0.001, 5.0);
     this.linear_maximum.setOnChangeListener(x -> integrator.integratorLinearSetMaximumSpeed(
-      (double) (x.floatValue() / delta)));
+      x.floatValue() / delta));
     this.linear_maximum.setCurrent(this.linear_maximum.getMaximum());
 
     this.horizontal_drag =
       new CameraFloatSlider("Horizontal drag", 0.000001, 1.0);
     this.horizontal_drag.setOnChangeListener(x -> integrator.integratorAngularSetDragHorizontal(
-      (double) x.floatValue()));
+      x.floatValue()));
     this.horizontal_drag.setCurrent(this.horizontal_drag.getMinimum());
 
     this.horizontal_acceleration =
       new CameraFloatSlider("Horizontal acceleration", 0.01, 1.0);
     this.horizontal_acceleration
       .setOnChangeListener(x -> integrator.integratorAngularSetAccelerationHorizontal(
-        (double) (x.floatValue() / delta)));
+        x.floatValue() / delta));
     this.horizontal_acceleration.setCurrent(this.horizontal_acceleration.getMaximum());
 
     this.horizontal_maximum =
       new CameraFloatSlider("Horizontal maximum", 0.0001, 0.01);
     this.horizontal_maximum.setOnChangeListener(x -> integrator.integratorAngularSetMaximumSpeedHorizontal(
-      (double) (x.floatValue() / delta)));
+      x.floatValue() / delta));
     this.horizontal_maximum.setCurrent(this.horizontal_maximum.getMaximum());
 
     this.vertical_drag =
       new CameraFloatSlider("Vertical drag", 0.000001, 1.0);
     this.vertical_drag.setOnChangeListener(x -> integrator.integratorAngularSetDragVertical(
-      (double) x.floatValue()));
+      x.floatValue()));
     this.vertical_drag.setCurrent(this.vertical_drag.getMinimum());
 
     this.vertical_acceleration =
       new CameraFloatSlider("Vertical acceleration", 0.01, 1.0);
     this.vertical_acceleration
       .setOnChangeListener(x -> integrator.integratorAngularSetAccelerationVertical(
-        (double) (x.floatValue() / delta)));
+        x.floatValue() / delta));
     this.vertical_acceleration.setCurrent(this.vertical_acceleration.getMaximum());
 
     this.vertical_maximum =
       new CameraFloatSlider("Vertical maximum", 0.0001, 0.01);
     this.vertical_maximum.setOnChangeListener(x -> integrator.integratorAngularSetMaximumSpeedVertical(
-      (double) (x.floatValue() / delta)));
+      x.floatValue() / delta));
     this.vertical_maximum.setCurrent(this.vertical_maximum.getMaximum());
   }
 

@@ -1,34 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>com.io7m.jcamera</groupId>
     <artifactId>com.io7m.jcamera</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
   </parent>
+
   <artifactId>com.io7m.jcamera.core</artifactId>
 
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
   <description>Universal 3D camera functions (Core)</description>
-  <url>http://io7m.github.io/jcamera/</url>
+  <url>https://www.io7m.com/software/jcamera/</url>
   <name>${project.artifactId}</name>
 
-  <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}
-    </developerConnection>
-  </scm>
-
   <dependencies>
-    <dependency>
-      <groupId>com.io7m.jnull</groupId>
-      <artifactId>com.io7m.jnull.core</artifactId>
-    </dependency>
     <dependency>
       <groupId>com.io7m.junreachable</groupId>
       <artifactId>com.io7m.junreachable.core</artifactId>
@@ -55,37 +47,16 @@
       <artifactId>value</artifactId>
       <scope>provided</scope>
     </dependency>
-
-    <!--  Test suite -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.bundle</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- Check style -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-
-      <!-- Produce OSGi bundle -->
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Export-Package>
-              com.io7m.jcamera
-            </Export-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

@@ -1,10 +1,10 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
- * 
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -20,8 +20,7 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 /**
  * <p>
- * Functions to work around the idiotic lack of solution given for bug
- * 6435126.
+ * Functions to work around the idiotic lack of solution given for bug 6435126.
  * </p>
  * <p>
  * See <a href="http://bugs.java.com/view_bug.do?bug_id=6435126">Bug
@@ -45,7 +44,7 @@ public final class ExampleTimer
   @SuppressWarnings("unused")
   public static void enableHighResolutionTimer()
   {
-    if (ExampleTimer.ENABLED) {
+    if (ENABLED) {
       return;
     }
 
@@ -62,7 +61,7 @@ public final class ExampleTimer
       {
         while (true) {
           try {
-            Thread.sleep((long) Integer.MAX_VALUE);
+            Thread.sleep(Integer.MAX_VALUE);
           } catch (final InterruptedException ex) {
             // Nothing
           }
@@ -70,6 +69,6 @@ public final class ExampleTimer
       }
     };
 
-    ExampleTimer.ENABLED = true;
+    ENABLED = true;
   }
 }
