@@ -1,30 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<c:changelog xmlns:c="urn:com.io7m.changelog:4.0"
-             project="com.io7m.jcamera">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<c:changelog project="com.io7m.jcamera" xmlns:c="urn:com.io7m.changelog:4.0">
   <c:releases>
-    <c:release date="2017-04-18T00:00:00+00:00"
-               version="0.5.0"
-               ticket-system="com.github.io7m.jcamera">
+    <c:release date="2017-04-18T00:00:00+00:00" is-open="false" ticket-system="com.github.io7m.jcamera" version="0.5.0">
       <c:changes>
-        <c:change date="2017-04-18T00:00:00+00:00"
-                  summary="Rename project. Use the new primogenitor POM and 2017 project conventions."/>
-        <c:change date="2017-04-18T00:00:00+00:00"
-                  summary="Use newest core io7m libraries."
-                  compatible="false"/>
+        <c:change date="2017-04-18T00:00:00+00:00" summary="Rename project. Use the new primogenitor POM and 2017 project conventions."/>
+        <c:change compatible="false" date="2017-04-18T00:00:00+00:00" summary="Use newest core io7m libraries."/>
       </c:changes>
     </c:release>
-    <c:release date="2016-05-06T00:00:00+00:00"
-               version="0.4.0"
-               ticket-system="com.github.io7m.jcamera">
+    <c:release date="2016-05-06T00:00:00+00:00" is-open="false" ticket-system="com.github.io7m.jcamera" version="0.4.0">
       <c:changes>
-        <c:change date="2016-05-06T00:00:00+00:00"
-                  summary="Initial release."/>
+        <c:change date="2016-05-06T00:00:00+00:00" summary="Initial release."/>
+      </c:changes>
+    </c:release>
+    <c:release date="2021-12-31T17:25:43+00:00" is-open="false" ticket-system="com.github.io7m.jcamera" version="0.6.0">
+      <c:changes>
+        <c:change date="2021-12-31T00:00:00+00:00" summary="Modularize the codebase, use modern libraries."/>
       </c:changes>
     </c:release>
   </c:releases>
   <c:ticket-systems>
-    <c:ticket-system id="com.github.io7m.jcamera"
-                     url="https://www.github.com/io7m/jcamera/issues/"/>
+    <c:ticket-system default="false" id="com.github.io7m.jcamera" url="https://www.github.com/io7m/jcamera/issues/"/>
   </c:ticket-systems>
 </c:changelog>
