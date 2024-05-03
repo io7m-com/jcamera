@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>7.0.0-beta0003</version>
+    <version>8.2.0</version>
   </parent>
 
   <groupId>com.io7m.jcamera</groupId>
@@ -30,6 +30,8 @@
 
   <properties>
     <io7m.api.previousVersion>0.6.0-SNAPSHOT</io7m.api.previousVersion>
+    <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
+
     <junit.version>5.8.2</junit.version>
     <io7m.org.immutables.value.version>2.9.0-rc1</io7m.org.immutables.value.version>
   </properties>
@@ -42,10 +44,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/io7m/jcamera</url>
-    <connection>scm:git:https://github.com/io7m/jcamera</connection>
-    <developerConnection>scm:git:https://github.com/io7m/jcamera
-    </developerConnection>
+    <url>https://www.github.com/io7m-com/jcamera</url>
+    <connection>scm:git:https://www.github.com/io7m-com/jcamera</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/jcamera</developerConnection>
   </scm>
 
   <developers>
@@ -58,7 +59,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://www.github.com/io7m/jcamera/issues</url>
+    <url>https://www.github.com/io7m-com/jcamera/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
@@ -80,7 +81,7 @@
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://www.github.com/jcamera/actions</url>
+    <url>https://www.github.com/io7m-com/jcamera/actions</url>
   </ciManagement>
 
   <prerequisites>
@@ -181,7 +182,7 @@
       <dependency>
         <groupId>com.io7m.primogenitor</groupId>
         <artifactId>com.io7m.primogenitor.support</artifactId>
-        <version>7.0.0-beta0003</version>
+        <version>8.2.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
