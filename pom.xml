@@ -32,7 +32,7 @@
     <io7m.api.previousVersion>0.6.0-SNAPSHOT</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
 
-    <junit.version>5.8.2</junit.version>
+    <junit.version>5.10.2</junit.version>
     <io7m.org.immutables.value.version>2.9.0-rc1</io7m.org.immutables.value.version>
   </properties>
 
