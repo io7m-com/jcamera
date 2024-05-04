@@ -16,872 +16,690 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   -->
 
-<s:section
-  xmlns:s="http://schemas.io7m.com/structural/2.1.0"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xml:id="dai.spherical">
-  <s:section-title>Spherical Camera</s:section-title>
-  <s:section-contents/>
+<Section xmlns="urn:com.io7m.structural:8:0"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         id="46794e66-f48b-4930-b01e-c7ca8dd1a3b9"
+         title="Spherical Camera">
 
-  <s:subsection xml:id="dai.spherical.overview">
-    <s:subsection-title>Overview</s:subsection-title>
-    <s:paragraph>
-      Most real-time strategy games implement some variation of a
-      so-called <s:term s:type="term">spherical</s:term> camera (also
-      sometimes known as an <s:term s:type="term">orbital</s:term> camera).
-      A spherical camera always points towards, and stays a given distance
-      from, a <s:term s:type="term">target point</s:term>.
-    </s:paragraph>
-    <s:paragraph>
-      One of the classic examples of this type of camera was implemented
-      in Bungie's
-      <s:link-external s:target="https://en.wikipedia.org/wiki/Myth_II:_Soulblighter">
-        Myth II: Soulblighter</s:link-external>.
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Myth II: Soulblighter</s:formal-item-title>
-      <s:image s:source="images/soulblighter.png">Myth II: Soulblighter
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      The camera described here implements a useful subset of the
-      capabilities of <s:term s:type="term">Myth II's</s:term> camera
-      system
-      <s:footnote>
-        <s:term s:type="term">Myth II</s:term>
-        allowed the target
-        point to orbit around the camera, as opposed to only allowing
-        the camera to orbit around the target point. This capability
-        is not widely useful and complicates the implementation of
-        the camera significantly, and so is omitted here.
-      </s:footnote>
-      .
-    </s:paragraph>
-    <s:paragraph>
+  <Subsection id="4514729d-f407-4913-8d8e-9c61b82638ac"
+              title="Overview">
+    <Paragraph>
+      Most real-time strategy games implement some variation of a so-called <Term type="term">spherical</Term> camera
+      (also sometimes known as an <Term type="term">orbital</Term> camera). A spherical camera always points towards,
+      and stays a given distance from, a <Term type="term">target point</Term>.
+    </Paragraph>
+    <Paragraph>
+      One of the classic examples of this type of camera was implemented in Bungie's
+      <LinkExternal target="https://en.wikipedia.org/wiki/Myth_II:_Soulblighter">
+        Myth II: Soulblighter</LinkExternal>.
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Myth II: Soulblighter">
+      <Image source="images/soulblighter.png">Myth II: Soulblighter</Image>
+    </FormalItem>
+    <Paragraph>
+      The camera described here implements a useful subset of the capabilities of
+      <Term type="term">Myth II's</Term>
+      camera system<LinkFootnote target="7fc6c0c9-3d9e-40e1-9369-0809ce136ad8"/>.
+    </Paragraph>
+    <Paragraph>
       A restricted form of this camera is present in Blizzard's
-      <s:link-external s:target="https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty">
-        Starcraft II</s:link-external>.
-      The mouse-control scheme for
-      <s:term s:type="term">Starcraft's</s:term>
-      camera is generally considered to be the definitive one amongst
-      real-time strategy games, and the camera described here shamelessly
-      duplicates it.
-    </s:paragraph>
-    <s:paragraph>
-      It is recommended that the reader fully understand the implementation
-      and mathematics of
-      <s:link s:target="dai.fpsstyle.overview">fps-style cameras</s:link>
-      as most of the implementation described here uses the same approach
-      and concepts.
-    </s:paragraph>
-  </s:subsection>
+      <LinkExternal target="https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty">
+        Starcraft II</LinkExternal>. The mouse-control scheme for
+      <Term type="term">Starcraft's</Term>
+      camera is generally considered to be the definitive one amongst real-time strategy games, and the camera described
+      here shamelessly duplicates it.
+    </Paragraph>
+    <Paragraph>
+      It is recommended that the reader fully understand the implementation and mathematics of
+      <Link target="71755212-005f-43b6-a084-ff50c0047b1e">fps-style cameras</Link>
+      as most of the implementation described here uses the same approach and concepts.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.behaviour">
-    <s:subsection-title>Camera Behaviour</s:subsection-title>
-    <s:paragraph>
-      A spherical camera remains at a given <s:term s:type="term">radius
-    </s:term> from
-      a movable <s:term s:type="term">target point</s:term>. The orientation of
-      the
-      camera is derived from a <s:term s:type="term">heading</s:term> angle and
-      an
-      <s:term s:type="term">incline</s:term>
+  <Subsection id="f61c77b1-3fd5-4dd1-bea6-fa7e56f7563f"
+              title="Camera Behaviour">
+    <Paragraph>
+      A spherical camera remains at a given
+      <Term type="term">radius</Term>
+      from a movable <Term type="term">target point</Term>. The orientation of the camera is derived from a
+      <Term type="term">heading</Term>
+      angle and an
+      <Term type="term">incline</Term>
       angle.
-    </s:paragraph>
-    <s:paragraph>
-      With no input from the mouse, the camera remains at its
-      current orientation:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>No input</s:formal-item-title>
-      <s:image s:source="images/spherical_neutral.png">No input</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      The red sphere indicates the <s:term s:type="term">target point</s:term>.
-      The camera remains at a given <s:term s:type="term">radius</s:term> from
-      the target point, with the cyan ring indicating the path that the camera
-      would take if the <s:term s:type="term">incline</s:term> were to change,
-      and the magenta ring indicating the path that the camera would take if
-      the <s:term s:type="term">heading</s:term> were to change. If the user
-      presses the whatever key is assigned to <s:term s:type="term">orbit
-      left</s:term>,
-      the camera <s:term s:type="term">heading</s:term> angle begins to
-      <s:term s:type="term">decrease</s:term>
-      at a configurable rate.
-      This results in the camera rotating horizontally around the target point:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Orbit Heading</s:formal-item-title>
-      <s:image s:source="images/spherical_orbit_heading_0.png">Orbit Heading
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">
-      orbit right</s:term>,
-      the camera begins to rotate around the same arc but in the opposite
-      direction.
-    </s:paragraph>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">
-      orbit up</s:term>,
-      the camera <s:term s:type="term">incline</s:term> angle begins to
-      <s:term s:type="term">increase</s:term>
-      at a configurable rate. This results in
-      the camera rotating vertically around the target point:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Orbit Incline</s:formal-item-title>
-      <s:image s:source="images/spherical_orbit_incline_0.png">Orbit Incline
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">
-      orbit down</s:term>,
-      the camera begins to rotate around the same arc but in the opposite
-      direction.
-    </s:paragraph>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">zoom
-      out</s:term>,
-      the <s:term s:type="term">radius</s:term> begins to increase at a
-      configurable
-      rate. This results in the camera giving the effect of
-      <s:term s:type="term">zooming out</s:term>:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Zoom</s:formal-item-title>
-      <s:image s:source="images/spherical_zoom_0.png">Orbit Incline</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">zoom
-      in</s:term>,
-      the <s:term s:type="term">radius</s:term> begins to decrease at a
-      configurable
-      rate. This results in the camera giving the effect of
-      <s:term s:type="term">zooming in</s:term>.
-    </s:paragraph>
-    <s:paragraph>
-      The <s:term s:type="term">target point</s:term> can also move according to
-      user input:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Target point movement</s:formal-item-title>
-      <s:image s:source="images/spherical_move_0.png">Target point movement
-      </s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Target point movement</s:formal-item-title>
-      <s:image s:source="images/spherical_move_1.png">Target point movement
-      </s:image>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.spherical.behaviour.mouse_or_keyboard">
-      Whether target point movement occurs due to keyboard or mouse input is
-      a matter of taste. The implementation described here provides both.
-      Movement
-      of the target point occurs along directions derived from the camera's
-      current
-      orientation. When the user instructs the target point to move
-      <s:term s:type="term">up</s:term>, the point begins to move towards
-      positive infinity on the global Y axis. When the user instructs the target
-      point to move <s:term s:type="term">forward</s:term>, the target point
-      begins
-      to move along the direction defined by projecting the camera's current
-      <s:term s:type="term">forward</s:term>
-      vector onto the horizontal plane.
-      When the user instructs the target
-      point to move <s:term s:type="term">right</s:term>, the target point
-      begins
-      to move along the direction defined by projecting the camera's current
-      <s:term s:type="term">right</s:term>
-      vector onto the horizontal plane.
-      The precise definitions of these vectors are given in the following
-      section
-      on the mathematics of the camera.
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Right and Forward</s:formal-item-title>
-      <s:image s:source="images/spherical_forward.png">Right and Forward
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Moving the target point via keyboard input works in a familiar and
-      unsurprising manner: When the user presses whatever key is assigned
-      to a particular direction, the camera moves in that direction until
-      the user releases the key.
-    </s:paragraph>
-    <s:paragraph xml:id="dai.spherical.behaviour.drag_scroll">
-      Moving the target point via mouse input is more complicated, however.
-      Mouse movement is provided by both
-      <s:term s:type="term">dragging</s:term>
-      and <s:term s:type="term">edge scrolling</s:term>. When the user
-      <s:term s:type="term">drags</s:term>
-      the mouse in a given direction,
-      the camera appears to move in the opposite direction by an amount
-      proportional to the drag distance. When the user moves the mouse
-      cursor to the <s:term s:type="term">edge</s:term> of the screen,
-      the camera appears to move in at a constant rate in a direction
-      relative to the edge of the screen, until the user moves the mouse
-      cursor away from that edge. These descriptions are somewhat vague,
-      and a more formal description is given in the section on
-      <s:link s:target="dai.spherical.camera_math">camera mathematics</s:link>.
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+    <Paragraph>
+      With no input from the mouse, the camera remains at its current orientation:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="No input">
+      <Image source="images/spherical_neutral.png">No input</Image>
+    </FormalItem>
+    <Paragraph>
+      The red sphere indicates the <Term type="term">target point</Term>. The camera remains at a given
+      <Term type="term">radius</Term>
+      from the target point, with the cyan ring indicating the path that the camera would take if the
+      <Term type="term">incline</Term>
+      were to change, and the magenta ring indicating the path that the camera would take if the
+      <Term type="term">heading</Term>
+      were to change. If the user presses the whatever key is assigned to
+      <Term type="term">orbit left</Term>, the camera <Term type="term">heading</Term> angle begins to
+      <Term type="term">decrease</Term>
+      at a configurable rate. This results in the camera rotating horizontally around the target point:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Orbit Heading">
+      <Image source="images/spherical_orbit_heading_0.png">Orbit Heading</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">
+      orbit right</Term>, the camera begins to rotate around the same arc but in the opposite direction.
+    </Paragraph>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">
+      orbit up</Term>, the camera <Term type="term">incline</Term> angle begins to
+      <Term type="term">increase</Term>
+      at a configurable rate. This results in the camera rotating vertically around the target point:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Orbit Incline">
+      <Image source="images/spherical_orbit_incline_0.png">Orbit Incline</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">
+      orbit down</Term>, the camera begins to rotate around the same arc but in the opposite direction.
+    </Paragraph>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">zoom out</Term>, the <Term type="term">radius
+    </Term> begins to increase at a configurable rate. This results in the camera giving the effect of
+      <Term type="term">zooming out</Term>:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Zoom">
+      <Image source="images/spherical_zoom_0.png">Orbit Incline</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">zoom in</Term>, the <Term type="term">radius
+    </Term> begins to decrease at a configurable rate. This results in the camera giving the effect of
+      <Term type="term">zooming in</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="term">target point</Term> can also move according to user input:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Target point movement">
+      <Image source="images/spherical_move_0.png">Target point movement</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Target point movement">
+      <Image source="images/spherical_move_1.png">Target point movement</Image>
+    </FormalItem>
+    <Paragraph id="852f5966-7d89-4927-8121-a4dc6ebefc45">
+      Whether target point movement occurs due to keyboard or mouse input is a matter of taste. The implementation
+      described here provides both. Movement of the target point occurs along directions derived from the camera's
+      current orientation. When the user instructs the target point to move
+      <Term type="term">up</Term>, the point begins to move towards positive infinity on the global Y axis. When the
+      user instructs the target point to move <Term type="term">forward</Term>, the target point begins to move along
+      the direction defined by projecting the camera's current
+      <Term type="term">forward</Term>
+      vector onto the horizontal plane. When the user instructs the target point to move <Term type="term">right</Term>,
+      the target point begins to move along the direction defined by projecting the camera's current
+      <Term type="term">right</Term>
+      vector onto the horizontal plane. The precise definitions of these vectors are given in the following section on
+      the mathematics of the camera.
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Right and Forward">
+      <Image source="images/spherical_forward.png">Right and Forward</Image>
+    </FormalItem>
+    <Paragraph>
+      Moving the target point via keyboard input works in a familiar and unsurprising manner: When the user presses
+      whatever key is assigned to a particular direction, the camera moves in that direction until the user releases the
+      key.
+    </Paragraph>
+    <Paragraph id="8276ef39-d46b-4b18-9521-98d1d28b56bc">
+      Moving the target point via mouse input is more complicated, however. Mouse movement is provided by both
+      <Term type="term">dragging</Term>
+      and <Term type="term">edge scrolling</Term>. When the user
+      <Term type="term">drags</Term>
+      the mouse in a given direction, the camera appears to move in the opposite direction by an amount proportional to
+      the drag distance. When the user moves the mouse cursor to the <Term type="term">edge</Term> of the screen, the
+      camera appears to move in at a constant rate in a direction relative to the edge of the screen, until the user
+      moves the mouse cursor away from that edge. These descriptions are somewhat vague, and a more formal description
+      is given in the section on
+      <Link target="0fa66f1b-6b6f-4845-b3d0-8f573c35155f">camera mathematics</Link>.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.camera_math">
-    <s:subsection-title>Camera Mathematics</s:subsection-title>
-    <s:paragraph>
-      A <s:term s:type="term">spherical</s:term> camera can be represented
-      as a 4-tuple <s:term s:type="expression">(t, h, i, r)</s:term>, where
-      <s:term s:type="expression">t</s:term>
+  <Subsection id="0fa66f1b-6b6f-4845-b3d0-8f573c35155f"
+              title="Camera Mathematics">
+    <Paragraph>
+      A <Term type="term">spherical</Term> camera can be represented as a 4-tuple <Term type="expression">(t, h, i,
+      r)</Term>, where
+      <Term type="expression">t</Term>
       is the position of the target point,
-      <s:term s:type="expression">h</s:term>
-      is an angle around the
-      global Y axis (the <s:term s:type="term">heading</s:term>),
-      <s:term s:type="expression">i</s:term>
-      is an angle around the
-      local X axis in radians (the <s:term s:type="term">incline</s:term>),
-      and <s:term s:type="expression">r</s:term> is the camera's distance
-      from the target point (the <s:term s:type="term">radius</s:term>). Astute
-      readers will notice that the defined angles are coordinates in a
-      <s:link-external s:target="https://en.wikipedia.org/wiki/Spherical_coordinate_system">
-        spherical coordinate system</s:link-external>,
-      and therefore the movement of the camera around the target point
-      always describes a sphere of radius <s:term s:type="expression">r</s:term>.
-    </s:paragraph>
-    <s:paragraph>
+      <Term type="expression">h</Term>
+      is an angle around the global Y axis (the <Term type="term">heading</Term>),
+      <Term type="expression">i</Term>
+      is an angle around the local X axis in radians (the <Term type="term">incline</Term>), and <Term type="expression">
+      r
+    </Term> is the camera's distance from the target point (the <Term type="term">radius</Term>). Astute readers will
+      notice that the defined angles are coordinates in a
+      <LinkExternal target="https://en.wikipedia.org/wiki/Spherical_coordinate_system">
+        spherical coordinate system</LinkExternal>, and therefore the movement of the camera around the target point
+      always describes a sphere of radius <Term type="expression">r</Term>.
+    </Paragraph>
+    <Paragraph>
       As with
-      <s:link s:target="dai.fpsstyle.camera_math">fps-style</s:link>
-      cameras, in order to implement forward/backward and
-      left/right movement (and to derive a final
-      <s:term s:type="term">view matrix</s:term>
-      so that the camera
-      can be used to produce a viewing transform for 3D graphics), it's
-      necessary to derive a 3-tuple of orthonormal
-      direction vectors
-      <s:term s:type="expression">(forward, right, up)</s:term>
+      <Link target="c65d3c0a-c84b-427c-8e70-370464cc56c8">fps-style</Link>
+      cameras, in order to implement forward/backward and left/right movement (and to derive a final
+      <Term type="term">view matrix</Term>
+      so that the camera can be used to produce a viewing transform for 3D graphics), it's necessary to derive a 3-tuple
+      of orthonormal direction vectors
+      <Term type="expression">(forward, right, up)</Term>
       from the camera's angles and radius.
-    </s:paragraph>
-    <s:paragraph>
-      In order to derive the vectors, it's necessary to first work out
-      the orientation of the camera. In order to calculate a full viewing
-      transform, it's also necessary to calculate the actual world-space
-      position <s:term s:type="expression">p</s:term> of the camera.
-      As stated in the description of the
-      <s:link s:target="dai.spherical.behaviour">camera behaviour</s:link>,
-      the camera is always oriented towards <s:term s:type="expression">
-      t</s:term>.
-      The mathematics of determining the camera's world-space position and
-      orientation can
-      be simplified if <s:term s:type="expression">t</s:term> is considered as
-      the origin of a new local coordinate system that will be referred to as
-      <s:term s:type="term">target-space</s:term>. Transforming a world-space
-      position <s:term s:type="expression">w</s:term> to
+    </Paragraph>
+    <Paragraph>
+      In order to derive the vectors, it's necessary to first work out the orientation of the camera. In order to
+      calculate a full viewing transform, it's also necessary to calculate the actual world-space position <Term type="expression">
+      p
+    </Term> of the camera. As stated in the description of the
+      <Link target="f61c77b1-3fd5-4dd1-bea6-fa7e56f7563f">camera behaviour</Link>, the camera is always oriented towards <Term type="expression">
+      t</Term>. The mathematics of determining the camera's world-space position and orientation can be simplified if <Term type="expression">
+      t
+    </Term> is considered as the origin of a new local coordinate system that will be referred to as
+      <Term type="term">target-space</Term>. Transforming a world-space position <Term type="expression">w</Term> to
       target-space simply requires subtracting
-      <s:term s:type="expression">t</s:term>
-      from <s:term s:type="expression">w</s:term>. Transforming a target-space
-      position <s:term s:type="expression">u</s:term> to world-space requires
-      adding <s:term s:type="expression">t</s:term> to
-      <s:term s:type="expression">u</s:term>. The following diagram illustrates
-      all of the above, flattened onto the X/Z (horizontal) plane for ease of
-      viewing:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Camera configuration on X/Z</s:formal-item-title>
-      <s:image s:source="images/spherical_spaces.png">Camera configuration on
-        X/Z
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">t</Term>
+      from <Term type="expression">w</Term>. Transforming a target-space position <Term type="expression">u</Term> to
+      world-space requires adding <Term type="expression">t</Term> to
+      <Term type="expression">u</Term>. The following diagram illustrates all of the above, flattened onto the X/Z
+      (horizontal) plane for ease of viewing:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Camera configuration on X/Z">
+      <Image source="images/spherical_spaces.png">Camera configuration on X/Z</Image>
+    </FormalItem>
+    <Paragraph>
       Firstly, then, to calculate the target-space camera position
-      <s:term s:type="expression">q</s:term>
-      the same equations are
-      used as were used when calculating the
-      <s:link s:target="dai.fpsstyle.camera_math">direction vectors</s:link>
+      <Term type="expression">q</Term>
+      the same equations are used as were used when calculating the
+      <Link target="c65d3c0a-c84b-427c-8e70-370464cc56c8">direction vectors</Link>
       for the fps-style camera. Firstly, a direction vector
-      <s:term s:type="expression">d</s:term>
-      is calculated
-      that points towards <s:term s:type="expression">q</s:term> from the
-      origin:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>x of d</s:formal-item-title>
-      <s:image s:source="images/spherical_q_x.png">x of d</s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>y of d</s:formal-item-title>
-      <s:image s:source="images/spherical_q_y.png">y of d</s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>z of d</s:formal-item-title>
-      <s:image s:source="images/spherical_q_z.png">z of d</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Then, <s:term s:type="expression">q</s:term> is simply
-      <s:term s:type="expression">d</s:term>
+      <Term type="expression">d</Term>
+      is calculated that points towards <Term type="expression">q</Term> from the origin:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="x of d">
+      <Image source="images/spherical_q_x.png">x of d</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="y of d">
+      <Image source="images/spherical_q_y.png">y of d</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="z of d">
+      <Image source="images/spherical_q_z.png">z of d</Image>
+    </FormalItem>
+    <Paragraph>
+      Then, <Term type="expression">q</Term> is simply
+      <Term type="expression">d</Term>
       scaled by
-      <s:term s:type="expression">r</s:term>:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Target-space Q</s:formal-item-title>
-      <s:verbatim>q = Vector3f.scale d r</s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">r</Term>:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Target-space Q">
+      <Verbatim>q = Vector3f.scale d r</Verbatim>
+    </FormalItem>
+    <Paragraph>
       The world-space camera position
-      <s:term s:type="expression">p</s:term>
-      is simply <s:term s:type="expression">q</s:term> added to
-      <s:term s:type="expression">t</s:term>:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>World-space P</s:formal-item-title>
-      <s:verbatim>p = Vector3f.add3 q t</s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">p</Term>
+      is simply <Term type="expression">q</Term> added to
+      <Term type="expression">t</Term>:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="World-space P">
+      <Verbatim>p = Vector3f.add3 q t</Verbatim>
+    </FormalItem>
+    <Paragraph>
       As stated, the aim is to construct a
-      <s:term s:type="term">forward</s:term>
-      vector that points
-      towards <s:term s:type="expression">t</s:term> from
-      <s:term s:type="expression">p</s:term>. This is simply
-      the negation of <s:term s:type="expression">d</s:term>:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Forward</s:formal-item-title>
-      <s:verbatim>forward = Vector3f.normalize (Vector3f.scale d -1)
-      </s:verbatim>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Camera configuration on X/Z</s:formal-item-title>
-      <s:image s:source="images/spherical_df.png">Camera configuration on X/Z
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="term">forward</Term>
+      vector that points towards <Term type="expression">t</Term> from
+      <Term type="expression">p</Term>. This is simply the negation of <Term type="expression">d</Term>:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Forward">
+      <Verbatim>forward = Vector3f.normalize (Vector3f.scale d -1)</Verbatim>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Camera configuration on X/Z">
+      <Image source="images/spherical_df.png">Camera configuration on X/Z</Image>
+    </FormalItem>
+    <Paragraph>
       Constructing the
-      <s:term s:type="term">up</s:term>
-      vector for the
-      camera is achieved by performing the exact same calculation
-      as for the <s:term s:type="term">forward</s:term> vector
-      but with <s:term s:type="expression">i - (π / 2)</s:term>.
-      Intuitively, this works by calculating
-      <s:term s:type="term">q</s:term>
-      as if it had been orbited
-      downwards around the sphere, and then taking the negation
-      of the resulting direction vector as normal:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Up</s:formal-item-title>
-      <s:image s:source="images/spherical_up.png">Up</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Finally, calculating the <s:term s:type="term">right</s:term> vector is
-      simply the cross product of the <s:term s:type="term">forward</s:term> and
-      <s:term s:type="term">up</s:term>
+      <Term type="term">up</Term>
+      vector for the camera is achieved by performing the exact same calculation as for the <Term type="term">forward
+    </Term> vector but with <Term type="expression">i - (π / 2)</Term>. Intuitively, this works by calculating
+      <Term type="term">q</Term>
+      as if it had been orbited downwards around the sphere, and then taking the negation of the resulting direction
+      vector as normal:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Up">
+      <Image source="images/spherical_up.png">Up</Image>
+    </FormalItem>
+    <Paragraph>
+      Finally, calculating the <Term type="term">right</Term> vector is simply the cross product of the <Term type="term">
+      forward
+    </Term> and
+      <Term type="term">up</Term>
       vectors.
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Right</s:formal-item-title>
-      <s:verbatim>right = Vector3f.cross forward up</s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      As stated earlier, forward/backward and left/right movement
-      occurs only on the horizontal plane. Because the camera is
-      not allowed to <s:term s:type="term">roll</s:term>, the calculated
-      <s:term s:type="term">right</s:term>
-      vector is always parallel
-      to the horizontal plane and can therefore be used directly. Because
-      the camera inclination is variable, however, the calculated
-      <s:term s:type="term">forward</s:term>
-      vector is only parallel
-      to the horizontal plane when <s:term s:type="expression">i = 0</s:term>.
-      It's therefore necessary to calculate a
-      <s:term s:type="term">forward_on_xz</s:term>
-      vector that is always
-      parallel to the horizontal plane. This is achieved by projecting
-      the <s:term s:type="term">forward</s:term> vector onto the X/Z
-      plane via a simple orthographic projection:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Forward on X/Z</s:formal-item-title>
-      <s:verbatim><![CDATA[project :: Vector3f.T -> Vector3f.T
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Right">
+      <Verbatim>right = Vector3f.cross forward up</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      As stated earlier, forward/backward and left/right movement occurs only on the horizontal plane. Because the
+      camera is not allowed to <Term type="term">roll</Term>, the calculated
+      <Term type="term">right</Term>
+      vector is always parallel to the horizontal plane and can therefore be used directly. Because the camera
+      inclination is variable, however, the calculated
+      <Term type="term">forward</Term>
+      vector is only parallel to the horizontal plane when <Term type="expression">i = 0</Term>. It's therefore
+      necessary to calculate a
+      <Term type="term">forward_on_xz</Term>
+      vector that is always parallel to the horizontal plane. This is achieved by projecting the <Term type="term">
+      forward
+    </Term> vector onto the X/Z plane via a simple orthographic projection:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Forward on X/Z">
+      <Verbatim><![CDATA[project :: Vector3f.T -> Vector3f.T
 project v =
   let vx = Vector3f.x v
       vz = Vector3f.z v
   in Vector3f.normalize (Vector3f.V3 vx 0.0 vz)
 
 forward_on_xz :: Vector3f.T
-forward_on_xz = project forward]]></s:verbatim>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.spherical.camera_math.projection_issue">
-      There is an issue here: The projection of the forward vector resulting
-      from an incline of exactly
-      <s:term s:type="expression">(π / 2)</s:term>
-      or <s:term s:type="expression">(-π / 2)</s:term> radians results in a
-      <s:term s:type="term">forward</s:term>
+forward_on_xz = project forward]]></Verbatim>
+    </FormalItem>
+    <Paragraph id="c1a9f24b-41e2-4b3b-9470-090b943bde40">
+      There is an issue here: The projection of the forward vector resulting from an incline of exactly
+      <Term type="expression">(π / 2)</Term>
+      or <Term type="expression">(-π / 2)</Term> radians results in a
+      <Term type="term">forward</Term>
       vector equal to
-      <s:term s:type="expression">(0, ±1, 0)</s:term>, the projection of which
-      is the zero vector <s:term s:type="expression">(0, 0, 0)</s:term>. This
-      means that when the camera is looking directly up towards (or directly
-      down upon)
-      the target position, the camera cannot be moved forwards or backwards.
-      In practice, it is rare that the incline will be exactly either these
-      values. The problem can be worked around entirely by clamping the possible
-      incline ranges to <s:term s:type="expression">[(π / 2) + e, (-π / 2) -
-      e]</s:term>,
-      where <s:term s:type="expression">e</s:term> is an arbitrary very small
-      value.
-    </s:paragraph>
-    <s:paragraph>
-      A complete listing of all the equations given so far, using
-      the default inclination and heading angles, and the default
-      camera position is as follows
-      [<s:link-external s:target="haskell/ExampleSphericalDefaultVectors.hs">
-      ExampleSphericalDefaultVectors.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="listing">
-      <s:formal-item-title>Default Vectors</s:formal-item-title>
-      <s:verbatim>
+      <Term type="expression">(0, ±1, 0)</Term>, the projection of which is the zero vector <Term type="expression">(0,
+      0, 0)</Term>. This means that when the camera is looking directly up towards (or directly down upon) the target
+      position, the camera cannot be moved forwards or backwards. In practice, it is rare that the incline will be
+      exactly either these values. The problem can be worked around entirely by clamping the possible incline ranges to <Term type="expression">
+      [(π / 2) + e, (-π / 2) - e]</Term>, where <Term type="expression">e</Term> is an arbitrary very small value.
+    </Paragraph>
+    <Paragraph>
+      A complete listing of all the equations given so far, using the default inclination and heading angles, and the
+      default camera position is as follows [<LinkExternal target="haskell/ExampleSphericalDefaultVectors.hs">
+      ExampleSphericalDefaultVectors.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="listing"
+                title="Default Vectors">
+      <Verbatim>
         <xi:include href="haskell/ExampleSphericalDefaultVectors.hs"
                     parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      Movement of the target point is achieved identically to the
-      way
-      <s:link s:target="dai.fpssstyle.camera_math.movement">fps-style cameras
-      </s:link>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      Movement of the target point is achieved identically to the way
+      <Link target="9d8a57e1-d5fb-486d-b239-cbbd20d17032">fps-style cameras
+      </Link>
       move, except that the
-      <s:term s:type="term">forward_on_xz</s:term>
+      <Term type="term">forward_on_xz</Term>
       vector is used instead of the ordinary
-      <s:term s:type="term">forward</s:term>
-      vector for forward/backward
-      movement, and the global Y axis is used for
-      up/down movement instead of the camera's
-      <s:term s:type="term">up</s:term>
+      <Term type="term">forward</Term>
+      vector for forward/backward movement, and the global Y axis is used for up/down movement instead of the camera's
+      <Term type="term">up</Term>
       vector.
-      <s:link s:target="dai.fpssstyle.camera_math.view_matrix">View matrix
-      </s:link>
+      <Link target="3dbc77be-03bd-4587-8ff5-b2b7919f25ab">View matrix
+      </Link>
       calculating is also identical, using the calculated
-      <s:term s:type="term">forward</s:term>, <s:term s:type="term">
-      right</s:term>,
-      and <s:term s:type="term">up</s:term> vectors, and
-      <s:term s:type="expression">p</s:term>
+      <Term type="term">forward</Term>, <Term type="term">
+      right</Term>, and <Term type="term">up</Term> vectors, and
+      <Term type="expression">p</Term>
       for the translational components.
-    </s:paragraph>
-    <s:paragraph>
+    </Paragraph>
+    <Paragraph>
       In order to implement
-      <s:link s:target="dai.spherical.behaviour.drag_scroll">mouse control
-      </s:link>
-      over movement of the target point, it's necessary to somehow map
-      two-dimensional mouse cursor movements to three-dimensional camera
-      movements. All windowing systems tend to use system-specific
-      conventions: Some windowing systems place
-      <s:term s:type="expression">(0, 0)</s:term>
-      at the top-left corner of the
-      window, and others place <s:term s:type="expression">(0, 0)</s:term> at
-      the bottom-left corner. In order to get
-      <s:term s:type="term">system-independent</s:term>
-      and <s:term s:type="term">display-density-independent</s:term> mouse
-      control,
-      the <s:term s:type="package">${project.parent.name}</s:term> package
-      borrows
-      a concept from OpenGL:
-      <s:term s:type="term">normalized device coordinates</s:term>
-      (albeit in a two-dimensional form). In <s:term s:type="term">normalized
-      device space</s:term>,
-      the origin <s:term s:type="expression">(0, 0)</s:term> is in the center of
-      the screen.
-      The rightmost edge of the screen is <s:term s:type="expression">x =
-      1</s:term>, the
-      leftmost edge of the screen is <s:term s:type="expression">x = -1</s:term>,
-      the topmost
-      edge is <s:term s:type="expression">y = 1</s:term>, and the bottommost ege
-      is
-      <s:term s:type="expression">y = -1</s:term>:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Normalized Device Space</s:formal-item-title>
-      <s:image s:source="images/ndc.png">Normalized Device Space</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      The translation to normalized device coordinates from screen coordinates
-      is simple, although slightly different equations are needed for systems
-      that use a top-left origin as opposed to a bottom-left origin
-      [<s:link-external s:target="haskell/NormalizedDevice.hs">
-      NormalizedDevice.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Screen To Normalized Device</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/NormalizedDevice.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.spherical.camera_math.edge_scrolling">
-      Given an arbitrary cursor position expressed as normalized device
-      coordinates, it's then possible to determine if the cursor is at
-      one or more of the screen edges. This is how
-      <s:term s:type="term">edge scrolling</s:term>
-      is implemented.
-      For example, if the cursor is at <s:term s:type="expression">(1,
-      1)</s:term>,
-      then it means the cursor is at the extreme top-right corner of the screen.
-      The simple fact that a given cursor either is or isn't at a particular
-      edge
-      can be used as a discrete input. For the spherical camera described here,
-      if the
-      cursor is moved to the top edge of the screen, it is as if the user had
-      pressed whatever key is assigned to <s:term s:type="term">forward</s:term>.
-      The camera continues moving in that direction until the cursor is moved
-      away from the edge. If the cursor is moved to the right edge of the
-      screen, it is as if the user had pressed whatever key is assigned to
-      <s:term s:type="term">right</s:term>. If the cursor is at one of the
-      corners, it is as if the user had pressed whatever keys are assigned
-      to the two relevant edges.
-    </s:paragraph>
-    <s:paragraph xml:id="dai.spherical.camera_math.dragging">
-      For the other form of mouse control - <s:term s:type="term">dragging
-    </s:term> -
-      the same system is used to map screen-space mouse coordinates to
-      normalized device coordinates. However, the coordinates of the mouse
-      are only taken into account when the relevant mouse button is being
-      held
-      <s:footnote>
-        Starcraft II uses the middle mouse button for dragging. The
-        <s:term s:type="package">${project.parent.name}</s:term>
-        package
-        leaves it to the programmer to decide.
-      </s:footnote>
-      . The offsets from the center of the screen are accumulated
-      in the same manner as with the
-      <s:link s:target="dai.fpsstyle.input.rotation_coefficients">rotation
-        coefficients
-      </s:link>
+      <Link target="8276ef39-d46b-4b18-9521-98d1d28b56bc">mouse control
+      </Link>
+      over movement of the target point, it's necessary to somehow map two-dimensional mouse cursor movements to
+      three-dimensional camera movements. All windowing systems tend to use system-specific conventions: Some windowing
+      systems place
+      <Term type="expression">(0, 0)</Term>
+      at the top-left corner of the window, and others place <Term type="expression">(0, 0)</Term> at the bottom-left
+      corner. In order to get
+      <Term type="term">system-independent</Term>
+      and <Term type="term">display-density-independent</Term> mouse control, the <Term type="package">
+      ${project.parent.name}
+    </Term> package borrows a concept from OpenGL:
+      <Term type="term">normalized device coordinates</Term>
+      (albeit in a two-dimensional form). In <Term type="term">normalized device space</Term>, the origin <Term type="expression">
+      (0, 0)
+    </Term> is in the center of the screen. The rightmost edge of the screen is <Term type="expression">x = 1</Term>,
+      the leftmost edge of the screen is <Term type="expression">x = -1</Term>, the topmost edge
+      is <Term type="expression">y = 1</Term>, and the bottommost ege is
+      <Term type="expression">y = -1</Term>:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Normalized Device Space">
+      <Image source="images/ndc.png">Normalized Device Space</Image>
+    </FormalItem>
+    <Paragraph>
+      The translation to normalized device coordinates from screen coordinates is simple, although slightly different
+      equations are needed for systems that use a top-left origin as opposed to a bottom-left origin
+      [<LinkExternal target="haskell/NormalizedDevice.hs">
+      NormalizedDevice.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Screen To Normalized Device">
+      <Verbatim>
+        <xi:include href="haskell/NormalizedDevice.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph id="2d78eda5-85d0-43d4-8ab1-44dbe9b5d8cd">
+      Given an arbitrary cursor position expressed as normalized device coordinates, it's then possible to determine if
+      the cursor is at one or more of the screen edges. This is how
+      <Term type="term">edge scrolling</Term>
+      is implemented. For example, if the cursor is at <Term type="expression">(1, 1)</Term>, then it means the cursor
+      is at the extreme top-right corner of the screen. The simple fact that a given cursor either is or isn't at a
+      particular edge can be used as a discrete input. For the spherical camera described here, if the cursor is moved
+      to the top edge of the screen, it is as if the user had pressed whatever key is assigned to <Term type="term">
+      forward</Term>. The camera continues moving in that direction until the cursor is moved away from the edge. If the
+      cursor is moved to the right edge of the screen, it is as if the user had pressed whatever key is assigned to
+      <Term type="term">right</Term>. If the cursor is at one of the corners, it is as if the user had pressed whatever
+      keys are assigned to the two relevant edges.
+    </Paragraph>
+    <Paragraph id="9760553c-30d4-4751-b1dc-50f86692024d">
+      For the other form of mouse control - <Term type="term">dragging
+    </Term> - the same system is used to map screen-space mouse coordinates to normalized device coordinates. However,
+      the coordinates of the mouse are only taken into account when the relevant mouse button is being held
+      <LinkFootnote target="d54d797d-30c6-477d-86a8-9abb3be6f487"/>
+      . The offsets from the center of the screen are accumulated in the same manner as with the
+      <Link target="14f2bc10-d45d-4129-8892-2b6a21294ae8">rotation coefficients
+      </Link>
       for fps-style cameras, and are reset to
-      <s:term s:type="expression">(0, 0)</s:term>
-      periodically in the same manner. Additionally, the offsets are negated
-      when the actual camera movement is applied. For example, if the user
-      has dragged the mouse to the <s:term s:type="term">right</s:term>,
-      the camera is actually moved <s:term s:type="term">left</s:term>. An
-      intuitive way to think of this is to imagine that the objects that the
-      camera is observing are on a sheet, and in order to look at a specific
-      object that is laying to the right of the camera, the sheet must be
-      pulled left to move the object into view. This is not actually mandated
-      by the implementation in the
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package;
-      the programmer is free to pass the non-negated offsets to the camera
-      in order to move it
-      <s:footnote>
-        The "inverted" behaviour is the default camera behaviour in
-        Starcraft II, and is therefore used here as the default.
-      </s:footnote>. An illustration of this (with the red frame indicating
-      the camera's view):
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Dragging</s:formal-item-title>
-      <s:image s:source="images/dragging.png">Dragging</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      In practical terms, with the default settings, if the user drags the
-      mouse <s:term s:type="term">downward</s:term>, the camera moves as if
-      the user had pressed whatever key is assigned to
-      <s:term s:type="term">forward</s:term>
-      for the
-      duration of the drag. If the user drags the mouse
-      <s:term s:type="term">right</s:term>, the camera moves as if the user
-      had pressed <s:term s:type="term">left</s:term> for the duration of
-      the drag. The camera will correctly move diagonally if the user drags
-      <s:term s:type="term">downward</s:term>
+      <Term type="expression">(0, 0)</Term>
+      periodically in the same manner. Additionally, the offsets are negated when the actual camera movement is applied.
+      For example, if the user has dragged the mouse to the <Term type="term">right</Term>, the camera is actually moved
+      <Term type="term">left</Term>. An intuitive way to think of this is to imagine that the objects that the camera is
+      observing are on a sheet, and in order to look at a specific object that is laying to the right of the camera, the
+      sheet must be pulled left to move the object into view. This is not actually mandated by the implementation in the
+      <Term type="package">${project.parent.name}</Term>
+      package; the programmer is free to pass the non-negated offsets to the camera in order to move it
+      <LinkFootnote target="d2ff631c-e2f7-4e94-8c77-d12b68474386"/>. An illustration of this (with the red frame
+      indicating the camera's view):
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Dragging">
+      <Image source="images/dragging.png">Dragging</Image>
+    </FormalItem>
+    <Paragraph>
+      In practical terms, with the default settings, if the user drags the mouse <Term type="term">downward</Term>, the
+      camera moves as if the user had pressed whatever key is assigned to
+      <Term type="term">forward</Term>
+      for the duration of the drag. If the user drags the mouse
+      <Term type="term">right</Term>, the camera moves as if the user had pressed <Term type="term">left</Term> for the
+      duration of the drag. The camera will correctly move diagonally if the user drags
+      <Term type="term">downward</Term>
       and
-      <s:term s:type="term">right</s:term>.
-    </s:paragraph>
-  </s:subsection>
+      <Term type="term">right</Term>.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.camera_impl">
-    <s:subsection-title>Camera Implementation</s:subsection-title>
-    <s:paragraph>
-      In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      the interface exposed by a <s:term s:type="term">spherical</s:term> camera
-      is described by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalType.java">
+  <Subsection id="97062e63-587a-465c-927a-dca27ee07f66"
+              title="Camera Implementation">
+    <Paragraph>
+      In the <Term type="package">${project.parent.name}</Term> package, the interface exposed by a <Term type="term">
+      spherical
+    </Term> camera is described by the
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalType.java">
         JCameraSphericalType
-      </s:link-external>
+      </LinkExternal>
       type. The actual implementation of the
-      <s:link s:target="dai.spherical.camera_math">camera mathematics</s:link>
+      <Link target="0fa66f1b-6b6f-4845-b3d0-8f573c35155f">camera mathematics</Link>
       is given in the
-      <s:link-external s:target="com/io7m/jcamera/JCameraSpherical.java">
+      <LinkExternal target="com/io7m/jcamera/JCameraSpherical.java">
         JCameraSpherical
-      </s:link-external>
+      </LinkExternal>
       type.
-    </s:paragraph>
-    <s:paragraph>
-      A small point to note about the implementation:
-      The <s:term s:type="expression">
-      forward</s:term>, <s:term s:type="expression">right</s:term>, and
-      <s:term s:type="expression">up</s:term>
-      vectors are calculated lazily whenever the user attempts
-      to perform an operation that involves them. The vectors are derived only
-      from the current camera
-      angles and so are not recomputed if the angles have not been changed since
-      the vectors were
-      last calculated.
-    </s:paragraph>
-    <s:paragraph>
-      Additionally, the incline angle <s:term s:type="expression">i</s:term> can
-      be
-      <s:link s:target="dai.spherical.angular_integrators.clamping">clamped
-      </s:link>
-      to a
-      given range (and is clamped by default).
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+    <Paragraph>
+      A small point to note about the implementation: The <Term type="expression">
+      forward</Term>, <Term type="expression">right</Term>, and
+      <Term type="expression">up</Term>
+      vectors are calculated lazily whenever the user attempts to perform an operation that involves them. The vectors
+      are derived only from the current camera angles and so are not recomputed if the angles have not been changed
+      since the vectors were last calculated.
+    </Paragraph>
+    <Paragraph>
+      Additionally, the incline angle <Term type="expression">i</Term> can be
+      <Link target="5ac8e4eb-04e8-4a29-8c60-bac48ded472b">clamped
+      </Link>
+      to a given range (and is clamped by default).
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.input">
-    <s:subsection-title>Input</s:subsection-title>
-    <s:paragraph>
-      In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      an <s:term s:type="term">input</s:term> is a simple abstraction intended
-      to keep
-      <s:link s:target="dai.spherical.integrators">integrators</s:link>
+  <Subsection id="3011a3d6-4598-4c8f-be10-21dfadb2f2e2"
+              title="Input">
+    <Paragraph>
+      In the <Term type="package">${project.parent.name}</Term> package, an <Term type="term">input</Term> is a simple
+      abstraction intended to keep
+      <Link target="7ecdf72c-e8ba-40c3-920f-f09fc0ce35f8">integrators</Link>
       insulated from the platform-specific details of keyboard and mouse input.
-    </s:paragraph>
-    <s:paragraph>
+    </Paragraph>
+    <Paragraph>
       As described in the section on
-      <s:link s:target="dai.fpsstyle.input">fps-style camera input</s:link>,
-      input can categorized as <s:term s:type="term">discrete</s:term> or
-      <s:term s:type="term">continuous</s:term>. The details of input for
-      spherical cameras are slightly more complicated than for fps-style
-      cameras due to the more complex
-      <s:link s:target="dai.spherical.behaviour.mouse_or_keyboard">control
-        scheme</s:link>.
-    </s:paragraph>
-    <s:paragraph>
-      An <s:term s:type="term">input</s:term> for a spherical camera in the
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package is
-      represented by the following data structure
-      [<s:link-external s:target="haskell/InputSpherical.hs">
-      InputSpherical.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Input (Spherical)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/InputSpherical.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      In a similar manner to the <s:link s:target="dai.fpsstyle.input">fps-style
-      camera input</s:link>,
-      pressing a key on the keyboard sets the corresponding boolean field
-      in the input to <s:term s:type="expression">true</s:term>, setting
-      it to <s:term s:type="expression">false</s:term> when the key is released.
-      In order to account for the fact that some movements can be prompted by
-      both the keyboard and mouse, there are separate fields for keyboard and
-      cursor control. For example, moving a mouse to the right edge of the
-      screen
-      sets the <s:term s:type="expression">is_moving_right_cursor</s:term> field
-      to <s:term s:type="expression">true</s:term>. The
-      <s:term s:type="expression">moving_forward_continuous</s:term>
+      <Link target="f6279a9f-ed43-4d8f-b0b9-6a99d0a5f190">fps-style camera input</Link>, input can categorized as <Term type="term">
+      discrete
+    </Term> or
+      <Term type="term">continuous</Term>. The details of input for spherical cameras are slightly more complicated than
+      for fps-style cameras due to the more complex
+      <Link target="852f5966-7d89-4927-8121-a4dc6ebefc45">control scheme</Link>.
+    </Paragraph>
+    <Paragraph>
+      An <Term type="term">input</Term> for a spherical camera in the
+      <Term type="package">${project.parent.name}</Term>
+      package is represented by the following data structure [<LinkExternal target="haskell/InputSpherical.hs">
+      InputSpherical.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Input (Spherical)">
+      <Verbatim>
+        <xi:include href="haskell/InputSpherical.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      In a similar manner to the <Link target="f6279a9f-ed43-4d8f-b0b9-6a99d0a5f190">fps-style camera input</Link>,
+      pressing a key on the keyboard sets the corresponding boolean field in the input to <Term type="expression">
+      true</Term>, setting it to <Term type="expression">false</Term> when the key is released. In order to account for
+      the fact that some movements can be prompted by both the keyboard and mouse, there are separate fields for
+      keyboard and cursor control. For example, moving a mouse to the right edge of the screen sets the <Term type="expression">
+      is_moving_right_cursor
+    </Term> field to <Term type="expression">true</Term>. The
+      <Term type="expression">moving_forward_continuous</Term>
       and
-      <s:term s:type="expression">moving_right_continuous</s:term>
-      fields
-      represent the accumulated
-      <s:link s:target="dai.spherical.camera_math.dragging">dragging</s:link>
+      <Term type="expression">moving_right_continuous</Term>
+      fields represent the accumulated
+      <Link target="9760553c-30d4-4751-b1dc-50f86692024d">dragging</Link>
       for the current time period.
-    </s:paragraph>
-    <s:paragraph>
-      In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      spherical camera inputs are represented by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalInput.java">
+    </Paragraph>
+    <Paragraph>
+      In the <Term type="package">${project.parent.name}</Term> package, spherical camera inputs are represented by the
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalInput.java">
         JCameraSphericalInput
-      </s:link-external>
+      </LinkExternal>
       type, and mouse regions are represented by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalMouseRegion.java">
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalMouseRegion.java">
         JCameraSphericalMouseRegion
-      </s:link-external>
+      </LinkExternal>
       type.
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.integrators">
-    <s:subsection-title>Integrators</s:subsection-title>
-    <s:paragraph>
-      <s:term s:type="term">Integrators</s:term>
-      are responsible for
-      updating properties of cameras over time. They are divided into
-      <s:link s:target="dai.spherical.linear_integrators">linear</s:link>
+  <Subsection id="7ecdf72c-e8ba-40c3-920f-f09fc0ce35f8"
+              title="Integrators">
+    <Paragraph>
+      <Term type="term">Integrators</Term>
+      are responsible for updating properties of cameras over time. They are divided into
+      <Link target="e53278e0-5fbe-407f-a46b-387039617bff">linear</Link>
       and
-      <s:link s:target="dai.spherical.angular_integrators">angular</s:link>
+      <Link target="a5d461ca-a358-48b0-ae16-1c77c3e390da">angular</Link>
       types.
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.linear_integrators">
-    <s:subsection-title>Linear Integrators</s:subsection-title>
-    <s:paragraph>
-      A <s:term s:type="term">linear integrator</s:term> updates the position
-      of a camera over time.
-    </s:paragraph>
-    <s:paragraph>
-      Linear integration of the camera is achieved in an almost identical
-      manner to linear integration of
-      <s:link s:target="dai.fpsstyle.linear_integrators">fps-style
-        cameras</s:link>,
-      with the addition of the changes of position caused by the continuous
-      input from <s:link s:target="dai.spherical.camera_math.dragging">mouse
-      dragging</s:link>.
-      Changes in radius (zooming) are also handled by the linear integrator.
-    </s:paragraph>
-    <s:paragraph>
-      Calculation of the <s:term s:type="term">forward</s:term> velocity
-      is given by the following equations
-      [<s:link-external s:target="haskell/IntegratorSphericalForward.hs">
-      IntegratorSphericalForward.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Integrator (forward)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/IntegratorSphericalForward.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+  <Subsection id="e53278e0-5fbe-407f-a46b-387039617bff"
+              title="Linear Integrators">
+    <Paragraph>
+      A <Term type="term">linear integrator</Term> updates the position of a camera over time.
+    </Paragraph>
+    <Paragraph>
+      Linear integration of the camera is achieved in an almost identical manner to linear integration of
+      <Link target="0f53949b-b42e-4126-90e3-6d5ae37f8df2">fps-style cameras</Link>, with the addition of the changes of
+      position caused by the continuous input from <Link target="9760553c-30d4-4751-b1dc-50f86692024d">mouse
+      dragging</Link>. Changes in radius (zooming) are also handled by the linear integrator.
+    </Paragraph>
+    <Paragraph>
+      Calculation of the <Term type="term">forward</Term> velocity is given by the following equations
+      [<LinkExternal target="haskell/IntegratorSphericalForward.hs">
+      IntegratorSphericalForward.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Integrator (forward)">
+      <Verbatim>
+        <xi:include href="haskell/IntegratorSphericalForward.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       The first thing to note is the
-      <s:term s:type="function">drag_forward_speed</s:term>
-      function: This calculates how much the camera should be moving in the
-      forward
-      direction based on the current accumulated continuous input. The forward
-      speed
-      calculated by the function is added to the current total speed
-      <s:term s:type="emphasis">after</s:term>
+      <Term type="function">drag_forward_speed</Term>
+      function: This calculates how much the camera should be moving in the forward direction based on the current
+      accumulated continuous input. The forward speed calculated by the function is added to the current total speed
+      <Term type="emphasis">after</Term>
       the total has been
-      <s:term s:type="term">clamped</s:term>
-      to the speed limits. The reason for this
-      is simply that the speed limits are usually set reasonably low in order to
-      avoid
-      the camera getting up to too high a speed when controlled by the keyboard,
-      but
-      the low speed limits also tend to mean that the user cannot drag the mouse
-      fast enough
-      to get a comfortable movement rate. Exceeding the speed limit temporarily
-      is mildly
-      distasteful, but relies on the fact that the user is physically limited by
-      their own
-      ability to fling a piece of plastic across a desktop, and so the speed of
-      the camera
-      should not become excessively high. An alternate solution would be to have
-      two sets
-      of speed limits, one for keyboard control and another for dragging. This
-      is trivial
-      to implement, but is not implemented here for the sake of keeping the
-      implementation
-      as easy to understand as possible.
-    </s:paragraph>
-    <s:paragraph>
-      There is also a limitation in the described integrator: The camera feels
-      increasingly
-      sluggish as the camera zooms out. This is purely a perceptual issue: If
-      the camera
-      is a very long way away from an object, then the camera has to move much
-      further
-      for there to be a perceived movement onscreen than it would have to move
-      if it
-      were very close to the object. Essentially, it's desirable for the camera
-      to move
-      faster the further away it is from the target point. The way this is
-      achieved in the
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package is to associate a
-      pair of functions <s:term s:type="function">scale_linear</s:term> and
-      <s:term s:type="function">scale_dragging</s:term>
-      with the integrator that are responsible
-      for producing scaling factors when given the current
-      <s:term s:type="term">radius</s:term>
+      <Term type="term">clamped</Term>
+      to the speed limits. The reason for this is simply that the speed limits are usually set reasonably low in order
+      to avoid the camera getting up to too high a speed when controlled by the keyboard, but the low speed limits also
+      tend to mean that the user cannot drag the mouse fast enough to get a comfortable movement rate. Exceeding the
+      speed limit temporarily is mildly distasteful, but relies on the fact that the user is physically limited by their
+      own ability to fling a piece of plastic across a desktop, and so the speed of the camera should not become
+      excessively high. An alternate solution would be to have two sets of speed limits, one for keyboard control and
+      another for dragging. This is trivial to implement, but is not implemented here for the sake of keeping the
+      implementation as easy to understand as possible.
+    </Paragraph>
+    <Paragraph>
+      There is also a limitation in the described integrator: The camera feels increasingly sluggish as the camera zooms
+      out. This is purely a perceptual issue: If the camera is a very long way away from an object, then the camera has
+      to move much further for there to be a perceived movement onscreen than it would have to move if it were very
+      close to the object. Essentially, it's desirable for the camera to move faster the further away it is from the
+      target point. The way this is achieved in the
+      <Term type="package">${project.parent.name}</Term>
+      package is to associate a pair of functions <Term type="function">scale_linear</Term> and
+      <Term type="function">scale_dragging</Term>
+      with the integrator that are responsible for producing scaling factors when given the current
+      <Term type="term">radius</Term>
       (zoom). The linear speed, acceleration, and maximum speeds are scaled by
-      <s:term s:type="function">scale_linear</s:term>, and the extra speed
-      produced by
-      <s:term s:type="term">dragging</s:term>
+      <Term type="function">scale_linear</Term>, and the extra speed produced by
+      <Term type="term">dragging</Term>
       is scaled by
-      <s:term s:type="function">scale_dragging</s:term>
-      [<s:link-external s:target="haskell/IntegratorSphericalForwardZoomScaled.hs">
-      IntegratorSphericalForwardZoomScaled.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Integrator (forward, zoom-scaled)
-      </s:formal-item-title>
-      <s:verbatim>
+      <Term type="function">scale_dragging</Term>
+      [<LinkExternal target="haskell/IntegratorSphericalForwardZoomScaled.hs">
+      IntegratorSphericalForwardZoomScaled.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Integrator (forward, zoom-scaled)">
+      <Verbatim>
         <xi:include href="haskell/IntegratorSphericalForwardZoomScaled.hs"
                     parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       Experimentation has shown that using the same function for
-      <s:term s:type="function">scale_dragging</s:term>
-      and <s:term s:type="function">scale_linear</s:term> tends to give results
-      that are
-      good for one and not the other. The default choice for
-      <s:term s:type="function">scale_dragging</s:term>
-      is simply the
-      identity function, and the default choice
-      for <s:term s:type="function">scale_linear</s:term> is the square root
-      function. This effectively scales dragging directly by the current
-      zoom level, and scales linear movement (caused by edge scrolling and the
-      keyboard)
-      by the square root of the current zoom level. The same scaling is applied
-      equally to forward and rightward movement.
-    </s:paragraph>
-  </s:subsection>
+      <Term type="function">scale_dragging</Term>
+      and <Term type="function">scale_linear</Term> tends to give results that are good for one and not the other. The
+      default choice for
+      <Term type="function">scale_dragging</Term>
+      is simply the identity function, and the default choice for <Term type="function">scale_linear</Term> is the
+      square root function. This effectively scales dragging directly by the current zoom level, and scales linear
+      movement (caused by edge scrolling and the keyboard) by the square root of the current zoom level. The same
+      scaling is applied equally to forward and rightward movement.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.angular_integrators">
-    <s:subsection-title>Angular Integrators</s:subsection-title>
-    <s:paragraph>
-      An <s:term s:type="term">angular integrator</s:term> updates the
-      orientation
-      of a camera over time.
-    </s:paragraph>
-    <s:paragraph>
-      Integration of orientation occurs in almost exactly the same manner as
-      integration of <s:link s:target="dai.spherical.linear_integrators">
-      position</s:link>;
-      orientation is treated as a pair of scalar rotations around two axes, and
-      the
-      rotation values are increased by speed values calculated from acceleration
+  <Subsection id="a5d461ca-a358-48b0-ae16-1c77c3e390da"
+              title="Angular Integrators">
+    <Paragraph>
+      An <Term type="term">angular integrator</Term> updates the orientation of a camera over time.
+    </Paragraph>
+    <Paragraph>
+      Integration of orientation occurs in almost exactly the same manner as integration
+      of <Link target="e53278e0-5fbe-407f-a46b-387039617bff">position</Link>; orientation is treated as a pair of scalar
+      rotations around two axes, and the rotation values are increased by speed values calculated from acceleration
       values for each axis.
-    </s:paragraph>
-    <s:paragraph xml:id="dai.spherical.angular_integrators.clamping">
-      Rotation by the incline angle is identical, except that the actual
-      camera itself may optionally <s:term s:type="term">clamp</s:term> the
-      incline angle to work around the documented
-      <s:link s:target="dai.spherical.camera_math.projection_issue">projection
-        issue</s:link>.
-    </s:paragraph>
-    <s:paragraph>
+    </Paragraph>
+    <Paragraph id="5ac8e4eb-04e8-4a29-8c60-bac48ded472b">
+      Rotation by the incline angle is identical, except that the actual camera itself may optionally <Term type="term">
+      clamp
+    </Term> the incline angle to work around the documented
+      <Link target="c1a9f24b-41e2-4b3b-9470-090b943bde40">projection issue</Link>.
+    </Paragraph>
+    <Paragraph>
       The type of angular integrators in the
-      <s:term s:type="package">${project.parent.name}</s:term>
+      <Term type="package">${project.parent.name}</Term>
       is
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalAngularIntegratorType.java">
-        JCameraSphericalAngularIntegratorType</s:link-external>,
-      with the default implementation being
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalAngularIntegrator.java">
-        JCameraSphericalAngularIntegrator</s:link-external>.
-    </s:paragraph>
-  </s:subsection>
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalAngularIntegratorType.java">
+        JCameraSphericalAngularIntegratorType</LinkExternal>, with the default implementation being
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalAngularIntegrator.java">
+        JCameraSphericalAngularIntegrator</LinkExternal>.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.spherical.aggregate_integrators">
-    <s:subsection-title>Aggregate Integrators</s:subsection-title>
-    <s:paragraph>
-      Usually, a user will want cameras to both move and rotate, as
-      opposed to just one or the other. The
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package
-      provides the
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalIntegratorType.java">
+  <Subsection id="b85c374d-478b-4e7d-9ad8-c9e88f55ce60"
+              title="Aggregate Integrators">
+    <Paragraph>
+      Usually, a user will want cameras to both move and rotate, as opposed to just one or the other. The
+      <Term type="package">${project.parent.name}</Term>
+      package provides the
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalIntegratorType.java">
         JCameraSphericalIntegratorType
-      </s:link-external>
+      </LinkExternal>
       which aggregates both the
-      <s:link s:target="dai.spherical.linear_integrators">linear</s:link>
+      <Link target="e53278e0-5fbe-407f-a46b-387039617bff">linear</Link>
       and
-      <s:link s:target="dai.spherical.angular_integrators">angular</s:link>
+      <Link target="a5d461ca-a358-48b0-ae16-1c77c3e390da">angular</Link>
       integrators, with the default implementation given by
-      <s:link-external s:target="com/io7m/jcamera/JCameraSphericalIntegrator.java">
-        JCameraSphericalIntegrator</s:link-external>.
-    </s:paragraph>
-  </s:subsection>
+      <LinkExternal target="com/io7m/jcamera/JCameraSphericalIntegrator.java">
+        JCameraSphericalIntegrator</LinkExternal>.
+    </Paragraph>
+  </Subsection>
 
-</s:section>
+  <Footnote id="7fc6c0c9-3d9e-40e1-9369-0809ce136ad8">
+    <Term type="term">Myth II</Term>
+    allowed the target point to orbit around the camera, as opposed to only allowing the camera to orbit around the
+    target point. This capability is not widely useful and complicates the implementation of the camera significantly,
+    and so is omitted here.
+  </Footnote>
+
+  <Footnote id="d54d797d-30c6-477d-86a8-9abb3be6f487">
+    Starcraft II uses the middle mouse button for dragging. The
+    <Term type="package">${project.parent.name}</Term>
+    package leaves it to the programmer to decide.
+  </Footnote>
+
+  <Footnote id="d2ff631c-e2f7-4e94-8c77-d12b68474386">
+    The "inverted" behaviour is the default camera behaviour in Starcraft II, and is therefore used here as the default.
+  </Footnote>
+
+</Section>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="838e5b40-d341-4fea-8ec8-c2990e6b07a7"
+         title="Usage">
+
+  <Subsection id="c5089961-307c-4bf2-8650-92f937859f03"
+              title="Overview">
+    <Paragraph>
+      This section attempts to describe how to use the
+      <Term type="package">${project.parent.name}</Term>
+      package. The example code uses
+      <LinkExternal target="http://jogamp.org/jogl/www">JOGL</LinkExternal>
+      but the package can obviously be used under any Java input/windowing system. This section doesn't attempt to
+      explain why anything works the way it does: Readers are encouraged to read the
+      <Link target="2f0335ba-e008-431f-b8f1-4ff6e477f573">design and implementation</Link>
+      section, which describes everything in extensive detail.
+    </Paragraph>
+    <Paragraph>
+      A complete listing of all example source files is available at
+      the <Link target="da65e2a3-b554-421a-bbf3-010ac5083e42">end of the section</Link>.
+    </Paragraph>
+  </Subsection>
+
+</Section>

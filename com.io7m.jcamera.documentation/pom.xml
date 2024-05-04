@@ -20,6 +20,8 @@
 
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
+    <checkstyle.skip>true</checkstyle.skip>
+    <bnd.baseline.skip>true</bnd.baseline.skip>
   </properties>
 
   <dependencies>
@@ -87,8 +89,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
-
-          <!-- Unpack sources into JavaDoc sources. -->
+          <!-- Unpack sources into example sources. -->
           <execution>
             <id>unpack-sources-javadoc</id>
             <phase>package</phase>
@@ -100,11 +101,9 @@
               <includeGroupIds>${project.groupId}</includeGroupIds>
               <classifier>sources</classifier>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
-              <outputDirectory>${project.build.directory}/javadoc-sources</outputDirectory>
+              <outputDirectory>${project.build.directory}/example-sources</outputDirectory>
             </configuration>
           </execution>
-
-          <!-- Also unpack sources into documentation. -->
           <execution>
             <id>unpack-sources-documentation</id>
             <phase>package</phase>
@@ -119,43 +118,14 @@
               <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
             </configuration>
           </execution>
-
-          <execution>
-            <id>make-classpath</id>
-            <phase>package</phase>
-            <goals>
-              <goal>build-classpath</goal>
-            </goals>
-            <configuration>
-              <outputFile>${project.build.directory}/javadoc-classpath</outputFile>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
 
-      <!-- Javadoc handling -->
+      <!-- Generate split example code -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
-          <!-- Generate split example code -->
-          <execution>
-            <id>make-example-sim</id>
-            <phase>package</phase>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>com.io7m.jcamera.documentation.ExampleSplitMain</mainClass>
-              <arguments>
-                <argument>${project.build.directory}/javadoc-sources/com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java</argument>
-                <argument>${project.build.directory}/documentation/</argument>
-                <argument>example-fps-sim-</argument>
-              </arguments>
-            </configuration>
-          </execution>
-
-          <!-- Generate split example code -->
           <execution>
             <id>make-example-main</id>
             <phase>package</phase>
@@ -165,62 +135,58 @@
             <configuration>
               <mainClass>com.io7m.jcamera.documentation.ExampleSplitMain</mainClass>
               <arguments>
-                <argument>${project.build.directory}/javadoc-sources/com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java</argument>
+                <argument>${project.build.directory}/example-sources/com/io7m/jcamera/examples/jogl/ExampleFPSStyleMain.java</argument>
                 <argument>${project.build.directory}/documentation/</argument>
                 <argument>example-fps-main-</argument>
               </arguments>
             </configuration>
           </execution>
-
-          <!-- Generate JavaDoc -->
           <execution>
+            <id>make-example-sim</id>
+            <phase>package</phase>
             <goals>
               <goal>java</goal>
             </goals>
-            <phase>package</phase>
             <configuration>
-              <mainClass>com.io7m.primogenitor.support.TrivialJavadoc</mainClass>
+              <mainClass>com.io7m.jcamera.documentation.ExampleSplitMain</mainClass>
               <arguments>
-                <argument>${project.build.directory}/javadoc-sources</argument>
-                <argument>${project.build.directory}/javadoc-classpath</argument>
-                <argument>${project.build.directory}/documentation/apidocs</argument>
-                <argument>${project.build.directory}/javadoc-log.txt</argument>
-                <argument>${project.build.directory}/javadoc-options</argument>
+                <argument>${project.build.directory}/example-sources/com/io7m/jcamera/examples/jogl/ExampleFPSStyleSimulation.java</argument>
+                <argument>${project.build.directory}/documentation/</argument>
+                <argument>example-fps-sim-</argument>
               </arguments>
             </configuration>
           </execution>
         </executions>
       </plugin>
 
-      <!-- Produce documentation -->
+      <!-- Generate documentation in various formats. -->
       <plugin>
-        <groupId>com.io7m.jstructural</groupId>
-        <artifactId>io7m-jstructural-maven-plugin</artifactId>
+        <groupId>com.io7m.xstructural</groupId>
+        <artifactId>com.io7m.xstructural.maven_plugin</artifactId>
+        <version>${com.io7m.xstructural.version}</version>
         <executions>
           <execution>
-            <id>make-documentation-single</id>
+            <id>xhtml-single</id>
             <phase>package</phase>
             <goals>
-              <goal>transform</goal>
+              <goal>xhtml-single</goal>
             </goals>
             <configuration>
-              <documentFile>${project.build.directory}/documentation/documentation.xml</documentFile>
-              <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
-              <brandFile>${project.build.directory}/documentation/brand.xml</brandFile>
-              <pagination>XHTML_SINGLE</pagination>
+              <brandingFile>${project.build.directory}/documentation/brand.xml</brandingFile>
+              <sourceFile>${project.build.directory}/documentation/main.xml</sourceFile>
+              <outputDirectory>${project.build.directory}/documentation</outputDirectory>
             </configuration>
           </execution>
           <execution>
-            <id>make-documentation-multi</id>
+            <id>xhtml-multi</id>
             <phase>package</phase>
             <goals>
-              <goal>transform</goal>
+              <goal>xhtml-multi</goal>
             </goals>
             <configuration>
-              <documentFile>${project.build.directory}/documentation/documentation.xml</documentFile>
-              <outputDirectory>${project.build.directory}/documentation/</outputDirectory>
-              <brandFile>${project.build.directory}/documentation/brand.xml</brandFile>
-              <pagination>XHTML_MULTI</pagination>
+              <brandingFile>${project.build.directory}/documentation/brand.xml</brandingFile>
+              <sourceFile>${project.build.directory}/documentation/main.xml</sourceFile>
+              <outputDirectory>${project.build.directory}/documentation</outputDirectory>
             </configuration>
           </execution>
         </executions>

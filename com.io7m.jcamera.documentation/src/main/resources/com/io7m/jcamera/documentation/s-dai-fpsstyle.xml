@@ -16,1091 +16,915 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   -->
 
-<s:section
-  xmlns:s="http://schemas.io7m.com/structural/2.1.0"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xml:id="dai.fpsstyle">
-  <s:section-title>FPS Camera</s:section-title>
-  <s:section-contents/>
+<Section xmlns="urn:com.io7m.structural:8:0"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         id="ad288ac9-49a7-4111-8d34-9d3864c31221"
+         title="FPS Camera">
 
-  <s:subsection xml:id="dai.fpsstyle.overview">
-    <s:subsection-title>Overview</s:subsection-title>
-    <s:paragraph>
-      Most modern 3D games and simulations feature a form of camera
-      known, for want of a better name, as a
-      <s:term s:type="term">first-person-shooter-style free-camera</s:term>
-      (subsequently referred to here as <s:term s:type="term">fps-style</s:term>,
-      for brevity).
-      The camera is typically controlled by the combination of a mouse
-      and keyboard and allows the user to orient the view direction using
-      the mouse, and to move forwards, backwards, left, right, up, and down
-      using the keyboard.
-    </s:paragraph>
-  </s:subsection>
+  <Subsection id="71755212-005f-43b6-a084-ff50c0047b1e"
+              title="Overview">
+    <Paragraph>
+      Most modern 3D games and simulations feature a form of camera known, for want of a better name, as a
+      <Term type="term">first-person-shooter-style free-camera</Term>
+      (subsequently referred to here as <Term type="term">fps-style</Term>, for brevity). The camera is typically
+      controlled by the combination of a mouse and keyboard and allows the user to orient the view direction using the
+      mouse, and to move forwards, backwards, left, right, up, and down using the keyboard.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.behaviour">
-    <s:subsection-title>Camera Behaviour</s:subsection-title>
-    <s:paragraph>
-      With no input from the mouse, the camera remains at its
-      current orientation:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>No input</s:formal-item-title>
-      <s:image s:source="images/fps_mouse_neutral.png">No input</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      The green line denotes the camera's local Y axis, the red line denotes the
-      camera's local X axis, and the blue line denotes the camera's local
-      Z axis.
-    </s:paragraph>
-    <s:paragraph>
+  <Subsection id="888fd2d0-63c0-4c02-92ff-9deab92b118a"
+              title="Camera Behaviour">
+    <Paragraph>
+      With no input from the mouse, the camera remains at its current orientation:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="No input">
+      <Image source="images/fps_mouse_neutral.png">No input</Image>
+    </FormalItem>
+    <Paragraph>
+      The green line denotes the camera's local Y axis, the red line denotes the camera's local X axis, and the blue
+      line denotes the camera's local Z axis.
+    </Paragraph>
+    <Paragraph>
       If the user moves the mouse left, the camera will rotate around the
-      <s:term s:type="term">global</s:term>
+      <Term type="term">global</Term>
       Y axis and appear to turn left:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Mouse moves left</s:formal-item-title>
-      <s:image s:source="images/fps_mouse_left.png">Mouse moves left</s:image>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.fpsstyle.behaviour.mouse_left">
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Mouse moves left">
+      <Image source="images/fps_mouse_left.png">Mouse moves left</Image>
+    </FormalItem>
+    <Paragraph id="a1501624-4935-46fd-b48d-bd1f1aafa9a6">
       If the user moves the mouse right, the camera will rotate around the
-      <s:term s:type="term">global</s:term>
+      <Term type="term">global</Term>
       Y axis and appear to turn right:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Mouse moves right</s:formal-item-title>
-      <s:image s:source="images/fps_mouse_right.png">Mouse moves right</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user pushes the mouse <s:term s:type="term">away</s:term>,
-      the camera will rotate around its own local X axis and appear to turn
-      upwards:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Mouse moves away</s:formal-item-title>
-      <s:image s:source="images/fps_mouse_up.png">Mouse moves away</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user pulls the mouse <s:term s:type="term">towards</s:term>,
-      the camera will rotate around its own local X axis and appear to turn
-      downwards:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Mouse moves towards</s:formal-item-title>
-      <s:image s:source="images/fps_mouse_down.png">Mouse moves towards
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      The choice of whether <s:term s:type="term">towards</s:term> and
-      <s:term s:type="term">away</s:term>
-      mean "look down" and "look up",
-      or "look up" and "look down", respectively, is a matter
-      of personal taste. Most games and simulations provide an option to
-      invert the Y axis for mouse control, so that moving the mouse
-      <s:term s:type="term">away</s:term>
-      results in the camera turning
-      downwards, and so on.
-    </s:paragraph>
-    <s:paragraph>
-      With no input from the keyboard, the camera remains at its
-      current position:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>No input</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_neutral.png">No input</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">
-      right</s:term>,
-      the camera moves towards positive infinity along its own local
-      X axis at a configurable rate:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard right</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_right.png">Keyboard right</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">
-      left</s:term>,
-      the camera moves towards negative infinity along its own local
-      X axis at a configurable rate:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard left</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_left.png">Keyboard left</s:image>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.fpsstyle.behaviour.local_x">
-      Note that movement occurs along the <s:term s:type="term">local</s:term> X
-      axis; if the camera has been
-      <s:link s:target="dai.fpsstyle.behaviour.mouse_left">rotated</s:link>
-      around
-      the global Y axis, then the local X axis has been transformed as a result,
-      and movement will occur along a different trajectory than in the unrotated
-      case:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard right (local 0)</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_right_local_0.png">Keyboard right
-        (local 0)
-      </s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard right (local 1)</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_right_local_1.png">Keyboard right
-        (local 1)
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      If the user presses whatever key is assigned to <s:term s:type="term">
-      forward</s:term>,
-      the camera moves towards negative infinity along its own local
-      Z axis at a configurable rate:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard forward 0</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_forward_0.png">Keyboard forward 0
-      </s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard forward 1</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_forward_1.png">Keyboard forward 1
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Whether <s:term s:type="term">forward</s:term> is considered to be towards
-      <s:term s:type="term">positive</s:term>
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Mouse moves right">
+      <Image source="images/fps_mouse_right.png">Mouse moves right</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user pushes the mouse <Term type="term">away</Term>, the camera will rotate around its own local X axis and
+      appear to turn upwards:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Mouse moves away">
+      <Image source="images/fps_mouse_up.png">Mouse moves away</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user pulls the mouse <Term type="term">towards</Term>, the camera will rotate around its own local X axis
+      and appear to turn downwards:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Mouse moves towards">
+      <Image source="images/fps_mouse_down.png">Mouse moves towards</Image>
+    </FormalItem>
+    <Paragraph>
+      The choice of whether <Term type="term">towards</Term> and
+      <Term type="term">away</Term>
+      mean "look down" and "look up", or "look up" and "look down", respectively, is a matter of personal taste. Most
+      games and simulations provide an option to invert the Y axis for mouse control, so that moving the mouse
+      <Term type="term">away</Term>
+      results in the camera turning downwards, and so on.
+    </Paragraph>
+    <Paragraph>
+      With no input from the keyboard, the camera remains at its current position:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="No input">
+      <Image source="images/fps_keyboard_neutral.png">No input</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">
+      right</Term>, the camera moves towards positive infinity along its own local X axis at a configurable rate:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Keyboard right">
+      <Image source="images/fps_keyboard_right.png">Keyboard right</Image>
+    </FormalItem>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">
+      left</Term>, the camera moves towards negative infinity along its own local X axis at a configurable rate:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Keyboard left">
+      <Image source="images/fps_keyboard_left.png">Keyboard left</Image>
+    </FormalItem>
+    <Paragraph id="c8c585fd-3676-437d-a1e7-0e723791c0dd">
+      Note that movement occurs along the <Term type="term">local</Term> X axis; if the camera has been
+      <Link target="a1501624-4935-46fd-b48d-bd1f1aafa9a6">rotated</Link>
+      around the global Y axis, then the local X axis has been transformed as a result, and movement will occur along a
+      different trajectory than in the unrotated case:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Keyboard right (local 0)">
+      <Image source="images/fps_keyboard_right_local_0.png">Keyboard right (local 0)
+      </Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Keyboard right (local 1)">
+      <Image source="images/fps_keyboard_right_local_1.png">Keyboard right (local 1)
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      If the user presses whatever key is assigned to <Term type="term">
+      forward</Term>, the camera moves towards negative infinity along its own local Z axis at a configurable rate:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Keyboard forward 0">
+      <Image source="images/fps_keyboard_forward_0.png">Keyboard forward 0</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Keyboard forward 1">
+      <Image source="images/fps_keyboard_forward_1.png">Keyboard forward 1</Image>
+    </FormalItem>
+    <Paragraph>
+      Whether <Term type="term">forward</Term> is considered to be towards
+      <Term type="term">positive</Term>
       or
-      <s:term s:type="term">negative</s:term>
-      infinity on the Z axis is more or less a property of the coordinate system
-      used by the rendering system. Systems such as
-      <s:link-external s:target="http://opengl.org">OpenGL</s:link-external>
-      traditionally
-      use a <s:term s:type="term">right-handed</s:term> coordinate system, with
-      <s:term s:type="term">forward</s:term>
-      pointing towards negative infinity. Systems
+      <Term type="term">negative</Term>
+      infinity on the Z axis is more or less a property of the coordinate system used by the rendering system. Systems
       such as
-      <s:link-external s:target="http://en.wikipedia.org/wiki/Direct3D">
+      <LinkExternal target="http://opengl.org">OpenGL</LinkExternal>
+      traditionally use a <Term type="term">right-handed</Term> coordinate system, with
+      <Term type="term">forward</Term>
+      pointing towards negative infinity. Systems such as
+      <LinkExternal target="http://en.wikipedia.org/wiki/Direct3D">
         Direct3D
-      </s:link-external>
-      traditionally use a <s:term s:type="term">left-handed</s:term> coordinate
-      system, with
-      <s:term s:type="term">forward</s:term>
+      </LinkExternal>
+      traditionally use a <Term type="term">left-handed</Term> coordinate system, with
+      <Term type="term">forward</Term>
       pointing towards positive infinity. The
-      <s:term s:type="package">${project.parent.name}</s:term>
+      <Term type="package">${project.parent.name}</Term>
       package assumes a
-      <s:term s:type="term">right-handed</s:term>
+      <Term type="term">right-handed</Term>
       coordinate system.
-    </s:paragraph>
-    <s:paragraph>
-      As with movement on the <s:link s:target="dai.fpsstyle.behaviour.local_x">
-      local X axis</s:link>,
-      forward/backward movement occurs on the camera's local Z axis and is
-      therefore affected by
+    </Paragraph>
+    <Paragraph>
+      As with movement on the <Link target="c8c585fd-3676-437d-a1e7-0e723791c0dd">
+      local X axis</Link>, forward/backward movement occurs on the camera's local Z axis and is therefore affected by
       rotation around the Y axis.
-    </s:paragraph>
-    <s:paragraph>
-      Finally, if the user presses whatever key is assigned
-      to <s:term s:type="term">up</s:term>,
-      the camera moves towards positive infinity along its local Y axis (with
-      <s:term s:type="term">down</s:term>
+    </Paragraph>
+    <Paragraph>
+      Finally, if the user presses whatever key is assigned to <Term type="term">up</Term>, the camera moves towards
+      positive infinity along its local Y axis (with
+      <Term type="term">down</Term>
       moving the camera towards negative infinity, accordingly):
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard up 0</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_up_0.png">Keyboard up 0</s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard up 1</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_up_1.png">Keyboard up 1</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Note that <s:term s:type="term">up</s:term> and
-      <s:term s:type="term">down</s:term>
-      movement occurs on the local Y axis and is therefore affected by the
-      current orientation
-      of the camera:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard up local 0</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_up_local_0.png">Keyboard up local
-        0
-      </s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Keyboard up local 1</s:formal-item-title>
-      <s:image s:source="images/fps_keyboard_up_local_1.png">Keyboard up local
-        1
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      All other movement is restricted. The camera cannot, for example, rotate
-      around its own local Z axis (the <s:term s:type="term">roll</s:term> rotation,
-      in aircraft terminology).
-    </s:paragraph>
-    <s:paragraph>
-      The rest of this section attempts to give a mathematical description
-      of a camera system that implements the above behaviour, and describes
-      the design and implementation of the camera system derived from the
-      description as it exists in the
-      <s:term s:type="package">${project.parent.name}</s:term>
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Keyboard up 0">
+      <Image source="images/fps_keyboard_up_0.png">Keyboard up 0</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Keyboard up 1">
+      <Image source="images/fps_keyboard_up_1.png">Keyboard up 1</Image>
+    </FormalItem>
+    <Paragraph>
+      Note that <Term type="term">up</Term> and
+      <Term type="term">down</Term>
+      movement occurs on the local Y axis and is therefore affected by the current orientation of the camera:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Keyboard up local 0">
+      <Image source="images/fps_keyboard_up_local_0.png">Keyboard up local 0
+      </Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Keyboard up local 1">
+      <Image source="images/fps_keyboard_up_local_1.png">Keyboard up local 1
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      All other movement is restricted. The camera cannot, for example, rotate around its own local Z axis (the <Term type="term">
+      roll
+    </Term> rotation, in aircraft terminology).
+    </Paragraph>
+    <Paragraph>
+      The rest of this section attempts to give a mathematical description of a camera system that implements the above
+      behaviour, and describes the design and implementation of the camera system derived from the description as it
+      exists in the
+      <Term type="package">${project.parent.name}</Term>
       package.
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.camera_math">
-    <s:subsection-title>Camera Mathematics</s:subsection-title>
-    <s:paragraph>
-      An <s:term s:type="term">fps-style</s:term> camera can be represented
-      as a 3-tuple <s:term s:type="expression">(p, h, v)</s:term>, where
-      <s:term s:type="expression">p</s:term>
+  <Subsection id="c65d3c0a-c84b-427c-8e70-370464cc56c8"
+              title="Camera Mathematics">
+    <Paragraph>
+      An <Term type="term">fps-style</Term> camera can be represented as a 3-tuple <Term type="expression">(p, h,
+      v)</Term>, where
+      <Term type="expression">p</Term>
       is the position of the camera,
-      <s:term s:type="expression">h</s:term>
-      is an angle around the
-      camera's local X axis in radians, and
-      <s:term s:type="expression">v</s:term>
-      is an angle around the
-      global Y axis in radians. In order to implement forward/backward and
-      left/right movement (and to derive a final
-      <s:term s:type="term">view matrix</s:term>
-      so that the camera
-      can be used to produce a viewing transform for 3D graphics), it's
-      necessary to derive a 3-tuple of orthonormal
-      direction vectors
-      <s:term s:type="expression">(forward, right, up)</s:term>
-      from the angles <s:term s:type="expression">h</s:term> and
-      <s:term s:type="expression">v</s:term>.
-    </s:paragraph>
-    <s:paragraph>
+      <Term type="expression">h</Term>
+      is an angle around the camera's local X axis in radians, and
+      <Term type="expression">v</Term>
+      is an angle around the global Y axis in radians. In order to implement forward/backward and left/right movement
+      (and to derive a final
+      <Term type="term">view matrix</Term>
+      so that the camera can be used to produce a viewing transform for 3D graphics), it's necessary to derive a 3-tuple
+      of orthonormal direction vectors
+      <Term type="expression">(forward, right, up)</Term>
+      from the angles <Term type="expression">h</Term> and
+      <Term type="expression">v</Term>.
+    </Paragraph>
+    <Paragraph>
       Given the standard trigonometric functions:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Trigonometric functions</s:formal-item-title>
-      <s:image s:source="images/trig.png">Trigonometric functions</s:image>
-    </s:formal-item>
-    <s:paragraph>
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Trigonometric functions">
+      <Image source="images/trig.png">Trigonometric functions</Image>
+    </FormalItem>
+    <Paragraph>
       It's possible to calculate the three components of the
-      <s:term s:type="expression">forward</s:term>
-      vector by assigning
-      pairs of axes to the unit circle and using three equations:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Forward X</s:formal-item-title>
-      <s:image s:source="images/forward_x.png">Forward X</s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Forward Y</s:formal-item-title>
-      <s:image s:source="images/forward_y.png">Forward Y</s:image>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Forward Z</s:formal-item-title>
-      <s:image s:source="images/forward_z.png">Forward Z</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Note that the sign of the right hand side of the last equation
-      is inverted in order to take into account the fact that the
-      viewing direction is towards <s:term s:type="term">negative Z</s:term>.
-    </s:paragraph>
-    <s:paragraph>
-      In most mathematics texts, a positive rotation around an axis
-      represents a counter-clockwise rotation when viewing the system along
-      the negative direction of the axis in question. Adhering to this
-      convention, the equations for calculating the
-      <s:term s:type="expression">right</s:term>
-      vector are identical
-      except for the fact that the equations work with a value of
-      <s:term s:type="expression">v - (π / 2)</s:term>
+      <Term type="expression">forward</Term>
+      vector by assigning pairs of axes to the unit circle and using three equations:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Forward X">
+      <Image source="images/forward_x.png">Forward X</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Forward Y">
+      <Image source="images/forward_y.png">Forward Y</Image>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="Forward Z">
+      <Image source="images/forward_z.png">Forward Z</Image>
+    </FormalItem>
+    <Paragraph>
+      Note that the sign of the right hand side of the last equation is inverted in order to take into account the fact
+      that the viewing direction is towards <Term type="term">negative Z</Term>.
+    </Paragraph>
+    <Paragraph>
+      In most mathematics texts, a positive rotation around an axis represents a counter-clockwise rotation when viewing
+      the system along the negative direction of the axis in question. Adhering to this convention, the equations for
+      calculating the
+      <Term type="expression">right</Term>
+      vector are identical except for the fact that the equations work with a value of
+      <Term type="expression">v - (π / 2)</Term>
       instead of
-      <s:term s:type="expression">v</s:term>
-      (a clockwise rotation
-      of <s:term s:type="expression">90°</s:term>).
-    </s:paragraph>
-    <s:paragraph>
+      <Term type="expression">v</Term>
+      (a clockwise rotation of <Term type="expression">90°</Term>).
+    </Paragraph>
+    <Paragraph>
       Finally, calculating the
-      <s:term s:type="expression">up</s:term>
+      <Term type="expression">up</Term>
       vector is simply a matter of calculating the cross product
-      <s:term s:type="expression">cross (right, forward)</s:term>.
-    </s:paragraph>
-    <s:paragraph>
-      The <s:term s:type="package">${project.parent.name}</s:term> package
-      assumes that a camera with no rotation or translation applied is
-      placed at the origin position
-      <s:term s:type="expression">p = (0, 0, 0)</s:term>
-      with <s:term s:type="expression">h = 0</s:term> and
-      <s:term s:type="expression">v = π / 2</s:term>. The reason for the
-      value of <s:term s:type="expression">v</s:term> is that in most
-      mathematics texts, an angle of
-      <s:term s:type="expression">0</s:term>
+      <Term type="expression">cross (right, forward)</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="package">${project.parent.name}</Term> package assumes that a camera with no rotation or
+      translation applied is placed at the origin position
+      <Term type="expression">p = (0, 0, 0)</Term>
+      with <Term type="expression">h = 0</Term> and
+      <Term type="expression">v = π / 2</Term>. The reason for the value of <Term type="expression">v</Term> is that in
+      most mathematics texts, an angle of
+      <Term type="expression">0</Term>
       radians is illustrated as pointing to the right:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Angle convention</s:formal-item-title>
-      <s:image s:source="images/rad_convention.png">Angle convention</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      In a typical OpenGL configuration, the viewer is placed at the
-      origin looking towards negative infinity on the Z axis, and the X
-      axis appears to run horizontally, perpendicular to the viewing
-      direction. Given this convention, it's somewhat intuitive to map
-      those axes to the unit circle as follows (assuming a second observer
-      looking down onto the scene towards negative infinity on the Y axis):
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Angle convention (with axes)</s:formal-item-title>
-      <s:image s:source="images/rad_convention_axes.png">Angle convention (with
-        axes)
-      </s:image>
-    </s:formal-item>
-    <s:paragraph>
-      Using this convention means that the values derived from the vector
-      equations above can be used directly to compute a
-      <s:term s:type="term">view matrix</s:term>
-      in the coordinate
-      system conventionally used by OpenGL.
-    </s:paragraph>
-    <s:paragraph>
-      As a concrete example, using the default position and orientation
-      given above, the resulting vectors are calculated as
-      [<s:link-external s:target="haskell/ExampleDefaultVectors.hs">
-      ExampleDefaultVectors.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Example default vectors</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/ExampleDefaultVectors.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      The resulting <s:term s:type="expression">forward</s:term>,
-      <s:term s:type="expression">right</s:term>, and
-      <s:term s:type="expression">up</s:term>
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Angle convention">
+      <Image source="images/rad_convention.png">Angle convention</Image>
+    </FormalItem>
+    <Paragraph>
+      In a typical OpenGL configuration, the viewer is placed at the origin looking towards negative infinity on the Z
+      axis, and the X axis appears to run horizontally, perpendicular to the viewing direction. Given this convention,
+      it's somewhat intuitive to map those axes to the unit circle as follows (assuming a second observer looking down
+      onto the scene towards negative infinity on the Y axis):
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Angle convention (with axes)">
+      <Image source="images/rad_convention_axes.png">Angle convention (with axes)
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      Using this convention means that the values derived from the vector equations above can be used directly to
+      compute a
+      <Term type="term">view matrix</Term>
+      in the coordinate system conventionally used by OpenGL.
+    </Paragraph>
+    <Paragraph>
+      As a concrete example, using the default position and orientation given above, the resulting vectors are
+      calculated as [<LinkExternal target="haskell/ExampleDefaultVectors.hs">
+      ExampleDefaultVectors.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="example"
+                title="Example default vectors">
+      <Verbatim>
+        <xi:include href="haskell/ExampleDefaultVectors.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The resulting <Term type="expression">forward</Term>,
+      <Term type="expression">right</Term>, and
+      <Term type="expression">up</Term>
       vectors are consistent with the
-      <s:term s:type="expression">Z</s:term>, <s:term s:type="expression">
-      X</s:term>,
-      and <s:term s:type="expression">Y</s:term> axes typically used in
-      OpenGL.
-    </s:paragraph>
-    <s:paragraph xml:id="dai.fpssstyle.camera_math.movement">
-      With the <s:term s:type="expression">forward</s:term> and
-      <s:term s:type="expression">right</s:term>
-      vectors calculated, it is
-      now trivial to derive forward/backward and left/right movement. Forward
-      movement by <s:term s:type="expression">d</s:term> units is simply a
-      positive translation of the camera position
-      <s:term s:type="expression">p</s:term>
+      <Term type="expression">Z</Term>, <Term type="expression">
+      X</Term>, and <Term type="expression">Y</Term> axes typically used in OpenGL.
+    </Paragraph>
+    <Paragraph id="9d8a57e1-d5fb-486d-b239-cbbd20d17032">
+      With the <Term type="expression">forward</Term> and
+      <Term type="expression">right</Term>
+      vectors calculated, it is now trivial to derive forward/backward and left/right movement.
+      Forward movement by <Term type="expression">d</Term> units is simply a positive translation of the camera position
+      <Term type="expression">p</Term>
       along the
-      <s:term s:type="expression">forward</s:term>
-      vector by <s:term s:type="expression">d</s:term> units
-      [<s:link-external s:target="haskell/Forward.hs">
-      Forward.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Forward movement</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Forward.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">forward</Term>
+      vector by <Term type="expression">d</Term> units [<LinkExternal target="haskell/Forward.hs">
+      Forward.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="example"
+                title="Forward movement">
+      <Verbatim>
+        <xi:include href="haskell/Forward.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       A backward movement is simply the same equation with a negative
-      <s:term s:type="expression">d</s:term>
+      <Term type="expression">d</Term>
       distance:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Backward movement</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Backward.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+    </Paragraph>
+    <FormalItem type="example"
+                title="Backward movement">
+      <Verbatim>
+        <xi:include href="haskell/Backward.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       Moving right is a positive translation of the camera position
-      <s:term s:type="expression">p</s:term>
+      <Term type="expression">p</Term>
       along the
-      <s:term s:type="expression">right</s:term>
-      vector by <s:term s:type="expression">d</s:term> units:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Right movement</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Right.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">right</Term>
+      vector by <Term type="expression">d</Term> units:
+    </Paragraph>
+    <FormalItem type="example"
+                title="Right movement">
+      <Verbatim>
+        <xi:include href="haskell/Right.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       Moving left is simply the same equation with a negative
-      <s:term s:type="expression">d</s:term>
+      <Term type="expression">d</Term>
       distance:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Left movement</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Left.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+    </Paragraph>
+    <FormalItem type="example"
+                title="Left movement">
+      <Verbatim>
+        <xi:include href="haskell/Left.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       Moving up is a positive translation of the camera position
-      <s:term s:type="expression">p</s:term>
+      <Term type="expression">p</Term>
       along the
-      <s:term s:type="expression">up</s:term>
-      vector by <s:term s:type="expression">d</s:term> units:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Up movement</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Up.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">up</Term>
+      vector by <Term type="expression">d</Term> units:
+    </Paragraph>
+    <FormalItem type="example"
+                title="Up movement">
+      <Verbatim>
+        <xi:include href="haskell/Up.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       Moving down is simply the same equation with a negative
-      <s:term s:type="expression">d</s:term>
+      <Term type="expression">d</Term>
       distance:
-    </s:paragraph>
-    <s:formal-item s:kind="example">
-      <s:formal-item-title>Down movement</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Down.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.fpssstyle.camera_math.view_matrix">
-      The <s:term s:type="expression">right</s:term>,
-      <s:term s:type="expression">up</s:term>, and
-      <s:term s:type="expression">forward</s:term>
-      vectors form an orthonormal
-      basis for a coordinate system. In practical terms, they provide the
-      rotational component for a combined rotation and translation that can
-      be used to transform arbitrary coordinates given in
-      <s:term s:type="term">world space</s:term>
+    </Paragraph>
+    <FormalItem type="example"
+                title="Down movement">
+      <Verbatim>
+        <xi:include href="haskell/Down.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph id="3dbc77be-03bd-4587-8ff5-b2b7919f25ab">
+      The <Term type="expression">right</Term>,
+      <Term type="expression">up</Term>, and
+      <Term type="expression">forward</Term>
+      vectors form an orthonormal basis for a coordinate system. In practical terms, they provide the rotational
+      component for a combined rotation and translation that can be used to transform arbitrary coordinates given in
+      <Term type="term">world space</Term>
       to
-      <s:term s:type="term">eye space</s:term>
+      <Term type="term">eye space</Term>
       (also known as
-      <s:term s:type="term">view space</s:term>). This is what allows the
-      camera system to actually be used as a camera in 3D simulations. A
-      matrix that rotates vectors according to the calculated camera vectors
-      is given by
-      [<s:link-external s:target="haskell/ViewRotation.hs">
-      ViewRotation.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>View matrix (rotation)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/ViewRotation.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      A matrix that translates vectors according to the current camera
-      position is given by
-      [<s:link-external s:target="haskell/ViewTranslation.hs">
-      ViewTranslation.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>View matrix (translation)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/ViewTranslation.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      The matrices are multiplied together, resulting in
-      [<s:link-external s:target="haskell/View.hs">View.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>View matrix (complete)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/View.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>View matrix (diagram)</s:formal-item-title>
-      <s:image s:source="images/view_matrix.png">View matrix (diagram)</s:image>
-    </s:formal-item>
-  </s:subsection>
+      <Term type="term">view space</Term>). This is what allows the camera system to actually be used as a camera in 3D
+      simulations. A matrix that rotates vectors according to the calculated camera vectors is given by
+      [<LinkExternal target="haskell/ViewRotation.hs">
+      ViewRotation.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="View matrix (rotation)">
+      <Verbatim>
+        <xi:include href="haskell/ViewRotation.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      A matrix that translates vectors according to the current camera position is given by
+      [<LinkExternal target="haskell/ViewTranslation.hs">
+      ViewTranslation.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="View matrix (translation)">
+      <Verbatim>
+        <xi:include href="haskell/ViewTranslation.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The matrices are multiplied together, resulting in [<LinkExternal target="haskell/View.hs">View.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="View matrix (complete)">
+      <Verbatim>
+        <xi:include href="haskell/View.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <FormalItem type="diagram"
+                title="View matrix (diagram)">
+      <Image source="images/view_matrix.png">View matrix (diagram)</Image>
+    </FormalItem>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.camera_impl">
-    <s:subsection-title>Camera Implementation</s:subsection-title>
-    <s:paragraph>
-      In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      the interface exposed by an <s:term s:type="term">fps-style</s:term> camera
-      is described by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleType.java">
+  <Subsection id="7eef7897-429b-4016-b709-3b98ad825d95"
+              title="Camera Implementation">
+    <Paragraph>
+      In the <Term type="package">${project.parent.name}</Term> package, the interface exposed by an <Term type="term">
+      fps-style
+    </Term> camera is described by the
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleType.java">
         JCameraFPSStyleType
-      </s:link-external>
+      </LinkExternal>
       type. The actual implementation of the
-      <s:link s:target="dai.fpsstyle.camera_math">camera mathematics</s:link>
+      <Link target="c65d3c0a-c84b-427c-8e70-370464cc56c8">camera mathematics</Link>
       is given in the
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyle.java">
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyle.java">
         JCameraFPSStyle
-      </s:link-external>
+      </LinkExternal>
       type.
-    </s:paragraph>
-    <s:paragraph>
-      A small point to note about the implementation:
-      The <s:term s:type="expression">
-      forward</s:term>, <s:term s:type="expression">right</s:term>, and
-      <s:term s:type="expression">up</s:term>
-      vectors are calculated lazily whenever the user attempts
-      to perform an operation that involves them. The vectors are derived only
-      from the current camera
-      angles and so are not recomputed if the angles have not been changed since
-      the vectors were
-      last calculated.
-    </s:paragraph>
-    <s:paragraph>
-      Additionally, the horizontal angle <s:term s:type="expression">h</s:term> can
-      be
-      <s:link s:target="dai.fpsstyle.angular_integrators.clamping">clamped
-      </s:link>
-      to a
-      given range (and is clamped by default).
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+    <Paragraph>
+      A small point to note about the implementation: The <Term type="expression">
+      forward</Term>, <Term type="expression">right</Term>, and
+      <Term type="expression">up</Term>
+      vectors are calculated lazily whenever the user attempts to perform an operation that involves them. The vectors
+      are derived only from the current camera angles and so are not recomputed if the angles have not been changed
+      since the vectors were last calculated.
+    </Paragraph>
+    <Paragraph>
+      Additionally, the horizontal angle <Term type="expression">h</Term> can be
+      <Link target="e44149ec-73b8-45c3-915d-bc6f315079e1">clamped</Link>
+      to a given range (and is clamped by default).
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.input">
-    <s:subsection-title>Input</s:subsection-title>
-    <s:paragraph>
-      In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      an <s:term s:type="term">input</s:term> is a simple abstraction intended
-      to keep
-      <s:link s:target="dai.fpsstyle.integrators">integrators</s:link>
+  <Subsection id="f6279a9f-ed43-4d8f-b0b9-6a99d0a5f190"
+              title="Input">
+    <Paragraph>
+      In the <Term type="package">${project.parent.name}</Term> package, an <Term type="term">input</Term> is a simple
+      abstraction intended to keep
+      <Link target="3af181c8-f7e3-401c-aa92-adc97b68423b">integrators</Link>
       insulated from the platform-specific details of keyboard and mouse input.
-    </s:paragraph>
-    <s:paragraph>
+    </Paragraph>
+    <Paragraph>
       With the
-      <s:link s:target="dai.fpsstyle.behaviour">behaviour</s:link>
+      <Link target="888fd2d0-63c0-4c02-92ff-9deab92b118a">behaviour</Link>
       described in the first subsection, there are two types of input:
-      <s:term s:type="term">Discrete</s:term>
-      input (where the user presses
-      a key and the input is assumed to be constant until the key is released)
-      and <s:term s:type="term">continuous</s:term> input (where the user
-      moves a mouse and a stream of new mouse position vectors are generated).
-      Discrete input can be represented by a simple boolean flag, and continuous
-      input can be represented by summing the received input until an
-      integrator is ready to receive it.
-    </s:paragraph>
-    <s:paragraph>
-      An <s:term s:type="term">input</s:term> in the
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package is
-      represented by the following data structure
-      [<s:link-external s:target="haskell/Input.hs">Input.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Input</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/Input.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="term">Discrete</Term>
+      input (where the user presses a key and the input is assumed to be constant until the key is released) and <Term type="term">
+      continuous
+    </Term> input (where the user moves a mouse and a stream of new mouse position vectors are generated). Discrete
+      input can be represented by a simple boolean flag, and continuous input can be represented by summing the received
+      input until an integrator is ready to receive it.
+    </Paragraph>
+    <Paragraph>
+      An <Term type="term">input</Term> in the
+      <Term type="package">${project.parent.name}</Term>
+      package is represented by the following data structure [<LinkExternal target="haskell/Input.hs">
+      Input.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Input">
+      <Verbatim>
+        <xi:include href="haskell/Input.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       When the user presses whatever is key assigned to
-      <s:term s:type="term">up</s:term>, the corresponding boolean field in
-      the data structure is set to <s:term s:type="constant">true</s:term>. When
-      the user releases the key, the corresponding field is set to
-      <s:term s:type="constant">false</s:term>.
-    </s:paragraph>
-    <s:paragraph xml:id="dai.fpsstyle.input.rotation_coefficients">
-      The situation for mouse movement is slightly more complex. Most
-      OS-specific
-      windowing systems will provide the user with the current mouse cursor
-      coordinates
-      as a pair of integer offsets (in pixels) relative to some origin. Some
-      systems
-      have the origin <s:term s:type="expression">(0, 0)</s:term> at the
-      top-left corner of the
-      screen/window, whilst others have it at the bottom-left corner of the
-      window.
-      Additionally, the density of displays is increasing at a steady rate. A
-      monitor
-      manufactured five years ago may be 40cm wide and have a resolution that
-      fits
-      1440 pixels into that width. A modern display may be the same width but
-      have
-      over four times as many pixels in the same space. A camera system that
-      recklessly consumes coordinates given in pixels is going to behave
-      differently
-      on a screen that has a higher density of pixels than it would on an older,
-      lower
-      resolution display.
-    </s:paragraph>
-    <s:paragraph>
-      In order for the <s:term s:type="package">${project.parent.name}</s:term> package
-      to remain system-independent, it's necessary to provide a way to map mouse
-      input
-      to a simple and consistent set of generic
-      <s:term s:type="term">rotation coefficients</s:term>
-      that can be consumed by an
-      integrator. The rotation coefficients are a pair of values
-      <s:term s:type="expression">(rx, ry)</s:term>
-      expressing the intention to rotate
-      the camera, with
-      <s:term s:type="expression">rx</s:term>
+      <Term type="term">up</Term>, the corresponding boolean field in the data structure is set
+      to <Term type="constant">true</Term>. When the user releases the key, the corresponding field is set to
+      <Term type="constant">false</Term>.
+    </Paragraph>
+    <Paragraph id="14f2bc10-d45d-4129-8892-2b6a21294ae8">
+      The situation for mouse movement is slightly more complex. Most OS-specific windowing systems will provide the
+      user with the current mouse cursor coordinates as a pair of integer offsets (in pixels) relative to some origin.
+      Some systems have the origin <Term type="expression">(0, 0)</Term> at the top-left corner of the screen/window,
+      whilst others have it at the bottom-left corner of the window. Additionally, the density of displays is increasing
+      at a steady rate. A monitor manufactured five years ago may be 40cm wide and have a resolution that fits 1440
+      pixels into that width. A modern display may be the same width but have over four times as many pixels in the same
+      space. A camera system that recklessly consumes coordinates given in pixels is going to behave differently on a
+      screen that has a higher density of pixels than it would on an older, lower resolution display.
+    </Paragraph>
+    <Paragraph>
+      In order for the <Term type="package">${project.parent.name}</Term> package to remain system-independent, it's
+      necessary to provide a way to map mouse input to a simple and consistent set of generic
+      <Term type="term">rotation coefficients</Term>
+      that can be consumed by an integrator. The rotation coefficients are a pair of values
+      <Term type="expression">(rx, ry)</Term>
+      expressing the intention to rotate the camera, with
+      <Term type="expression">rx</Term>
       affecting rotation around the camera's vertical axis, and
-      <s:term s:type="expression">ry</s:term>
+      <Term type="expression">ry</Term>
       affecting rotation around the camera's horizontal axis. In effect, when
-      <s:term s:type="expression">rx == -1.0</s:term>, the camera should appear
-      to
-      rotate
-      <s:term s:type="term">right</s:term>
-      <s:footnote>
-        While it may be more intuitive to think of the rightmost position being
-        <s:term s:type="expression">1.0</s:term>
-        and the leftmost position being
-        <s:term s:type="expression">-1.0</s:term>, recall that a positive
-        rotation
-        represents a counter-clockwise rotation around an axis when looking
-        towards
-        negative infinity on that axis. For a first-person camera system, a
-        negative
-        rotation on the vertical axis therefore represents a turn to the
-        <s:term s:type="term">right</s:term>.
-      </s:footnote>
-      . When <s:term s:type="expression">rx == 1.0</s:term>,
-      the camera should appear to rotate <s:term s:type="term">left</s:term>.
+      <Term type="expression">rx == -1.0</Term>, the camera should appear to rotate
+      <Term type="term">right</Term>
+      <LinkFootnote target="16a3b4b7-d9ac-4904-b1e3-0a97650b5b28"/>
+      . When <Term type="expression">rx == 1.0</Term>, the camera should appear to rotate <Term type="term">left</Term>.
       When
-      <s:term s:type="expression">ry == 1.0</s:term>, the camera should appear
-      to rotate
-      <s:term s:type="term">up</s:term>. When <s:term s:type="expression">ry ==
-      -1.0</s:term>,
-      the camera should appear to rotate <s:term s:type="term">down</s:term>.
-      The
-      coefficients linearly express fractional rotation, so a rotation of
-      <s:term s:type="expression">0.5</s:term>
+      <Term type="expression">ry == 1.0</Term>, the camera should appear to rotate
+      <Term type="term">up</Term>. When <Term type="expression">ry == -1.0</Term>, the camera should appear to
+      rotate <Term type="term">down</Term>. The coefficients linearly express fractional rotation, so a rotation of
+      <Term type="expression">0.5</Term>
       is exactly half as much rotation as
-      <s:term s:type="expression">1.0</s:term>.
-      The scheme used to map screen positions to coefficients is as follows:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Rotation coefficients</s:formal-item-title>
-      <s:list-unordered>
-        <s:list-item>
-          When the mouse cursor is in the exact center of the screen, the
-          resulting rotation coefficients are <s:term s:type="expression">(0,
-          0)</s:term>.
-        </s:list-item>
-        <s:list-item>
-          When the mouse cursor is in the uppermost, rightmost position of the
-          screen
-          <s:term s:type="expression">q</s:term>, the
-          resulting rotation coefficients are <s:term s:type="expression">(-1.0,
-          1.0)</s:term>.
-        </s:list-item>
-        <s:list-item>
-          When the mouse cursor is in the lowermost, leftmost position of the
-          screen
-          <s:term s:type="expression">p</s:term>, the
-          resulting rotation coefficients are <s:term s:type="expression">(1.0,
-          -1.0)</s:term>.
-        </s:list-item>
-        <s:list-item>
-          The rotation coefficients for any other position on the screen can be
-          derived from simple linear interpolation between
-          <s:term s:type="expression">p</s:term>
-          and <s:term s:type="expression">q</s:term>.
-        </s:list-item>
-      </s:list-unordered>
-    </s:formal-item>
-    <s:paragraph xml:id="dai.fpsstyle.input.mouse_region">
-      In order to actually map screen positions to rotation coefficients, it's
-      necessary
-      to take into account the windowing-system-specific origin. It's necessary
-      to define
-      a function that takes a <s:term s:type="term">mouse region</s:term> representing
-      the width and height of the screen with information labelling the origin,
-      and a pair
-      of screen/window-space coordinates <s:term s:type="expression">(sx,
-      sy)</s:term>, and
-      returns a pair of rotation coefficients
-      [<s:link-external s:target="haskell/MouseRegion.hs">
-      MouseRegion.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Mouse region</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/MouseRegion.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Term type="expression">1.0</Term>. The scheme used to map screen positions to coefficients is as follows:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Rotation Coefficients">
+      <ListUnordered>
+        <Item>
+          When the mouse cursor is in the exact center of the screen, the resulting rotation coefficients
+          are <Term type="expression">(0, 0)</Term>.
+        </Item>
+        <Item>
+          When the mouse cursor is in the uppermost, rightmost position of the screen
+          <Term type="expression">q</Term>, the resulting rotation coefficients are <Term type="expression">(-1.0,
+          1.0)</Term>.
+        </Item>
+        <Item>
+          When the mouse cursor is in the lowermost, leftmost position of the screen
+          <Term type="expression">p</Term>, the resulting rotation coefficients are <Term type="expression">(1.0,
+          -1.0)</Term>.
+        </Item>
+        <Item>
+          The rotation coefficients for any other position on the screen can be derived from simple linear interpolation
+          between
+          <Term type="expression">p</Term>
+          and <Term type="expression">q</Term>.
+        </Item>
+      </ListUnordered>
+    </FormalItem>
+    <Paragraph id="2febf7e6-6321-4a53-908e-76311253daf8">
+      In order to actually map screen positions to rotation coefficients, it's necessary to take into account the
+      windowing-system-specific origin. It's necessary to define a function that takes a <Term type="term">mouse
+      region
+    </Term> representing the width and height of the screen with information labelling the origin, and a pair of
+      screen/window-space coordinates <Term type="expression">(sx, sy)</Term>, and returns a pair of rotation
+      coefficients [<LinkExternal target="haskell/MouseRegion.hs">
+      MouseRegion.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Mouse region">
+      <Verbatim>
+        <xi:include href="haskell/MouseRegion.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       The assumption here is that the mouse cursor will be
-      <s:term s:type="term">warped</s:term>
-      back to the center of the screen at periodic
-      intervals. If this did not occur, the mouse cursor would eventually reach
-      one or
-      more edges of the screen and would be unable to travel further, halting
-      any rotation
-      in those directions.
-    </s:paragraph>
-    <s:paragraph>
-      In <s:term s:type="term">event-based</s:term> windowing systems, every
-      time the
-      user moves the mouse, a <s:term s:type="term">mouse event</s:term> is
-      generated
-      containing the current cursor position. In some systems, the user must
-      explicitly
-      ask for the current mouse position when it is needed. In the former case,
-      new
-      rotation coefficients will be generated repeatedly. In the latter case,
-      the
-      user will typically ask for the current mouse position at the beginning of
-      rendering the current simulation frame, and therefore will only receive a
-      single
-      set of coefficients (effectively representing the furthest distance that
-      the mouse
-      travelled during that time period). In the
-      <s:term s:type="package">${project.parent.name}</s:term>
+      <Term type="term">warped</Term>
+      back to the center of the screen at periodic intervals. If this did not occur, the mouse cursor would eventually
+      reach one or more edges of the screen and would be unable to travel further, halting any rotation in those
+      directions.
+    </Paragraph>
+    <Paragraph>
+      In <Term type="term">event-based</Term> windowing systems, every time the user moves the mouse, a <Term type="term">
+      mouse event
+    </Term> is generated containing the current cursor position. In some systems, the user must explicitly ask for the
+      current mouse position when it is needed. In the former case, new rotation coefficients will be generated
+      repeatedly. In the latter case, the user will typically ask for the current mouse position at the beginning of
+      rendering the current simulation frame, and therefore will only receive a single set of coefficients (effectively
+      representing the furthest distance that the mouse travelled during that time period). In the
+      <Term type="package">${project.parent.name}</Term>
       package, an
-      <s:link s:target="dai.fpsstyle.integrators">integrator</s:link>
-      will
-      read (and reset to <s:term s:type="expression">(0.0, 0.0)</s:term>)
-      the current rotation coefficients from an input at a (typically) fixed
-      rate. The current rotation coefficients stored in an input therefore
-      represent the sum of mouse movements for a given elapsed time period. To
-      this
-      end, the
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleInput.java">
+      <Link target="3af181c8-f7e3-401c-aa92-adc97b68423b">integrator</Link>
+      will read (and reset to <Term type="expression">(0.0, 0.0)</Term>) the current rotation coefficients from an input
+      at a (typically) fixed rate. The current rotation coefficients stored in an input therefore represent the sum of
+      mouse movements for a given elapsed time period. To this end, the
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleInput.java">
         JCameraFPSStyleInput
-      </s:link-external>
-      type in the <s:term s:type="package">${project.parent.name}</s:term> package
-      provides
-      an interface where the user simply submits new rotation coefficients each
-      time
-      they are received, and the type keeps a running total of the coefficients.
-      This
-      allows the input system to work the same way regardless of whether the
-      user
-      has to ask for mouse input, or is receiving it piecemeal via some event
-      system.
-    </s:paragraph>
-    <s:paragraph>
-      By taking the width and height of the screen in pixels, and dividing as
-      shown in the above equations, the resulting coefficients are
-      <s:term s:type="term">screen-density independent</s:term>. In other words,
-      if the user moves the cursor halfway across the screen on a very high
-      density display, the resulting coefficients are the same as those
-      resulting
-      from a user moving the cursor across the same distance on a much lower
-      density display, even though the distances expressed in pixels are very
-      different.
-    </s:paragraph>
-    <s:paragraph>
-      In the <s:term s:type="package">${project.parent.name}</s:term> package,
-      fps-style inputs are represented by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleInput.java">
+      </LinkExternal>
+      type in the <Term type="package">${project.parent.name}</Term> package provides an interface where the user simply
+      submits new rotation coefficients each time they are received, and the type keeps a running total of the
+      coefficients. This allows the input system to work the same way regardless of whether the user has to ask for
+      mouse input, or is receiving it piecemeal via some event system.
+    </Paragraph>
+    <Paragraph>
+      By taking the width and height of the screen in pixels, and dividing as shown in the above equations, the
+      resulting coefficients are
+      <Term type="term">screen-density independent</Term>. In other words, if the user moves the cursor halfway across
+      the screen on a very high density display, the resulting coefficients are the same as those resulting from a user
+      moving the cursor across the same distance on a much lower density display, even though the distances expressed in
+      pixels are very different.
+    </Paragraph>
+    <Paragraph>
+      In the <Term type="package">${project.parent.name}</Term> package, fps-style inputs are represented by the
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleInput.java">
         JCameraFPSStyleInput
-      </s:link-external>
+      </LinkExternal>
       type, and mouse regions are represented by the
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleMouseRegion.java">
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleMouseRegion.java">
         JCameraFPSStyleMouseRegion
-      </s:link-external>
+      </LinkExternal>
       type.
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.integrators">
-    <s:subsection-title>Integrators</s:subsection-title>
-    <s:paragraph>
-      <s:term s:type="term">Integrators</s:term>
-      are responsible for
-      updating properties of cameras over time. They are divided into
-      <s:link s:target="dai.fpsstyle.linear_integrators">linear</s:link>
+  <Subsection id="3af181c8-f7e3-401c-aa92-adc97b68423b"
+              title="Integrators">
+    <Paragraph>
+      <Term type="term">Integrators</Term>
+      are responsible for updating properties of cameras over time. They are divided into
+      <Link target="0f53949b-b42e-4126-90e3-6d5ae37f8df2">linear</Link>
       and
-      <s:link s:target="dai.fpsstyle.angular_integrators">angular</s:link>
+      <Link target="74aa2ea1-6870-4ffe-bc3c-9259520a3b22">angular</Link>
       types.
-    </s:paragraph>
-  </s:subsection>
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.linear_integrators">
-    <s:subsection-title>Linear Integrators</s:subsection-title>
-    <s:paragraph>
-      A <s:term s:type="term">linear integrator</s:term> updates the position
-      of a camera over time.
-    </s:paragraph>
-    <s:paragraph>
+  <Subsection id="0f53949b-b42e-4126-90e3-6d5ae37f8df2"
+              title="Linear Integrators">
+    <Paragraph>
+      A <Term type="term">linear integrator</Term> updates the position of a camera over time.
+    </Paragraph>
+    <Paragraph>
       In physics, the first derivative of
-      <s:term s:type="term">position</s:term>
-      with respect to <s:term s:type="term">time</s:term> is
-      <s:term s:type="term">velocity</s:term>. The second derivative of
-      position with respect to time is <s:term s:type="term">
-      acceleration</s:term>.
-      Newton's second law of motion relates force
-      <s:term s:type="expression">f</s:term>
-      with mass <s:term s:type="expression">m</s:term> and acceleration
-      <s:term s:type="expression">a</s:term>
-      [<s:link-external s:target="haskell/SecondLaw.hs">
-      SecondLaw.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Second Law</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/SecondLaw.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      Rearranging the equation, acceleration is given in terms of
-      [<s:link-external s:target="haskell/SecondLawRewrite.hs">
-      SecondLawRewrite.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Second Law (Rewrite)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/SecondLawRewrite.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      However, if <s:term s:type="expression">m</s:term> is assumed to
-      be <s:term s:type="expression">1</s:term>,
-      <s:term s:type="expression">a = (1 / 1) * f = f</s:term>. So, rather than
-      assign mass
-      to a camera and try to apply forces, it's possible to simply apply
-      acceleration
-      as a (configurable) constant term directly. Linear integrators in the
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package are
-      represented as 8-tuples
-      <s:term s:type="expression">(a, c, d, i, ms, sf, sr, su)</s:term>
+      <Term type="term">position</Term>
+      with respect to <Term type="term">time</Term> is
+      <Term type="term">velocity</Term>. The second derivative of position with respect to time is <Term type="term">
+      acceleration</Term>. Newton's second law of motion relates force
+      <Term type="expression">f</Term>
+      with mass <Term type="expression">m</Term> and acceleration
+      <Term type="expression">a</Term>
+      [<LinkExternal target="haskell/SecondLaw.hs">
+      SecondLaw.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Second Law">
+      <Verbatim>
+        <xi:include href="haskell/SecondLaw.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      Rearranging the equation, acceleration is given in terms of [<LinkExternal target="haskell/SecondLawRewrite.hs">
+      SecondLawRewrite.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Second Law (Rewrite)">
+      <Verbatim>
+        <xi:include href="haskell/SecondLawRewrite.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      However, if <Term type="expression">m</Term> is assumed to be <Term type="expression">1</Term>,
+      <Term type="expression">a = (1 / 1) * f = f</Term>. So, rather than assign mass to a camera and try to apply
+      forces, it's possible to simply apply acceleration as a (configurable) constant term directly. Linear integrators
+      in the
+      <Term type="package">${project.parent.name}</Term>
+      package are represented as 8-tuples
+      <Term type="expression">(a, c, d, i, ms, sf, sr, su)</Term>
       where:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Linear integrator components</s:formal-item-title>
-      <s:list-unordered>
-        <s:list-item>
-          <s:term s:type="expression">a</s:term>
-          is the acceleration to be applied,
-          given in units-per-second-per-second.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">c</s:term>
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Linear integrator components">
+      <ListUnordered>
+        <Item>
+          <Term type="expression">a</Term>
+          is the acceleration to be applied, given in units-per-second-per-second.
+        </Item>
+        <Item>
+          <Term type="expression">c</Term>
           is the camera to be affected.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">d</s:term>
-          is the <s:term s:type="term">drag factor</s:term>.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">i</s:term>
-          is an <s:link s:target="dai.fpsstyle.input">input</s:link>.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">ms</s:term>
+        </Item>
+        <Item>
+          <Term type="expression">d</Term>
+          is the <Term type="term">drag factor</Term>.
+        </Item>
+        <Item>
+          <Term type="expression">i</Term>
+          is an <Link target="f6279a9f-ed43-4d8f-b0b9-6a99d0a5f190">input</Link>.
+        </Item>
+        <Item>
+          <Term type="expression">ms</Term>
           is the maximum speed for the camera, in units-per-second.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">sf</s:term>
-          current <s:term s:type="term">forward</s:term> speed of the camera, in
-          units-per-second.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">sr</s:term>
-          current <s:term s:type="term">right</s:term> speed of the camera, in
-          units-per-second.
-        </s:list-item>
-        <s:list-item>
-          <s:term s:type="expression">su</s:term>
-          current <s:term s:type="term">up</s:term> speed of the camera, in
-          units-per-second.
-        </s:list-item>
-      </s:list-unordered>
-    </s:formal-item>
-    <s:paragraph>
-      The meaning of <s:term s:type="term">units</s:term> mentioned above is
-      application specific. An application might choose to map units to meters,
-      or miles, or any other arbitrary measure of distance.
-    </s:paragraph>
-    <s:paragraph>
-      As mentioned, an integrator makes changes to the position and orientation
-      of a camera over a given <s:term s:type="term">delta</s:term> time period.
-      In most simulations, the camera will be updated at a fixed rate of
-      something
-      approaching <s:term s:type="constant">60</s:term> times per second. The
-      <s:term s:type="term">delta</s:term>
+        </Item>
+        <Item>
+          <Term type="expression">sf</Term>
+          current <Term type="term">forward</Term> speed of the camera, in units-per-second.
+        </Item>
+        <Item>
+          <Term type="expression">sr</Term>
+          current <Term type="term">right</Term> speed of the camera, in units-per-second.
+        </Item>
+        <Item>
+          <Term type="expression">su</Term>
+          current <Term type="term">up</Term> speed of the camera, in units-per-second.
+        </Item>
+      </ListUnordered>
+    </FormalItem>
+    <Paragraph>
+      The meaning of <Term type="term">units</Term> mentioned above is application specific. An application might choose
+      to map units to meters, or miles, or any other arbitrary measure of distance.
+    </Paragraph>
+    <Paragraph>
+      As mentioned, an integrator makes changes to the position and orientation of a camera over a given <Term type="term">
+      delta
+    </Term> time period. In most simulations, the camera will be updated at a fixed rate of something approaching <Term type="constant">
+      60
+    </Term> times per second. The
+      <Term type="term">delta</Term>
       time in this case would be given by
-      <s:term s:type="expression">delta = 1.0 / 60.0 = 0.0166666...</s:term>.
-      The
-      integrator calculates a speed for each of the three
-      <s:term s:type="expression">(right, up, forward)</s:term>
-      axes in turn based
-      on the current linear acceleration/deceleration values, and the data from
-      the associated <s:link s:target="dai.fpsstyle.input">input</s:link>, and
-      tells the associated camera to move based on the resulting speeds.
-    </s:paragraph>
-    <s:paragraph>
-      For the <s:term s:type="expression">forward</s:term> axis, the integrator
-      calculates a forward speed <s:term s:type="expression">sfr</s:term> based
-      on the previous forward speed <s:term s:type="expression">sf</s:term>, the
-      state of the input <s:term s:type="expression">i</s:term>, the
-      acceleration <s:term s:type="expression">a</s:term>, and the drag factor
-      <s:term s:type="expression">d</s:term>, and increases the camera position
-      by
-      <s:term s:type="expression">sfr</s:term>
-      units along the <s:term s:type="expression">forward</s:term> axis. The
-      forward speed is clamped to the configurable range
-      <s:term s:type="expression">[-ms, ms]</s:term>.
-      Specifically, the procedure is given by
-      [<s:link-external s:target="haskell/IntegratorForward.hs">
-      IntegratorForward.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Integrator (forward)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/IntegratorForward.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
-      The <s:term s:type="term">drag factor</s:term> is a configurable value
-      that specifies how the camera will slow down over time. Ideally, when the
-      user is not telling the camera to move, the camera is either stationary
-      or on its way to becoming stationary. A drag factor
-      <s:term s:type="expression">d</s:term>
+      <Term type="expression">delta = 1.0 / 60.0 = 0.0166666...</Term>. The integrator calculates a speed for each of
+      the three
+      <Term type="expression">(right, up, forward)</Term>
+      axes in turn based on the current linear acceleration/deceleration values, and the data from the
+      associated <Link target="f6279a9f-ed43-4d8f-b0b9-6a99d0a5f190">input</Link>, and tells the associated camera to
+      move based on the resulting speeds.
+    </Paragraph>
+    <Paragraph>
+      For the <Term type="expression">forward</Term> axis, the integrator calculates a forward speed <Term type="expression">
+      sfr
+    </Term> based on the previous forward speed <Term type="expression">sf</Term>, the state of the
+      input <Term type="expression">i</Term>, the acceleration <Term type="expression">a</Term>, and the drag factor
+      <Term type="expression">d</Term>, and increases the camera position by
+      <Term type="expression">sfr</Term>
+      units along the <Term type="expression">forward</Term> axis. The forward speed is clamped to the configurable
+      range
+      <Term type="expression">[-ms, ms]</Term>. Specifically, the procedure is given by
+      [<LinkExternal target="haskell/IntegratorForward.hs">
+      IntegratorForward.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Integrator (forward)">
+      <Verbatim>
+        <xi:include href="haskell/IntegratorForward.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="term">drag factor</Term> is a configurable value that specifies how the camera will slow down over
+      time. Ideally, when the user is not telling the camera to move, the camera is either stationary or on its way to
+      becoming stationary. A drag factor
+      <Term type="expression">d</Term>
       will result in a speed
-      <s:term s:type="expression">s'</s:term>
+      <Term type="expression">s'</Term>
       by
-      <s:term s:type="expression">s' = s * (d ** delta)</s:term>. Intuitively,
-      the drag factor can be seen as the fraction of the original speed that
-      will remain after one second of not receiving any acceleration. If
-      <s:term s:type="expression">d = 0.0</s:term>, any object not having
-      acceleration applied will immediately stop. If
-      <s:term s:type="expression">d = 1.0</s:term>, an object will continue
-      moving indefinitely
-      <s:footnote>
-        This is obviously the correct physical behaviour for an object that
-        is not being influenced by any forces, but it's not very useful
-        behaviour
-        for a camera system!
-      </s:footnote>. A drag factor of <s:term s:type="expression">0.0</s:term> will
-      also imply an overall movement speed penalty due to the way integration is
-      performed. Usually, a drag factor of
-      <s:term s:type="expression">0.0</s:term>
+      <Term type="expression">s' = s * (d ** delta)</Term>. Intuitively, the drag factor can be seen as the fraction of
+      the original speed that will remain after one second of not receiving any acceleration. If
+      <Term type="expression">d = 0.0</Term>, any object not having acceleration applied will immediately stop. If
+      <Term type="expression">d = 1.0</Term>, an object will continue moving indefinitely
+      <LinkFootnote target="aff47dcf-3e12-4e85-803f-d1ce81d786f2"/>. A drag factor of <Term type="expression">0.0</Term> will
+      also imply an overall movement speed penalty due to the way integration is performed. Usually, a drag factor of
+      <Term type="expression">0.0</Term>
       is a bad idea - values closer to
-      <s:term s:type="expression">0.0001</s:term>
-      give the same abrupt behaviour but with slightly smoother results and less
-      of a movement speed penalty.
-    </s:paragraph>
-    <s:paragraph>
+      <Term type="expression">0.0001</Term>
+      give the same abrupt behaviour but with slightly smoother results and less of a movement speed penalty.
+    </Paragraph>
+    <Paragraph>
       Integration for the other axes is identical, modulo the parts of the
-      <s:link s:target="dai.fpsstyle.input">input</s:link>
-      that are sampled
-      [<s:link-external s:target="haskell/IntegratorRight.hs">
-      IntegratorRight.hs</s:link-external>]
-      and
-      [<s:link-external s:target="haskell/IntegratorUp.hs">
-      IntegratorUp.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Integrator (right)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/IntegratorRight.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Integrator (up)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/IntegratorUp.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+      <Link target="f6279a9f-ed43-4d8f-b0b9-6a99d0a5f190">input</Link>
+      that are sampled [<LinkExternal target="haskell/IntegratorRight.hs">
+      IntegratorRight.hs</LinkExternal>] and [<LinkExternal target="haskell/IntegratorUp.hs">
+      IntegratorUp.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Integrator (right)">
+      <Verbatim>
+        <xi:include href="haskell/IntegratorRight.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <FormalItem type="specification"
+                title="Integrator (up)">
+      <Verbatim>
+        <xi:include href="haskell/IntegratorUp.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       The type of linear integrators in the
-      <s:term s:type="package">${project.parent.name}</s:term>
+      <Term type="package">${project.parent.name}</Term>
       is
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleLinearIntegratorType.java">
-        JCameraFPSStyleLinearIntegratorType</s:link-external>,
-      with the default implementation being
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleLinearIntegrator.java">
-        JCameraFPSStyleLinearIntegrator</s:link-external>.
-    </s:paragraph>
-  </s:subsection>
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleLinearIntegratorType.java">
+        JCameraFPSStyleLinearIntegratorType</LinkExternal>, with the default implementation being
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleLinearIntegrator.java">
+        JCameraFPSStyleLinearIntegrator</LinkExternal>.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.angular_integrators">
-    <s:subsection-title>Angular Integrators</s:subsection-title>
-    <s:paragraph>
-      An <s:term s:type="term">angular integrator</s:term> updates the
-      orientation
-      of a camera over time.
-    </s:paragraph>
-    <s:paragraph>
-      Integration of orientation occurs in almost exactly the same manner as
-      integration of <s:link s:target="dai.fpsstyle.linear_integrators">
-      position</s:link>;
-      orientation is treated as a pair of scalar rotations around two axes, and
-      the
-      rotation values are increased by speed values calculated from acceleration
-      values for each axis. Integration of rotations around the vertical axis is
-      given by
-      [<s:link-external s:target="haskell/IntegratorAngularVertical.hs">
-      IntegratorAngularVertical.hs</s:link-external>]:
-    </s:paragraph>
-    <s:formal-item s:kind="specification">
-      <s:formal-item-title>Integrator (vertical)</s:formal-item-title>
-      <s:verbatim>
-        <xi:include href="haskell/IntegratorAngularVertical.hs" parse="text"/>
-      </s:verbatim>
-    </s:formal-item>
-    <s:paragraph>
+  <Subsection id="74aa2ea1-6870-4ffe-bc3c-9259520a3b22"
+              title="Angular Integrators">
+    <Paragraph>
+      An <Term type="term">angular integrator</Term> updates the orientation of a camera over time.
+    </Paragraph>
+    <Paragraph>
+      Integration of orientation occurs in almost exactly the same manner as integration
+      of <Link target="0f53949b-b42e-4126-90e3-6d5ae37f8df2">
+      position</Link>; orientation is treated as a pair of scalar rotations around two axes, and the rotation values are
+      increased by speed values calculated from acceleration values for each axis. Integration of rotations around the
+      vertical axis is given by [<LinkExternal target="haskell/IntegratorAngularVertical.hs">
+      IntegratorAngularVertical.hs</LinkExternal>]:
+    </Paragraph>
+    <FormalItem type="specification"
+                title="Integrator (vertical)">
+      <Verbatim>
+        <xi:include href="haskell/IntegratorAngularVertical.hs"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
       Note that the acceleration around the axis is multiplied by the
-      <s:link s:target="dai.fpsstyle.input.rotation_coefficients">rotation
-        coefficients
-      </s:link>
+      <Link target="14f2bc10-d45d-4129-8892-2b6a21294ae8">rotation coefficients
+      </Link>
       taken from the input.
-    </s:paragraph>
-    <s:paragraph xml:id="dai.fpsstyle.angular_integrators.clamping">
-      Rotation around the horizontal axis is identical, except that the actual
-      camera itself may <s:term s:type="term">clamp</s:term> rotations around
-      the horizontal axis. The reason for this is simple: If rotations are not
-      clamped, and the user rotates the camera upwards or downwards, there comes
-      a point where the camera's rotation value wraps around and the camera
-      begins
-      to rotate in the opposite direction, as illustrated:
-    </s:paragraph>
-    <s:formal-item s:kind="diagram">
-      <s:formal-item-title>Rotation wrapping</s:formal-item-title>
-      <s:image s:source="images/rotation_wrap.png">Rotation wrapping</s:image>
-    </s:formal-item>
-    <s:paragraph>
-      The practical result of the above wrapping is that the user would, for
-      example,
-      be rotating the camera up towards the ceiling, the camera would reach the
-      limit
-      of rotation, and suddenly the camera would be facing the opposite
-      direction
-      and rotating down towards the floor again. This behaviour would be
-      irritating,
-      so cameras may optionally clamp rotations
-      and are required to indicate when clamping occurs so that the integrator
-      can
-      zero the speed of rotation around that axis. The reason for the zeroing of
-      the rotation speed is that if the speed were not zeroed, and the rotation
-      around the axis was proceeding at, say,
-      <s:term s:type="expression">100</s:term>
-      radians per second, the user would have to cause the rotation to decrease
-      by over <s:term s:type="expression">100</s:term> radians per second in the
-      opposite direction in order to get the camera to rotate at all. In effect,
-      the camera would appear to reach the limit of rotation, stop, and then the
-      user would have to scrub the mouse repeatedly in the opposite direction
-      in order to get rotation to begin again in the opposite direction.
-    </s:paragraph>
-    <s:paragraph>
+    </Paragraph>
+    <Paragraph id="e44149ec-73b8-45c3-915d-bc6f315079e1">
+      Rotation around the horizontal axis is identical, except that the actual camera itself may
+      <Term type="term">clamp</Term> rotations around the horizontal axis. The reason for this is simple: If rotations
+      are not clamped, and the user rotates the camera upwards or downwards, there comes a point where the camera's
+      rotation value wraps around and the camera begins to rotate in the opposite direction, as illustrated:
+    </Paragraph>
+    <FormalItem type="diagram"
+                title="Rotation wrapping">
+      <Image source="images/rotation_wrap.png">Rotation wrapping</Image>
+    </FormalItem>
+    <Paragraph>
+      The practical result of the above wrapping is that the user would, for example, be rotating the camera up towards
+      the ceiling, the camera would reach the limit of rotation, and suddenly the camera would be facing the opposite
+      direction and rotating down towards the floor again. This behaviour would be irritating, so cameras may optionally
+      clamp rotations and are required to indicate when clamping occurs so that the integrator can zero the speed of
+      rotation around that axis. The reason for the zeroing of the rotation speed is that if the speed were not zeroed,
+      and the rotation around the axis was proceeding at, say,
+      <Term type="expression">100</Term>
+      radians per second, the user would have to cause the rotation to decrease by over <Term type="expression">100
+    </Term> radians per second in the opposite direction in order to get the camera to rotate at all. In effect, the
+      camera would appear to reach the limit of rotation, stop, and then the user would have to scrub the mouse
+      repeatedly in the opposite direction in order to get rotation to begin again in the opposite direction.
+    </Paragraph>
+    <Paragraph>
       The type of angular integrators in the
-      <s:term s:type="package">${project.parent.name}</s:term>
+      <Term type="package">${project.parent.name}</Term>
       is
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleAngularIntegratorType.java">
-        JCameraFPSStyleAngularIntegratorType</s:link-external>,
-      with the default implementation being
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleAngularIntegrator.java">
-        JCameraFPSStyleAngularIntegrator</s:link-external>.
-    </s:paragraph>
-  </s:subsection>
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleAngularIntegratorType.java">
+        JCameraFPSStyleAngularIntegratorType</LinkExternal>, with the default implementation being
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleAngularIntegrator.java">
+        JCameraFPSStyleAngularIntegrator</LinkExternal>.
+    </Paragraph>
+  </Subsection>
 
-  <s:subsection xml:id="dai.fpsstyle.aggregate_integrators">
-    <s:subsection-title>Aggregate Integrators</s:subsection-title>
-    <s:paragraph>
-      Usually, a user will want cameras to both move and rotate, as
-      opposed to just one or the other. The
-      <s:term s:type="package">${project.parent.name}</s:term>
-      package
-      provides the
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleIntegratorType.java">
+  <Subsection id="b4f1b1bc-e871-4dcc-9cb7-a70c597c3416"
+              title="Aggregate Integrators">
+    <Paragraph>
+      Usually, a user will want cameras to both move and rotate, as opposed to just one or the other. The
+      <Term type="package">${project.parent.name}</Term>
+      package provides the
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleIntegratorType.java">
         JCameraFPSStyleIntegratorType
-      </s:link-external>
+      </LinkExternal>
       which aggregates both the
-      <s:link s:target="dai.fpsstyle.linear_integrators">linear</s:link>
+      <Link target="0f53949b-b42e-4126-90e3-6d5ae37f8df2">linear</Link>
       and
-      <s:link s:target="dai.fpsstyle.angular_integrators">angular</s:link>
+      <Link target="74aa2ea1-6870-4ffe-bc3c-9259520a3b22">angular</Link>
       integrators, with the default implementation given by
-      <s:link-external s:target="com/io7m/jcamera/JCameraFPSStyleIntegrator.java">
-        JCameraFPSStyleIntegrator</s:link-external>.
-    </s:paragraph>
-  </s:subsection>
+      <LinkExternal target="com/io7m/jcamera/JCameraFPSStyleIntegrator.java">
+        JCameraFPSStyleIntegrator</LinkExternal>.
+    </Paragraph>
+  </Subsection>
 
-</s:section>
+  <Footnote id="16a3b4b7-d9ac-4904-b1e3-0a97650b5b28">
+    While it may be more intuitive to think of the rightmost position being
+    <Term type="expression">1.0</Term>
+    and the leftmost position being
+    <Term type="expression">-1.0</Term>, recall that a positive rotation represents a counter-clockwise rotation around
+    an axis when looking towards negative infinity on that axis. For a first-person camera system, a negative rotation
+    on the vertical axis therefore represents a turn to the
+    <Term type="term">right</Term>.
+  </Footnote>
+
+  <Footnote id="aff47dcf-3e12-4e85-803f-d1ce81d786f2">
+    This is obviously the correct physical behaviour for an object that is not being influenced by any forces, but it's
+    not very useful behaviour for a camera system!
+  </Footnote>
+
+</Section>

@@ -18,9 +18,9 @@
 
 <Section xmlns="urn:com.io7m.structural:8:0"
          xmlns:xi="http://www.w3.org/2001/XInclude"
-         id="4ba1af13-e786-4985-aeda-3fc89c9490fd"
-         title="Usage">
-  <xi:include href="s-usage-overview.xml"/>
-  <xi:include href="s-usage-fps.xml"/>
-  <xi:include href="s-usage-files.xml"/>
+         id="2f0335ba-e008-431f-b8f1-4ff6e477f573"
+         title="Design And Implementation">
+  <xi:include href="s-dai-conventions.xml"/>
+  <xi:include href="s-dai-fpsstyle.xml"/>
+  <xi:include href="s-dai-spherical.xml"/>
 </Section>
