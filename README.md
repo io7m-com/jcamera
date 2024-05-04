@@ -13,3 +13,27 @@ jcamera
 | OpenJDK (Temurin) LTS | Linux | [![Build (OpenJDK (Temurin) LTS, Linux)](https://img.shields.io/github/actions/workflow/status/io7m-com/jcamera/main.linux.temurin.lts.yml)](https://www.github.com/io7m-com/jcamera/actions?query=workflow%3Amain.linux.temurin.lts)|
 | OpenJDK (Temurin) Current | Windows | [![Build (OpenJDK (Temurin) Current, Windows)](https://img.shields.io/github/actions/workflow/status/io7m-com/jcamera/main.windows.temurin.current.yml)](https://www.github.com/io7m-com/jcamera/actions?query=workflow%3Amain.windows.temurin.current)|
 | OpenJDK (Temurin) LTS | Windows | [![Build (OpenJDK (Temurin) LTS, Windows)](https://img.shields.io/github/actions/workflow/status/io7m-com/jcamera/main.windows.temurin.lts.yml)](https://www.github.com/io7m-com/jcamera/actions?query=workflow%3Amain.windows.temurin.lts)|
+
+## jcamera
+
+The `jcamera` package provides a rendering-system-independent camera 
+implementation.
+
+## Features
+
+* Rendering and input system independent camera implementations.
+* Smooth first-person camera.
+* Smooth spherical third-person camera.
+* Fully documented with all mathematical derivations given, tutorials, and Javadoc.
+* Implemented in pure Java 21 with no dependencies on any particular rendering system.
+* Example renderer using JOGL and Swing.
+* [OSGi-ready](https://www.osgi.org/)
+* [JPMS-ready](https://en.wikipedia.org/wiki/Java_Platform_Module_System)
+* ISC license.
+
+## Usage
+
+See the [user manual](https://www.io7m.com/software/jcamera).
+
+![com.io7m.jcamera](./src/site/resources/cameralab.png?raw=true)
+
