@@ -4,6 +4,7 @@ jcamera
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.jcamera/com.io7m.jcamera.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.jcamera%22)
 [![Maven Central (snapshot)](https://img.shields.io/nexus/s/com.io7m.jcamera/com.io7m.jcamera?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/io7m/jcamera/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m-com/jcamera.svg?style=flat-square)](https://codecov.io/gh/io7m-com/jcamera)
+![Java Version](https://img.shields.io/badge/21-java?label=java&color=007fff)
 
 ![com.io7m.jcamera](./src/site/resources/jcamera.jpg?raw=true)
 
