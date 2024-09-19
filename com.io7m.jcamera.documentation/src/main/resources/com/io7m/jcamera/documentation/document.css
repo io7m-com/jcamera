@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2024 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,23 +16,28 @@
 
 .brandingContainer
 {
-  margin: 1em;
+  margin-top:    1em;
+  margin-bottom: 2em;
+  font-size:     80%;
 }
 
 .branding
 {
   font-family: monospace;
-  font-size:   80%;
 }
 
 .command,
 .constant,
+.element,
+.element,
 .expression,
 .file,
 .function,
-.package,
 .language,
+.package,
 .parameter,
+.parameterType,
+.parameterValue,
 .statement,
 .type,
 .variable
@@ -40,102 +45,39 @@
   font-family: monospace;
 }
 
-.term
+.term,
+.emphasis
 {
   font-style: italic;
 }
 
-.parameterType {
-  font-family: monospace;
-}
-.parameterValue {
-  font-family: monospace;
-}
-
-.parametersTable tr
+.genericTable,
+.valueTable,
+.parameterTable
 {
-
+  border:          1px solid #dddddd;
+  border-collapse: collapse;
 }
-.parametersTable th
+.genericTable th,
+.valueTable th,
+.parameterTable th
 {
+  border:     1px solid #dddddd;
   text-align: left;
+  font-size:  var(--stFontSize);
   padding:    0.5em;
 }
-.parametersTable td
+.genericTable td,
+.valueTable td,
+.parameterTable td
 {
-  vertical-align: top;
-  hyphens:      auto;
-  padding:      0.5em;
-  border-top:   1px solid #eee;
-  border-right: 1px solid #eee;
+  border:    1px solid #dddddd;
+  font-size: var(--stFontSize);
+  padding:   0.5em;
 }
-.parametersTable td:nth-child(1)
+.genericTable td:nth-child(1),
+.valueTable td:nth-child(1),
+.parameterTable td:nth-child(1)
 {
-  hyphens: none;
-}
-.parametersTable td:nth-child(2)
-{
-
-}
-.parametersTable td:nth-child(3)
-{
-
-}
-.parametersTable td:nth-child(4)
-{
-
-}
-.parametersTable td:last-child
-{
-  border-right: none;
-}
-
-.valueTable th
-{
-  text-align: left;
-  padding:    0.5em;
-}
-.valueTable td
-{
-  padding:      0.5em;
-  border-top:   1px solid #eee;
-  border-right: 1px solid #eee;
-  vertical-align: top;
-}
-.valueTable td:nth-child(1)
-{
-  width: 8em;
-}
-.valueTable td:nth-child(2)
-{
-
-}
-.valueTable td:last-child
-{
-  border-right: none;
-}
-
-.genericTable th
-{
-  text-align: left;
-  padding:    0.5em;
-}
-.genericTable td
-{
-  padding:      0.5em;
-  border-top:   1px solid #eee;
-  border-right: 1px solid #eee;
-  vertical-align: top;
-}
-.genericTable td:nth-child(1)
-{
-  width: 8em;
-}
-.genericTable td:nth-child(2)
-{
-
-}
-.genericTable td:last-child
-{
-  border-right: none;
+  width: 12em;
 }
