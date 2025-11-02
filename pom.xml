@@ -38,7 +38,7 @@
 
     <!-- Third-party dependencies. -->
     <org.junit.version>5.14.1</org.junit.version>
-    <io7m.org.immutables.value.version>2.11.4</io7m.org.immutables.value.version>
+    <io7m.org.immutables.value.version>2.11.6</io7m.org.immutables.value.version>
   </properties>
 
   <licenses>
